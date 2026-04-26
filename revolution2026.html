@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pré-Venda Revolution 2 Anos | Ingresso + Brindes Exclusivos</title>
+  <meta name="description" content="Garanta sua pré-venda para o Revolution 2 Anos. 600 unidades por R$75 com bundle completo: ingresso + copo oficial + tirante + presente secreto. Sítio Vovó Hilda, Serra/ES, Julho/2026.">
+  <meta property="og:title" content="Pré-Venda Revolution 2 Anos | Ingresso + Brindes Exclusivos">
+  <meta property="og:description" content="600 unidades · R$75 · Bundle Completo. Sítio Vovó Hilda, Serra/ES.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="[OG_URL]">
+  <meta property="og:image" content="[OG_IMAGE]">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pré-Venda Revolution 2 Anos">
+  <meta name="twitter:description" content="600 unidades · R$75 · Bundle Completo">
+  <meta name="twitter:image" content="[TWITTER_IMAGE]">
+  <link rel="icon" type="image/x-icon" href="[FAVICON_PATH]">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ── MODAL ── */
+    #modal-overlay {
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(0,0,0,.75); backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 16px;
+      opacity: 0; pointer-events: none;
+      transition: opacity .25s ease;
+    }
+    #modal-overlay.open { opacity: 1; pointer-events: all; }
+    #modal-box {
+      background: #14141f; border: 1px solid rgba(139,92,246,.25);
+      border-radius: 24px; padding: 32px 24px; width: 100%; max-width: 480px;
+      transform: translateY(24px) scale(.97);
+      transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+      position: relative;
+    }
+    #modal-overlay.open #modal-box { transform: translateY(0) scale(1); }
+    .modal-option {
+      display: flex; flex-direction: column; gap: 6px;
+      background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.09);
+      border-radius: 16px; padding: 20px; cursor: pointer;
+      transition: all .25s ease; text-decoration: none; color: #fff;
+    }
+    .modal-option:hover {
+      background: rgba(139,92,246,.1); border-color: rgba(139,92,246,.4);
+      transform: translateY(-2px); box-shadow: 0 12px 32px rgba(139,92,246,.2);
+    }
+    .modal-close {
+      position: absolute; top: 14px; right: 16px;
+      background: none; border: none; color: rgba(255,255,255,.4);
+      font-size: 1.4rem; cursor: pointer; line-height: 1;
+      transition: color .2s;
+    }
+    .modal-close:hover { color: #fff; }
+  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- [PIXEL_META] Cole o Facebook Pixel aqui -->
+  <!-- [PIXEL_GOOGLE] Cole o Google Analytics aqui -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            'dark-base': '#0A0A0F',
+            'dark-surface': '#1a1a2e',
+            'purple-neon': '#8B5CF6',
+            'cyan-neon': '#06B6D4',
+            'amber-neon': '#F59E0B',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif; color: #fff; overflow-x: hidden;
+      background-image: url('imagm%20fundo.png');
+      background-attachment: fixed;
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-color: #0A0A0F;
+    }
+    /* Mobile: imagem proporcional centralizada */
+    @media(max-width:767px){
+      body {
+        background-attachment: scroll;
+        background-size: cover;
+        background-position: center center;
+      }
+    }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity .6s ease-out, transform .6s ease-out; }
+    .reveal.active { opacity: 1; transform: translateY(0); }
+    .stagger > *:nth-child(1) { transition-delay: 0s; }
+    .stagger > *:nth-child(2) { transition-delay: .1s; }
+    .stagger > *:nth-child(3) { transition-delay: .2s; }
+    .stagger > *:nth-child(4) { transition-delay: .3s; }
+    .stagger > *:nth-child(5) { transition-delay: .4s; }
+
+    /* ── HERO ── */
+    #hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    #hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+    #hero-bg { position: absolute; inset: 0; background: linear-gradient(135deg,#0A0A0F,#1a1a2e 50%,#0d0d1a); background-size: cover; background-position: center; z-index: 0; }
+    .hero-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.3); z-index: 1; }
+    .hero-content { position: relative; z-index: 2; }
+    @media(max-width:767px){ #hero-video { display:none; } }
+
+    /* ── COUNTDOWN ── */
+    .cd-block { display: flex; flex-direction: column; align-items: center; min-width: 68px; }
+    .cd-num {
+      font-size: 2.4rem; font-weight: 900; line-height: 1;
+      background: linear-gradient(135deg,#8B5CF6,#06B6D4);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      animation: pglow 2s ease-in-out infinite;
+    }
+    @keyframes pglow {
+      0%,100% { filter: drop-shadow(0 0 6px rgba(139,92,246,.5)); }
+      50%      { filter: drop-shadow(0 0 14px rgba(6,182,212,.8)); }
+    }
+    .cd-label { font-size: .6rem; font-weight: 700; letter-spacing: .15em; color: rgba(255,255,255,.5); text-transform: uppercase; margin-top: 4px; }
+    .cd-sep { font-size: 1.8rem; font-weight: 900; color: rgba(139,92,246,.5); padding: 0 2px; align-self: flex-start; margin-top: 6px; }
+
+    /* ── SCROLL INDICATOR ── */
+    .scroll-dot { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); z-index: 3; animation: bounce-y 2s ease-in-out infinite; }
+    @keyframes bounce-y { 0%,100%{transform:translateX(-50%) translateY(0);opacity:.5} 50%{transform:translateX(-50%) translateY(10px);opacity:1} }
+
+    /* ── GLASS CARD ── */
+    .glass { background: rgba(255,255,255,.04); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.08); border-radius: 16px; transition: all .3s ease; }
+    .glass:hover { background: rgba(139,92,246,.08); border-color: rgba(139,92,246,.3); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(139,92,246,.15); }
+
+    /* ── SECRET CARD ── */
+    .secret-card { background: linear-gradient(135deg,rgba(139,92,246,.1),rgba(6,182,212,.05)); border: 1px solid rgba(139,92,246,.4); border-radius: 16px; position: relative; overflow: hidden; transition: all .3s ease; }
+    .secret-card::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background: conic-gradient(transparent,rgba(139,92,246,.12),transparent 30%); animation: spin-glow 4s linear infinite; }
+    .secret-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(139,92,246,.25); }
+    @keyframes spin-glow { to { transform: rotate(360deg); } }
+    .secret-inner { position: relative; z-index: 1; }
+
+    /* ── BTN PRIMARY ── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 14px 36px; font-weight: 700; font-size: .95rem; letter-spacing: .05em;
+      text-transform: uppercase; border-radius: 50px; text-decoration: none;
+      background: linear-gradient(135deg,#8B5CF6,#06B6D4); color: #fff;
+      box-shadow: 0 8px 28px rgba(139,92,246,.4); position: relative; overflow: hidden;
+      transition: all .3s ease;
+    }
+    .btn::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent); transition: left .5s ease; }
+    .btn:hover::before { left:100%; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 14px 44px rgba(139,92,246,.6); }
+    .btn:active { transform: translateY(0); }
+
+    /* ── BADGE ── */
+    .badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 14px; border-radius: 50px; font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+    .badge-amber { background: rgba(245,158,11,.15); border: 1px solid rgba(245,158,11,.4); color: #F59E0B; }
+    .badge-purple { background: rgba(139,92,246,.15); border: 1px solid rgba(139,92,246,.4); color: #a78bfa; }
+
+    /* ── VACANCY ── */
+    .vacancy-num { font-size: 4rem; font-weight: 900; line-height: 1; background: linear-gradient(135deg,#F59E0B,#EF4444); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .vbar-track { height: 8px; background: rgba(255,255,255,.1); border-radius: 50px; overflow: hidden; }
+    .vbar-fill { height: 100%; background: linear-gradient(90deg,#F59E0B,#EF4444); border-radius: 50px; transition: width 1s ease; }
+
+    /* ── FAQ ── */
+    .faq-item { border-bottom: 1px solid rgba(255,255,255,.07); }
+    .faq-btn { width:100%; display:flex; align-items:center; justify-content:space-between; padding:18px 0; background:none; border:none; cursor:pointer; color:#fff; font-family:'Inter',sans-serif; font-size:.98rem; font-weight:600; text-align:left; transition: color .2s; }
+    .faq-btn:hover { color: #a78bfa; }
+    .faq-icon { flex-shrink:0; width:18px; height:18px; color:#8B5CF6; transition: transform .3s ease; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+    .faq-body { max-height: 0; overflow: hidden; transition: max-height .4s ease, padding .4s ease; }
+    .faq-item.open .faq-body { max-height: 260px; padding-bottom: 18px; }
+    .faq-body p { color: rgba(255,255,255,.6); line-height: 1.75; font-size: .93rem; }
+
+    /* ── STICKY MOBILE ── */
+    #sticky { display:none; position:fixed; bottom:0; left:0; right:0; z-index:999; padding:10px 14px; background:rgba(10,10,15,.96); backdrop-filter:blur(12px); border-top:1px solid rgba(139,92,246,.25); transform:translateY(100%); transition:transform .4s cubic-bezier(.34,1.56,.64,1); }
+    #sticky.show { transform: translateY(0); }
+    @media(max-width:767px){ #sticky { display:block; } }
+
+    /* ── UTILS ── */
+    .neon-line { height:1px; background:linear-gradient(90deg,transparent,#8B5CF6,#06B6D4,transparent); max-width:400px; margin:0 auto; }
+    .text-grad { background:linear-gradient(135deg,#8B5CF6,#06B6D4); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .text-grad-amber { background:linear-gradient(135deg,#F59E0B,#EF4444); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width:5px; }
+    ::-webkit-scrollbar-track { background:#0A0A0F; }
+    ::-webkit-scrollbar-thumb { background:#8B5CF6; border-radius:3px; }
+
+    /* ── ACCESSIBILITY ── */
+    :focus-visible { outline: 2px solid #8B5CF6; outline-offset: 3px; border-radius: 4px; }
+
+    /* ── REDUCED MOTION ── */
+    @media(prefers-reduced-motion:reduce){
+      *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; }
+      .reveal { opacity:1; transform:none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     HERO
+════════════════════════════════════════ -->
+<header id="hero" role="banner">
+
+  <!-- Vídeo (desktop) — [IMG_BACKGROUND] substitua os src -->
+  <video id="hero-video-a" autoplay muted playsinline preload="auto"
+    poster="imagm%20fundo.png" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;opacity:1;transition:opacity 5s ease-in-out;">
+    <source src="video%20fundoo.mp4" type="video/mp4">
+  </video>
+  <video id="hero-video-b" muted playsinline preload="auto"
+    aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;opacity:0;transition:opacity 5s ease-in-out;">
+    <source src="video%20fundoo.mp4" type="video/mp4">
+  </video>
+
+  <!-- Imagem fallback (mobile / sem vídeo) -->
+  <div id="hero-bg" aria-hidden="true" style="background-image:url('imagm%20fundo.png');"></div>
+
+  <div class="hero-overlay" aria-hidden="true"></div>
+
+  <div class="hero-content text-center px-4 max-w-4xl mx-auto w-full">
+
+    <!-- Badge + Logo -->
+    <div class="reveal mb-2">
+      <div class="mt-5">
+        <img src="logo.png" alt="Revolution 2 Anos - Além das Estrelas"
+             class="mx-auto w-64 md:w-80 lg:w-96 drop-shadow-2xl"
+             loading="eager" decoding="async">
+      </div>
+    </div>
+
+    <!-- Subheadline -->
+    <div class="reveal mt-3" style="transition-delay:.12s">
+      <p class="text-lg md:text-xl font-bold tracking-[.22em] text-white/75 uppercase">Pré-Venda Exclusiva</p>
+      <p class="text-sm md:text-base text-white/55 mt-1 font-medium">
+        Vagas Limitadas
+      </p>
+    </div>
+
+    <!-- Countdown -->
+    <div class="reveal mt-8 mb-8" style="transition-delay:.22s">
+      <p class="text-[.65rem] font-bold tracking-[.2em] uppercase text-white/40 mb-4">Pré-venda abre em</p>
+      <div id="countdown" class="flex items-center justify-center gap-2 md:gap-4" aria-label="Contagem regressiva">
+        <div class="cd-block glass px-4 py-3">
+          <span class="cd-num" id="cd-d">00</span>
+          <span class="cd-label">Dias</span>
+        </div>
+        <span class="cd-sep" aria-hidden="true">:</span>
+        <div class="cd-block glass px-4 py-3">
+          <span class="cd-num" id="cd-h">00</span>
+          <span class="cd-label">Horas</span>
+        </div>
+        <span class="cd-sep" aria-hidden="true">:</span>
+        <div class="cd-block glass px-4 py-3">
+          <span class="cd-num" id="cd-m">00</span>
+          <span class="cd-label">Min</span>
+        </div>
+        <span class="cd-sep" aria-hidden="true">:</span>
+        <div class="cd-block glass px-4 py-3">
+          <span class="cd-num" id="cd-s">00</span>
+          <span class="cd-label">Seg</span>
+        </div>
+      </div>
+      <p id="cd-ended" class="hidden text-lg font-black text-green-400 tracking-widest uppercase mt-4">🚀 Pré-Venda Aberta! Garanta já a sua!</p>
+    </div>
+
+    <!-- CTA -->
+    <div class="reveal" style="transition-delay:.32s">
+      <!-- [LINK_CHECKOUT] substitua pelo link real (Sympla / Eventbrite) -->
+      <a href="#" data-cta="modal" class="btn text-base md:text-lg px-8 py-4"
+         aria-label="Garantir minha vaga na pré-venda Revolution 2 Anos">
+        🎟️ Garantir minha vaga
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <p class="text-white/35 text-[.7rem] mt-3">Pagamento seguro · Garantia de entrega</p>
+    </div>
+
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="scroll-dot" aria-hidden="true">
+    <svg width="26" height="26" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="2" viewBox="0 0 24 24">
+      <path d="M12 5v14M5 12l7 7 7-7"/>
+    </svg>
+  </div>
+
+</header>
+
+<main>
+
+  <div class="neon-line opacity-60"></div>
+
+  <!-- ════════════════════════════════════════
+       O QUE ESTÁ INCLUSO
+  ════════════════════════════════════════ -->
+  <section id="bundle" class="py-20 px-4" style="background:linear-gradient(180deg,rgba(10,10,15,.7),rgba(26,26,46,.75) 50%,rgba(10,10,15,.7))"
+           aria-labelledby="bundle-title">
+    <div class="max-w-6xl mx-auto">
+
+      <div class="text-center mb-12 reveal">
+        <h2 id="bundle-title" class="text-3xl md:text-5xl font-black mt-4 mb-4">
+          O que está <span class="text-grad">incluso</span>
+        </h2>
+        <p class="text-white/55 text-lg max-w-lg mx-auto">
+          Tudo que você precisa para viver a revolução.
+        </p>
+      </div>
+
+      <!-- Grid de cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-12 stagger">
+
+        <div class="glass p-6 text-center reveal">
+          <span class="text-5xl block mb-3" aria-hidden="true">🎟️</span>
+          <h3 class="font-bold text-base mb-2">Ingresso Revolution 2 Anos</h3>
+          <p class="text-white/50 text-sm leading-relaxed">Acesso completo ao evento mais esperado do ano em Serra/ES</p>
+        </div>
+
+        <div class="glass p-6 text-center reveal">
+          <span class="text-5xl block mb-3" aria-hidden="true">🥤</span>
+          <h3 class="font-bold text-base mb-2">Copo Oficial Exclusivo</h3>
+          <p class="text-white/50 text-sm leading-relaxed">Copo personalizado da Revolution 2 Anos para levar de recordação</p>
+        </div>
+
+        <div class="glass p-6 text-center reveal">
+          <span class="text-5xl block mb-3" aria-hidden="true">🎫</span>
+          <h3 class="font-bold text-base mb-2">Tirante Oficial</h3>
+          <p class="text-white/50 text-sm leading-relaxed">Tirante exclusivo com a identidade visual oficial do evento</p>
+        </div>
+
+        <!-- Presente secreto — destaque especial -->
+        <div class="secret-card p-6 text-center reveal">
+          <div class="secret-inner">
+            <span class="text-5xl block mb-3" aria-hidden="true">🎁</span>
+            <span class="badge badge-purple mb-2">Só na pré-venda</span>
+            <h3 class="font-bold text-base mb-2 text-grad mt-2">Presente Secreto</h3>
+            <p class="text-white/50 text-sm leading-relaxed">Surpresa especial <strong class="text-purple-300">exclusiva para quem garantir a pré-venda</strong>. Revela no evento!</p>
+          </div>
+        </div>
+
+      </div>
+
+
+    </div>
+  </section>
+
+  <div class="neon-line opacity-40"></div>
+
+  <!-- ════════════════════════════════════════
+       SEGREDO + URGÊNCIA
+  ════════════════════════════════════════ -->
+  <section id="urgencia" class="py-20 px-4 relative overflow-hidden" style="background:rgba(26,26,46,.75)"
+           aria-labelledby="urgency-title">
+    <div class="absolute inset-0 opacity-10 pointer-events-none" aria-hidden="true"
+         style="background:radial-gradient(circle at 30% 50%,#8B5CF6,transparent 55%),radial-gradient(circle at 70% 50%,#06B6D4,transparent 55%);"></div>
+
+    <div class="max-w-4xl mx-auto relative z-10 text-center">
+
+      <div class="reveal mb-6">
+        <span class="badge badge-amber">🔥 Últimas Vagas</span>
+      </div>
+
+      <div class="reveal" style="transition-delay:.1s">
+        <h2 id="urgency-title" class="text-3xl md:text-5xl font-black mb-5 leading-tight">
+          Só quem garantir a<br>
+          <span class="text-grad">pré-venda</span> desbloqueia<br>
+          o <span class="text-amber-400">presente secreto</span>
+        </h2>
+        <p class="text-white/55 text-lg max-w-xl mx-auto mb-12">
+          Quando as vagas acabarem, acabou.<br>Sem segunda chance, sem lista de espera.
+        </p>
+      </div>
+
+      <!-- Aviso de vagas limitadas -->
+      <div class="reveal glass inline-block px-10 py-8 mb-10 mx-auto w-full max-w-xs" style="transition-delay:.2s">
+        <span class="text-4xl block mb-3" aria-hidden="true">⚠️</span>
+        <p class="font-black text-xl text-white mb-1">Vagas Limitadas</p>
+        <p class="text-white/50 text-sm leading-relaxed">Quando esgotar, não tem mais.<br>Sem lista de espera.</p>
+      </div>
+
+
+    </div>
+  </section>
+
+  <div class="neon-line opacity-40"></div>
+
+  <!-- ════════════════════════════════════════
+       INFORMAÇÕES DO EVENTO
+  ════════════════════════════════════════ -->
+  <section id="info" class="py-20 px-4" style="background:rgba(10,10,15,.72)" aria-labelledby="info-title">
+    <div class="max-w-4xl mx-auto">
+
+      <div class="text-center mb-12 reveal">
+        <h2 id="info-title" class="text-3xl md:text-5xl font-black mb-3">
+          Informações do <span class="text-grad">Evento</span>
+        </h2>
+        <p class="text-white/50">Salva na agenda. Você não vai querer perder.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12 stagger">
+
+        <div class="glass p-6 flex items-start gap-4 reveal">
+          <span class="text-3xl flex-shrink-0" aria-hidden="true">📅</span>
+          <div>
+            <p class="text-white/40 text-xs uppercase tracking-widest mb-1">Data</p>
+            <p class="font-bold text-lg">18 e 19 de Julho / 2026</p>
+            <p class="text-white/45 text-sm">Fim de semana completo</p>
+          </div>
+        </div>
+
+        <div class="glass p-6 flex items-start gap-4 reveal">
+          <span class="text-3xl flex-shrink-0" aria-hidden="true">📍</span>
+          <div>
+            <p class="text-white/40 text-xs uppercase tracking-widest mb-1">Local</p>
+            <a href="https://www.google.com/maps/dir//S%C3%8DTIO+VOV%C3%93+HILDA,+Estrada+rural+-+Campinho+da+Serra+I,+Serra+-+ES,+29175-213/@-20.1457664,-40.2587648,4081m/data=!3m1!1e3!4m8!4m7!1m0!1m5!1m1!1s0xb81f7bee5141a3:0xf8ba344f7922d931!2m2!1d-40.290228!2d-20.1532665?entry=ttu&g_ep=EgoyMDI2MDQyMi4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener"
+               class="font-bold text-lg text-white hover:text-purple-400 transition-colors underline decoration-dotted">
+              Sítio Vovó Hilda
+            </a>
+            <p class="text-white/45 text-sm">Serra, Espírito Santo · <span class="text-purple-400">Ver no mapa →</span></p>
+          </div>
+        </div>
+
+        <div class="glass p-6 flex items-start gap-4 reveal">
+          <span class="text-3xl flex-shrink-0" aria-hidden="true">⏰</span>
+          <div>
+            <p class="text-white/40 text-xs uppercase tracking-widest mb-1">Horário</p>
+            <p class="font-bold text-lg">21h — 18h</p>
+            <p class="text-white/45 text-sm">Sábado até o domingo</p>
+          </div>
+        </div>
+
+        <div class="glass p-6 flex items-start gap-4 reveal">
+          <span class="text-3xl flex-shrink-0" aria-hidden="true">🔞</span>
+          <div>
+            <p class="text-white/40 text-xs uppercase tracking-widest mb-1">Classificação</p>
+            <p class="font-bold text-lg">18+</p>
+            <p class="text-white/45 text-sm">Exclusivo para maiores de 18 anos</p>
+          </div>
+        </div>
+
+      </div>
+
+
+    </div>
+  </section>
+
+  <div class="neon-line opacity-40"></div>
+
+  <!-- ════════════════════════════════════════
+       FAQ
+  ════════════════════════════════════════ -->
+  <section id="faq" class="py-20 px-4" style="background:rgba(26,26,46,.75)" aria-labelledby="faq-title">
+    <div class="max-w-3xl mx-auto">
+
+      <div class="text-center mb-12 reveal">
+        <h2 id="faq-title" class="text-3xl md:text-5xl font-black mb-3">
+          Perguntas <span class="text-grad">Frequentes</span>
+        </h2>
+        <p class="text-white/50">Tem dúvida? A gente responde.</p>
+      </div>
+
+      <div class="reveal">
+
+        <div class="faq-item">
+          <button class="faq-btn" aria-expanded="false" aria-controls="faq1">
+            <span>O que é o presente secreto?</span>
+            <svg class="faq-icon" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+          <div class="faq-body" id="faq1" role="region">
+            <p>O presente secreto é uma surpresa exclusiva que <strong>só quem comprar a pré-venda receberá</strong> no dia do evento. Não vamos revelar antes — parte da magia é a surpresa. O que podemos dizer: vale muito a pena. 🎁</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" aria-expanded="false" aria-controls="faq2">
+            <span>Como retiro os itens do bundle?</span>
+            <svg class="faq-icon" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+          <div class="faq-body" id="faq2" role="region">
+            <p>Vá até a <strong>lojinha (store) do evento</strong> com o QR Code de cada item para fazer a retirada. A validação é feita na hora — <strong>códigos já validados não serão aceitos</strong>.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" aria-expanded="false" aria-controls="faq3">
+            <span>Posso transferir o ingresso?</span>
+            <svg class="faq-icon" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+          <div class="faq-body" id="faq3" role="region">
+            <p>Sim! A transferência pode ser feita pela plataforma de compra. Dúvidas? Fala com a gente pelo WhatsApp. <strong>A transferência precisa ser concluída antes da data do evento.</strong></p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" aria-expanded="false" aria-controls="faq4">
+            <span>Qual é a política de reembolso?</span>
+            <svg class="faq-icon" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+          <div class="faq-body" id="faq4" role="region">
+            <p>Reembolso ou troca de titularidade somente nos <strong>primeiros 7 dias após a compra</strong>, e apenas dentro do mesmo lote. Caso tenha ocorrido mudança de lote dentro dos 7 dias, é possível somente a <strong>troca de titularidade</strong> com pagamento do upgrade do valor do lote.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-btn" aria-expanded="false" aria-controls="faq5">
+            <span>O que é a Revolution?</span>
+            <svg class="faq-icon" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+          <div class="faq-body" id="faq5" role="region">
+            <p>A Revolution é um evento que reúne <strong>música, diversão e muita energia</strong> no Sítio Vovó Hilda, Serra/ES. Uma noite inesquecível para curtir com os amigos. Em 2026 promete ser ainda maior!</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <div class="neon-line opacity-60"></div>
+
+  <!-- ════════════════════════════════════════
+       CTA FINAL
+  ════════════════════════════════════════ -->
+  <section id="cta-final" class="py-24 px-4 relative overflow-hidden" aria-labelledby="cta-title">
+    <div class="absolute inset-0 opacity-15 pointer-events-none" aria-hidden="true"
+         style="background:radial-gradient(ellipse at center,#8B5CF6,transparent 70%);"></div>
+    <div class="absolute inset-0 pointer-events-none" style="background:linear-gradient(180deg,#0A0A0F,#1a1a2e,#0A0A0F);opacity:.9" aria-hidden="true"></div>
+
+    <div class="max-w-3xl mx-auto text-center relative z-10">
+      <div class="reveal">
+        <p class="text-purple-400 text-xs font-bold tracking-[.25em] uppercase mb-4">Não perca essa chance</p>
+        <h2 id="cta-title" class="text-4xl md:text-6xl font-black mb-6 leading-tight">
+          Não fique de fora.<br>
+          <span class="text-grad">A Revolução espera você.</span>
+        </h2>
+        <p class="text-white/55 text-lg mb-10 max-w-xl mx-auto">
+          Vagas limitadas. 1 presente secreto. 0 segunda chance.<br>
+          <strong class="text-white">Garanta o seu agora.</strong>
+        </p>
+
+        <!-- Destaque de preço -->
+        <div class="glass inline-flex flex-col items-center px-10 py-6 mb-10">
+          <p class="text-white/45 text-xs uppercase tracking-widest mb-1">Tudo isso por apenas</p>
+          <p class="text-6xl font-black text-grad-amber">R$75</p>
+          <p class="text-white/45 text-xs mt-1">Ingresso + Copo + Tirante + Presente Secreto</p>
+        </div>
+
+        <div class="block mb-3">
+          <a href="#" data-cta="modal" class="btn text-lg px-10 py-5"
+             aria-label="Garantir minha vaga agora na pré-venda Revolution 2 Anos">
+            🎟️ Garantir minha vaga agora
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+        <p class="text-white/25 text-xs">Vagas limitadas · Pagamento seguro · Retirada no evento</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════ -->
+<footer class="py-12 px-4 border-t border-white/5" style="background:rgba(5,5,8,.85)" role="contentinfo">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+
+      <div>
+        <h3 class="text-xl font-black text-grad mb-3">REVOLUTION 2 ANOS</h3>
+        <p class="text-white/45 text-sm leading-relaxed">O evento que você não pode perder.<br>Serra, Espírito Santo · Julho 2026.</p>
+      </div>
+
+      <div>
+        <h4 class="font-bold text-white/70 mb-4 text-xs uppercase tracking-widest">Redes Sociais</h4>
+        <div class="flex flex-col gap-3">
+          <!-- [SOCIAL_INSTAGRAM] substitua pelo link real -->
+          <a href="https://www.instagram.com/revollution.es/" class="text-white/45 hover:text-purple-400 transition-colors text-sm flex items-center gap-2"
+             aria-label="Instagram da Revolution 2 Anos">
+            <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            @revollution.es
+          </a>
+          <!-- [SOCIAL_TIKTOK] substitua pelo link real -->
+          <a href="https://www.tiktok.com/@revollution.es" class="text-white/45 hover:text-purple-400 transition-colors text-sm flex items-center gap-2"
+             aria-label="TikTok da Revolution 2 Anos">
+            <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+            @revollution.es
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="font-bold text-white/70 mb-4 text-xs uppercase tracking-widest">Contato</h4>
+        <!-- [WHATSAPP_CONTATO] substitua pelo número real (somente dígitos) -->
+        <a href="https://wa.me/[WHATSAPP_CONTATO]"
+           class="inline-flex items-center gap-2 text-white/45 hover:text-green-400 transition-colors text-sm"
+           aria-label="Fale conosco via WhatsApp">
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp de Suporte
+        </a>
+      </div>
+
+    </div>
+
+    <div class="neon-line opacity-20 mb-6"></div>
+    <div class="flex flex-col md:flex-row items-center justify-between gap-3">
+      <p class="text-white/25 text-xs">© 2026 Revolution. Todos os direitos reservados.</p>
+      <p class="text-white/20 text-xs">Evento 18+ · Serra, Espírito Santo</p>
+    </div>
+
+  </div>
+</footer>
+
+<!-- ════════════════════════════════════════
+     STICKY MOBILE CTA
+════════════════════════════════════════ -->
+<!-- ════════════════════════════════════════
+     MODAL — COMO GARANTIR SUA VAGA
+════════════════════════════════════════ -->
+<div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div id="modal-box">
+
+    <button class="modal-close" id="modal-close-btn" aria-label="Fechar">✕</button>
+
+    <div class="text-center mb-6">
+      <span class="text-3xl" aria-hidden="true">🎟️</span>
+      <h2 id="modal-title" class="text-xl font-black mt-2 mb-1">Como quer garantir sua vaga?</h2>
+      <p class="text-white/50 text-sm">Escolha a opção que preferir</p>
+    </div>
+
+    <div class="flex flex-col gap-4">
+
+      <!-- Opção 1: Site oficial -->
+      <!-- [LINK_SITE_OFICIAL] substitua quando fechar a parceria -->
+      <a href="#" class="modal-option" aria-label="Comprar pelo site oficial">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl" aria-hidden="true">💳</span>
+          <div>
+            <p class="font-bold text-base">Comprar pelo Site Oficial</p>
+            <!-- [COPY_SITE] ajuste a copy quando fechar parceria -->
+            <p class="text-white/50 text-sm">Parceria em breve — em até 12x no cartão</p>
+          </div>
+        </div>
+        <span class="badge badge-purple self-start text-[.65rem]">Em breve</span>
+      </a>
+
+      <!-- Opção 2: Comissários -->
+      <!-- [LINK_COMISSARIOS] substitua quando definir os comissários -->
+      <a href="#" class="modal-option" aria-label="Comprar com comissário oficial">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl" aria-hidden="true">📲</span>
+          <div>
+            <p class="font-bold text-base">Comprar com Comissário Oficial</p>
+            <!-- [COPY_COMISSARIO] ajuste a copy quando definir -->
+            <p class="text-white/50 text-sm">Ingresso no Pix — sem taxa</p>
+          </div>
+        </div>
+        <span class="badge badge-amber self-start text-[.65rem]">Em breve</span>
+      </a>
+
+    </div>
+
+    <p class="text-white/25 text-[.7rem] text-center mt-5">Opções disponíveis em breve · Fique ligado!</p>
+
+  </div>
+</div>
+
+<div id="sticky" role="complementary" aria-label="Ação rápida de compra">
+  <a href="#" data-cta="modal" class="btn w-full text-sm justify-center"
+     aria-label="Garantir minha vaga na pré-venda Revolution 2 Anos">
+    🎟️ Garantir minha vaga
+  </a>
+</div>
+
+<!-- ════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ── CONFIGURAÇÕES — edite aqui ── */
+var CFG = {
+  // [DATA_PRÉ_VENDA] — data/hora de abertura da pré-venda (formato ISO, horário local)
+  countdownTo: '2026-05-08T20:00:00',  // Abre 08/05 às 20h — fecha 10/05 às 20h
+  totalVacancies:   600,
+  initialSold:      113,   // vagas já vendidas
+  simInterval:    45000,   // ms entre cada simulação de venda
+  simIncrement:       1,   // +1 vaga por tick simulado
+};
+
+/* ── COUNTDOWN ── */
+(function () {
+  var target  = new Date(CFG.countdownTo).getTime();
+  var elD     = document.getElementById('cd-d');
+  var elH     = document.getElementById('cd-h');
+  var elM     = document.getElementById('cd-m');
+  var elS     = document.getElementById('cd-s');
+  var elWrap  = document.getElementById('countdown');
+  var elEnded = document.getElementById('cd-ended');
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function tick() {
+    var diff = target - Date.now();
+    if (diff <= 0) {
+      if (elWrap)  elWrap.classList.add('hidden');
+      if (elEnded) elEnded.classList.remove('hidden');
+      return;
+    }
+    elD.textContent = pad(Math.floor(diff / 86400000));
+    elH.textContent = pad(Math.floor(diff % 86400000 / 3600000));
+    elM.textContent = pad(Math.floor(diff % 3600000  / 60000));
+    elS.textContent = pad(Math.floor(diff % 60000    / 1000));
+  }
+
+  tick();
+  setInterval(tick, 1000);
+})();
+
+/* ── VACANCY COUNTER ── */
+(function () {
+  var total   = CFG.totalVacancies;
+  var sold    = CFG.initialSold;
+  var elNum   = document.getElementById('vacancy-num');
+  var elBar   = document.getElementById('vbar');
+  var elPct   = document.getElementById('vacancy-pct');
+  var elPbar  = elBar ? elBar.closest('[role="progressbar"]') : null;
+
+  function animNum(el, from, to, dur) {
+    var start = performance.now();
+    function step(now) {
+      var p = Math.min((now - start) / dur, 1);
+      var e = 1 - Math.pow(1 - p, 3); // ease-out cubic
+      el.textContent = Math.round(from + (to - from) * e);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  function update(animate) {
+    var remaining = total - sold;
+    var pct = Math.round(sold / total * 100);
+    if (elNum) {
+      if (animate) animNum(elNum, parseInt(elNum.textContent) || remaining, remaining, 700);
+      else elNum.textContent = remaining;
+    }
+    if (elBar)  elBar.style.width = (sold / total * 100) + '%';
+    if (elPct)  elPct.textContent = pct + '%';
+    if (elPbar) elPbar.setAttribute('aria-valuenow', remaining);
+  }
+
+  update(false);
+  setInterval(function () {
+    if (sold < total) { sold += CFG.simIncrement; update(true); }
+  }, CFG.simInterval);
+})();
+
+/* ── FAQ ACCORDION ── */
+(function () {
+  var items = document.querySelectorAll('.faq-item');
+  items.forEach(function (item) {
+    var btn  = item.querySelector('.faq-btn');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      var isOpen = item.classList.contains('open');
+      items.forEach(function (i) {
+        i.classList.remove('open');
+        var b = i.querySelector('.faq-btn');
+        if (b) b.setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+})();
+
+/* ── SCROLL REVEAL ── */
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var els = document.querySelectorAll('.reveal');
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('active'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(function (el) { obs.observe(el); });
+})();
+
+/* ── STICKY MOBILE CTA ── */
+(function () {
+  var cta = document.getElementById('sticky');
+  if (!cta) return;
+  var shown = false;
+  var limit = window.innerHeight;
+  window.addEventListener('scroll', function () {
+    var y = window.scrollY || window.pageYOffset;
+    if (y > limit && !shown)  { shown = true;  cta.classList.add('show'); }
+    if (y <= limit && shown)  { shown = false; cta.classList.remove('show'); }
+  }, { passive: true });
+})();
+
+/* ── SMOOTH SCROLL FALLBACK (Safari < 15) ── */
+(function () {
+  if ('scrollBehavior' in document.documentElement.style) return;
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var el = document.getElementById(this.getAttribute('href').slice(1));
+      if (!el) return;
+      e.preventDefault();
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+})();
+
+/* ── MODAL ── */
+(function () {
+  var overlay  = document.getElementById('modal-overlay');
+  var closeBtn = document.getElementById('modal-close-btn');
+  if (!overlay) return;
+
+  function openModal() {
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    closeBtn.focus();
+  }
+
+  function closeModal() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Todos os botões CTA abrem o modal
+  document.querySelectorAll('[data-cta="modal"]').forEach(function (el) {
+    el.addEventListener('click', function (e) {
+      e.preventDefault();
+      openModal();
+    });
+  });
+
+  // Fechar pelo botão X
+  closeBtn.addEventListener('click', closeModal);
+
+  // Fechar clicando fora da caixa
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) closeModal();
+  });
+
+  // Fechar com Esc
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeModal();
+  });
+})();
+
+/* ── VIDEO: CROSSFADE LOOP INFINITO ── */
+(function () {
+  var vA = document.getElementById('hero-video-a');
+  var vB = document.getElementById('hero-video-b');
+  if (!vA || !vB) return;
+
+  var FADE_DURATION = 5;  // segundos de crossfade (igual ao CSS transition)
+  var active = vA;
+  var next   = vB;
+  var crossing = false;
+
+  function startVideo(v) {
+    v.currentTime = 0;
+    var p = v.play();
+    if (p) p.catch(function(){});
+  }
+
+  function crossfade() {
+    if (crossing) return;
+    crossing = true;
+
+    // Prepara o próximo vídeo invisível e dá play
+    next.style.opacity = '0';
+    startVideo(next);
+
+    // Pequeno delay para garantir que o próximo está carregado
+    setTimeout(function () {
+      next.style.opacity  = '1';   // fade in no próximo
+      active.style.opacity = '0';  // fade out no atual
+
+      setTimeout(function () {
+        // Troca os papéis
+        var tmp = active;
+        active  = next;
+        next    = tmp;
+        crossing = false;
+      }, FADE_DURATION * 1000);
+    }, 50);
+  }
+
+  // Monitora o vídeo ativo e dispara crossfade perto do fim
+  setInterval(function () {
+    if (!active.duration || crossing) return;
+    var remaining = active.duration - active.currentTime;
+    if (remaining <= FADE_DURATION + 0.2) {
+      crossfade();
+    }
+  }, 200);
+
+  // Inicia o primeiro vídeo
+  startVideo(vA);
+})();
+</script>
+
+</body>
+</html>
