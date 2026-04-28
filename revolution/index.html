@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REVOLUTION | 18.19.JUL.2026</title>
+    <meta name="description" content="Revolution · 18 e 19 de Julho 2026 · Sítio Vovó Hilda · Serra/ES">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg:     #050009;
+            --cyan:   #00E5CC;
+            --purple: #7B00FF;
+            --pink:   #FF00BB;
+            --green:  #00FF66;
+            --gold:   #FFD600;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* ── GRAIN ── */
+        .grain {
+            position: fixed; inset: 0;
+            pointer-events: none; z-index: 9000;
+            opacity: 0.035;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 180px;
+        }
+
+        /* ── PARTICLES ── */
+        #pts { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+        .pt { position: absolute; border-radius: 50%; animation: ptRise linear infinite; }
+        @keyframes ptRise {
+            0%   { transform: translateY(100vh); opacity: 0; }
+            8%   { opacity: 0.6; }
+            92%  { opacity: 0.2; }
+            100% { transform: translateY(-60px); opacity: 0; }
+        }
+
+        /* ══════════════════════════════
+           HERO
+        ══════════════════════════════ */
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 640px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            overflow: hidden;
+            padding: 2rem 1.5rem;
+        }
+
+        /* arte de fundo */
+        .hero-bg {
+            position: absolute; inset: 0;
+            background-image: url('PROJETOO-4.png');
+            background-size: cover;
+            background-position: center 20%;
+            z-index: 0;
+        }
+
+        /* escurecimento suave — preserva a arte mas deixa ler */
+        .hero-bg::after {
+            content: '';
+            position: absolute; inset: 0;
+            background:
+                radial-gradient(ellipse at 50% 50%, rgba(5,0,9,0.45) 0%, rgba(5,0,9,0.7) 100%),
+                linear-gradient(180deg, rgba(5,0,9,0.4) 0%, rgba(5,0,9,0.0) 30%, rgba(5,0,9,0.0) 60%, rgba(5,0,9,0.9) 100%);
+        }
+
+        /* logo */
+        .hero-logo {
+            position: relative; z-index: 2;
+            width: clamp(220px, 60vw, 520px);
+            mix-blend-mode: screen;
+            filter: drop-shadow(0 0 40px rgba(0,229,204,0.35)) drop-shadow(0 0 80px rgba(123,0,255,0.25));
+            animation: logoPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes logoPulse {
+            0%,100% { filter: drop-shadow(0 0 35px rgba(0,229,204,0.35)) drop-shadow(0 0 70px rgba(123,0,255,0.25)); }
+            50%      { filter: drop-shadow(0 0 55px rgba(0,229,204,0.7)) drop-shadow(0 0 100px rgba(255,0,187,0.35)); }
+        }
+
+        /* data */
+        .hero-date {
+            position: relative; z-index: 2;
+            margin-top: 0.8rem;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(1.2rem, 3.5vw, 2rem);
+            letter-spacing: 0.4em;
+            color: var(--cyan);
+            text-shadow: 0 0 25px rgba(0,229,204,0.7), 0 2px 12px rgba(0,0,0,1);
+        }
+
+        /* local */
+        .hero-location {
+            position: relative; z-index: 2;
+            margin-top: 0.3rem;
+            font-size: clamp(0.65rem, 1.5vw, 0.82rem);
+            letter-spacing: 0.35em;
+            color: rgba(255,255,255,0.7);
+            text-transform: uppercase;
+            text-shadow: 0 1px 8px rgba(0,0,0,1);
+        }
+
+        /* countdown */
+        .hero-cd {
+            position: relative; z-index: 2;
+            margin-top: clamp(1.8rem, 4vh, 3rem);
+            text-align: center;
+        }
+
+        .cd-label {
+            font-size: 0.58rem;
+            letter-spacing: 0.55em;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            margin-bottom: 0.9rem;
+            text-shadow: 0 1px 8px rgba(0,0,0,1);
+        }
+
+        .cd-row {
+            display: flex;
+            justify-content: center;
+        }
+
+        .cd-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 clamp(0.8rem, 2.5vw, 2rem);
+        }
+
+        .cd-item + .cd-item {
+            border-left: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .cd-num {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.8rem, 8vw, 5rem);
+            color: #fff;
+            line-height: 1;
+            text-shadow: 0 0 30px rgba(0,229,204,0.5), 0 2px 12px rgba(0,0,0,1);
+        }
+
+        .cd-unit {
+            font-size: 0.55rem;
+            letter-spacing: 0.38em;
+            color: rgba(255,255,255,0.55);
+            text-transform: uppercase;
+            margin-top: 0.25rem;
+            text-shadow: 0 1px 6px rgba(0,0,0,1);
+        }
+
+        /* CTA */
+        .hero-cta {
+            position: relative; z-index: 2;
+            margin-top: clamp(1.8rem, 4vh, 3rem);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.9rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.35rem 1.1rem;
+            border: 1px solid rgba(255,214,0,0.6);
+            color: var(--gold);
+            font-size: 0.67rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            text-shadow: 0 0 12px rgba(255,214,0,0.5);
+            box-shadow: 0 0 15px rgba(255,214,0,0.1);
+        }
+
+        .btn-ticket {
+            display: inline-block;
+            padding: 1.1rem 3.5rem;
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            color: #fff;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 0.15em;
+            text-decoration: none;
+            border: 2px solid transparent;
+            transition: all 0.25s;
+            box-shadow: 0 0 30px rgba(255,0,187,0.3);
+        }
+
+        .btn-ticket:hover {
+            background: transparent;
+            border-color: var(--pink);
+            color: var(--pink);
+            box-shadow: 0 0 40px rgba(255,0,187,0.5);
+            transform: translateY(-2px);
+        }
+
+        /* seta */
+        .hero-arrow {
+            position: absolute;
+            bottom: 1.5rem; left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            color: rgba(255,255,255,0.2);
+            animation: arrowBounce 2.5s ease-in-out infinite;
+        }
+
+        @keyframes arrowBounce {
+            0%,100% { transform: translateX(-50%) translateY(0); }
+            50%      { transform: translateX(-50%) translateY(-8px); }
+        }
+
+        /* ══════════════════════════════
+           SECTIONS
+        ══════════════════════════════ */
+        .hr { height: 1px; background: rgba(255,255,255,0.05); }
+
+        .section {
+            padding: 6rem 2rem;
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        .sec-label {
+            font-size: 0.6rem;
+            letter-spacing: 0.55em;
+            color: rgba(255,255,255,0.25);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .sec-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.8rem, 7vw, 5rem);
+            line-height: 0.95;
+            margin-bottom: 3.5rem;
+            color: var(--cyan);
+            text-shadow: 0 0 40px rgba(0,229,204,0.2);
+        }
+
+        /* ── LINEUP ── */
+        .lineup-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        .lineup-big {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(4rem, 12vw, 8rem);
+            line-height: 0.9;
+            color: #fff;
+        }
+
+        .lineup-big span { color: var(--purple); display: block; text-shadow: 0 0 30px rgba(123,0,255,0.5); }
+
+        .lineup-side {
+            padding-top: 0.5rem;
+        }
+
+        .lineup-side p {
+            font-size: 0.8rem;
+            letter-spacing: 0.12em;
+            color: rgba(255,255,255,0.35);
+            line-height: 2;
+            text-transform: uppercase;
+        }
+
+        .lineup-side a {
+            color: var(--cyan);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* grade de slots */
+        .slots {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .slot {
+            background: var(--bg);
+            padding: 3rem 1rem;
+            text-align: center;
+            transition: background 0.2s;
+            cursor: default;
+        }
+
+        .slot:hover { background: rgba(123,0,255,0.07); }
+
+        .slot-q {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            color: rgba(255,255,255,0.06);
+            letter-spacing: 0.5em;
+        }
+
+        .slot-lbl {
+            margin-top: 0.5rem;
+            font-size: 0.58rem;
+            letter-spacing: 0.4em;
+            color: rgba(255,255,255,0.2);
+            text-transform: uppercase;
+        }
+
+        /* ── TICKETS ── */
+        .tiers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1px;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .tier {
+            background: var(--bg);
+            padding: 2.5rem 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tier-bar { height: 2px; margin-bottom: 2rem; }
+        .tier.on  .tier-bar { background: linear-gradient(90deg, var(--cyan), var(--purple)); }
+        .tier.off .tier-bar { background: rgba(255,255,255,0.07); }
+
+        .tier-tag {
+            font-size: 0.6rem;
+            letter-spacing: 0.45em;
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+        }
+        .tier.on  .tier-tag { color: var(--cyan); }
+        .tier.off .tier-tag { color: rgba(255,255,255,0.18); }
+
+        .tier-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+        }
+        .tier.on  .tier-name { color: #fff; }
+        .tier.off .tier-name { color: rgba(255,255,255,0.18); }
+
+        .tier-price {
+            margin-top: auto;
+            padding-top: 1.5rem;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3rem;
+            line-height: 1;
+        }
+        .tier.on  .tier-price { color: var(--gold); text-shadow: 0 0 20px rgba(255,214,0,0.3); }
+        .tier.off .tier-price { color: rgba(255,255,255,0.1); font-size: 1.8rem; }
+
+        .tier-sub { font-size: 0.72rem; color: rgba(255,255,255,0.25); margin-top: 0.3rem; }
+
+        .tier-btn {
+            display: block;
+            margin-top: 2rem;
+            padding: 0.9rem;
+            text-align: center;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 0.1em;
+            text-decoration: none;
+            background: linear-gradient(135deg, var(--pink), var(--purple));
+            color: #fff;
+            border: 2px solid transparent;
+            transition: all 0.25s;
+        }
+        .tier-btn:hover {
+            background: transparent;
+            border-color: var(--pink);
+            color: var(--pink);
+        }
+
+        /* ── COMISSÁRIOS ── */
+        .comm-card {
+            border: 1px solid rgba(0,229,204,0.15);
+            padding: 3rem;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 3rem;
+            align-items: center;
+            background: rgba(0,229,204,0.02);
+        }
+
+        .comm-card h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 0.8rem;
+            color: var(--cyan);
+        }
+
+        .comm-card p {
+            font-size: 0.88rem;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.8;
+        }
+
+        .btn-wpp {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 1rem 2rem;
+            background: #25D366;
+            color: #fff;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 0.08em;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+        .btn-wpp:hover { background: #128C7E; }
+
+        /* ── LOCAL ── */
+        .local-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .local-item {
+            padding: 2rem 1.5rem;
+            border-right: 1px solid rgba(255,255,255,0.05);
+        }
+        .local-item:last-child { border-right: none; }
+
+        .local-lbl {
+            font-size: 0.6rem;
+            letter-spacing: 0.45em;
+            color: rgba(255,255,255,0.25);
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+        }
+
+        .local-val {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            color: var(--green);
+            text-shadow: 0 0 20px rgba(0,255,102,0.3);
+        }
+
+        .local-note {
+            margin-top: 1.5rem;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.18);
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            border-top: 1px solid rgba(255,255,255,0.04);
+            padding: 4rem 2rem 3rem;
+            max-width: 980px;
+            margin: 4rem auto 0;
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            letter-spacing: 0.4em;
+            color: rgba(255,255,255,0.1);
+        }
+
+        .footer-links { display: flex; gap: 0.8rem; }
+
+        .footer-link {
+            width: 44px; height: 44px;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.35);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .footer-link:hover { border-color: var(--cyan); color: var(--cyan); }
+
+        .footer-copy {
+            text-align: center;
+            font-size: 0.68rem;
+            color: rgba(255,255,255,0.1);
+            letter-spacing: 0.2em;
+        }
+
+        /* ── GAME SECTION ── */
+        .game-section {
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(123,0,255,0.12) 0%, transparent 70%);
+        }
+        .game-section::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Ccircle cx='1' cy='1' r='0.5' fill='rgba(255,255,255,0.08)'/%3E%3C/svg%3E") repeat;
+            pointer-events: none;
+        }
+        .game-tag {
+            display: inline-block;
+            font-size: 0.6rem; letter-spacing: 0.4em; text-transform: uppercase;
+            color: var(--pink); margin-bottom: 1rem;
+            border: 1px solid rgba(255,0,187,0.3); padding: 0.3rem 0.8rem;
+        }
+        .game-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.2rem, 8vw, 4rem);
+            letter-spacing: 0.06em;
+            background: linear-gradient(135deg, #fff 30%, var(--purple));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 0.6rem;
+        }
+        .game-sub {
+            font-size: 0.85rem; color: rgba(255,255,255,0.45);
+            max-width: 480px; margin: 0 auto 2rem; line-height: 1.7;
+        }
+        .game-prizes {
+            display: flex; justify-content: center; flex-wrap: wrap;
+            gap: 0.8rem; margin-bottom: 2.5rem;
+        }
+        .game-prize {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 0.5rem 1rem; font-size: 0.75rem;
+            color: rgba(255,255,255,0.6);
+        }
+        .game-prize span { color: var(--gold); font-weight: 600; }
+        .btn-game {
+            display: inline-block;
+            padding: 1.1rem 3rem;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem; letter-spacing: 0.15em;
+            text-decoration: none; color: #fff;
+            background: linear-gradient(135deg, var(--purple), var(--pink));
+            box-shadow: 0 0 40px rgba(123,0,255,0.5);
+            transition: all 0.25s; position: relative; z-index: 1;
+        }
+        .btn-game:hover {
+            box-shadow: 0 0 60px rgba(255,0,187,0.6);
+            transform: translateY(-2px);
+        }
+        .game-note {
+            margin-top: 1.2rem; font-size: 0.68rem;
+            color: rgba(255,255,255,0.2); letter-spacing: 0.15em;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 640px) {
+            .slots { grid-template-columns: repeat(2, 1fr); }
+            .lineup-header { flex-direction: column; }
+            .comm-card { grid-template-columns: 1fr; padding: 2rem; gap: 1.5rem; }
+            .local-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); }
+            .local-item:last-child { border-bottom: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="grain"></div>
+<div id="pts"></div>
+
+<!-- ══════ HERO ══════ -->
+<section class="hero" id="inicio">
+    <div class="hero-bg"></div>
+
+    <img src="LOGO-2.png" alt="REVOLUTION" class="hero-logo">
+
+    <div class="hero-date">18 &nbsp;·&nbsp; 19 &nbsp;·&nbsp; JULHO &nbsp;·&nbsp; 2026</div>
+    <div class="hero-location">Sítio Vovó Hilda &nbsp;·&nbsp; Serra / ES</div>
+
+    <div class="hero-cd">
+        <div class="cd-label">a revolução começa em</div>
+        <div class="cd-row">
+            <div class="cd-item">
+                <div class="cd-num" id="days">000</div>
+                <div class="cd-unit">dias</div>
+            </div>
+            <div class="cd-item">
+                <div class="cd-num" id="hours">00</div>
+                <div class="cd-unit">horas</div>
+            </div>
+            <div class="cd-item">
+                <div class="cd-num" id="mins">00</div>
+                <div class="cd-unit">min</div>
+            </div>
+            <div class="cd-item">
+                <div class="cd-num" id="secs">00</div>
+                <div class="cd-unit">seg</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-cta" id="ingressos">
+        <span class="badge">⚡ Pré-venda abrindo em breve</span>
+        <a href="https://chat.whatsapp.com/LPe1mHv9OnRLKXbpmF3UiT" class="btn-ticket" target="_blank">Entre no grupo e seja o primeiro a saber</a>
+    </div>
+
+    <div class="hero-arrow">
+        <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
+            <line x1="7" y1="0" x2="7" y2="14" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M1 8l6 6 6-6" stroke="currentColor" stroke-width="1.2" fill="none"/>
+        </svg>
+    </div>
+</section>
+
+<div class="hr"></div>
+
+<!-- ══════ GAME ══════ -->
+<section class="game-section" id="game">
+    <div class="game-tag">🚀 Exclusivo pré-venda</div>
+    <div class="game-title">REVOLUTION<br>SPACE DEFENDER</div>
+    <p class="game-sub">
+        Jogue, acumule pontos e conquiste prêmios exclusivos.<br>
+        O ranking fica aberto até a abertura da pré-venda — os 3 melhores ganham!
+    </p>
+    <div class="game-prizes">
+        <div class="game-prize">🥇 <span>1º lugar</span> · Ingresso + Kit + Surpresa</div>
+        <div class="game-prize">🥈 <span>2º lugar</span> · Camisa Revolution</div>
+        <div class="game-prize">🥉 <span>3º lugar</span> · 20% de desconto</div>
+    </div>
+    <a href="game.html" class="btn-game">⚡ JOGAR AGORA</a>
+    <div class="game-note">RANKING GLOBAL · TODOS JOGAM NA MESMA LISTA</div>
+</section>
+
+<div class="hr"></div>
+
+<!-- ══════ LINEUP ══════ -->
+<section class="section" id="lineup">
+    <div class="lineup-header">
+        <div class="lineup-big">LINE<span>UP</span></div>
+        <div class="lineup-side">
+            <p>Revelações chegando.</p>
+            <p>Fique de olho em</p>
+            <p><a href="https://www.instagram.com/revollution.es/" target="_blank">@revollution.es</a></p>
+        </div>
+    </div>
+    <div class="slots">
+        <div class="slot"><div class="slot-q">???</div><div class="slot-lbl">em breve</div></div>
+        <div class="slot"><div class="slot-q">???</div><div class="slot-lbl">em breve</div></div>
+        <div class="slot"><div class="slot-q">???</div><div class="slot-lbl">em breve</div></div>
+        <div class="slot"><div class="slot-q">???</div><div class="slot-lbl">em breve</div></div>
+        <div class="slot"><div class="slot-q">???</div><div class="slot-lbl">em breve</div></div>
+        <div class="slot"><div class="slot-q">???</div><div class="slot-lbl">em breve</div></div>
+    </div>
+</section>
+
+<div class="hr"></div>
+
+<!-- ══════ TICKETS ══════ -->
+<section class="section" id="tickets">
+    <div class="sec-label">Ingressos</div>
+    <div class="sec-title">GARANTA O SEU</div>
+    <div class="tiers">
+        <div class="tier on">
+            <div class="tier-bar"></div>
+            <div class="tier-tag">🔥 Disponível agora</div>
+            <div class="tier-name">1º Lote</div>
+            <div class="tier-price">R$ ???</div>
+            <div class="tier-sub">Pré-venda exclusiva</div>
+            <a href="https://chat.whatsapp.com/LPe1mHv9OnRLKXbpmF3UiT" class="tier-btn" id="link-ticket" target="_blank">⚡ Entrar no grupo VIP</a>
+        </div>
+        <div class="tier off">
+            <div class="tier-bar"></div>
+            <div class="tier-tag">Em breve</div>
+            <div class="tier-name">2º Lote</div>
+            <div class="tier-price">—</div>
+            <div class="tier-sub">Em breve</div>
+        </div>
+        <div class="tier off">
+            <div class="tier-bar"></div>
+            <div class="tier-tag">Em breve</div>
+            <div class="tier-name">3º Lote</div>
+            <div class="tier-price">—</div>
+            <div class="tier-sub">Em breve</div>
+        </div>
+    </div>
+</section>
+
+<div class="hr"></div>
+
+<!-- ══════ COMISSÁRIOS ══════ -->
+<section class="section" id="comissarios">
+    <div class="sec-label">Comissários</div>
+    <div class="sec-title">FAÇA PARTE</div>
+    <div class="comm-card">
+        <div>
+            <h3>Seja um Comissário Oficial</h3>
+            <p>Quer vender ingressos e fazer parte da Revolution de outro jeito?<br>
+            Seja um comissário oficial e garanta vantagens exclusivas.</p>
+        </div>
+        <a href="https://wa.me/55SEUNUMERO" class="btn-wpp" id="link-comissario" target="_blank">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            WhatsApp
+        </a>
+    </div>
+</section>
+
+<div class="hr"></div>
+
+<!-- ══════ LOCAL ══════ -->
+<section class="section" id="local">
+    <div class="sec-label">Localização</div>
+    <div class="sec-title">ONDE ACONTECE</div>
+    <div class="local-grid">
+        <div class="local-item">
+            <div class="local-lbl">Local</div>
+            <div class="local-val">Sítio Vovó Hilda</div>
+        </div>
+        <div class="local-item">
+            <div class="local-lbl">Cidade</div>
+            <div class="local-val">Serra · ES</div>
+        </div>
+        <div class="local-item">
+            <div class="local-lbl">Data</div>
+            <div class="local-val">18–19 Jul</div>
+        </div>
+        <div class="local-item">
+            <div class="local-lbl">Formato</div>
+            <div class="local-val">2 Dias</div>
+        </div>
+    </div>
+    <p class="local-note">Endereço completo enviado após a compra do ingresso.</p>
+</section>
+
+<!-- ══════ FOOTER ══════ -->
+<footer>
+    <div class="footer-inner">
+        <div class="footer-brand">REVOLUTION</div>
+        <div class="footer-links">
+            <a href="https://www.instagram.com/revollution.es/" class="footer-link" target="_blank" title="Instagram">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a href="https://wa.me/55SEUNUMERO" class="footer-link" target="_blank" title="WhatsApp">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            </a>
+        </div>
+    </div>
+    <div class="footer-copy">© 2026 REVOLUTION · Serra · ES · Todos os direitos reservados</div>
+</footer>
+
+<script>
+    // COUNTDOWN
+    (function tick() {
+        const diff = new Date('2026-07-18T20:00:00') - new Date();
+        if (diff <= 0) return;
+        document.getElementById('days').textContent  = String(Math.floor(diff/86400000)).padStart(3,'0');
+        document.getElementById('hours').textContent = String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
+        document.getElementById('mins').textContent  = String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+        document.getElementById('secs').textContent  = String(Math.floor((diff%60000)/1000)).padStart(2,'0');
+        setTimeout(tick, 1000);
+    })();
+
+    // PARTICLES
+    (function(){
+        const colors = ['#00E5CC','#7B00FF','#FF00BB','#00FF66'];
+        const wrap = document.getElementById('pts');
+        for (let i = 0; i < 22; i++) {
+            const el = document.createElement('div');
+            el.className = 'pt';
+            const c = colors[i % colors.length];
+            const sz = 1 + Math.random() * 2;
+            el.style.cssText = `left:${Math.random()*100}%;width:${sz}px;height:${sz}px;background:${c};box-shadow:0 0 4px ${c};animation-duration:${12+Math.random()*18}s;animation-delay:${Math.random()*18}s;`;
+            wrap.appendChild(el);
+        }
+    })();
+</script>
+
+</body>
+</html>
