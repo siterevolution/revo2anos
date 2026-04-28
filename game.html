@@ -25,10 +25,19 @@ canvas { display:block; touch-action:none; }
   color:#00ff88; font:bold 18px monospace; padding:14px 40px; cursor:pointer; width:260px;
 }
 #nameModal button:hover { background:rgba(0,255,136,0.3); }
+#btnMute {
+  position:fixed; bottom:8px; left:8px; z-index:20;
+  background:rgba(0,0,0,0.55); border:1.5px solid rgba(200,150,255,0.35);
+  border-radius:9px; color:rgba(220,180,255,0.85);
+  font:bold 15px monospace; padding:7px 12px; cursor:pointer;
+  -webkit-tap-highlight-color:transparent; user-select:none;
+}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
+<audio id="bgm" src="musica.mp3" loop preload="auto"></audio>
+<button id="btnMute" title="Silenciar/Ligar música">🔊</button>
 
 <!-- Modal de nome -->
 <div id="nameModal">
@@ -74,6 +83,19 @@ async function loadOnlineRanking() {
     if (r.ok) { onlineRanking = await r.json(); }
   } catch(e) { onlineRanking = null; }
 }
+
+// ── MÚSICA DE FUNDO ──────────────────────────────────────────────────────
+const bgm = document.getElementById('bgm');
+const btnMute = document.getElementById('btnMute');
+bgm.volume = 0.32;
+let musicStarted = false, musicMuted = false;
+function startMusic(){ if(musicStarted)return; musicStarted=true; bgm.play().catch(()=>{}); }
+btnMute.addEventListener('click', e => {
+  e.stopPropagation();
+  musicMuted = !musicMuted;
+  bgm.muted = musicMuted;
+  btnMute.textContent = musicMuted ? '🔇' : '🔊';
+});
 
 // ── NOME DO JOGADOR ───────────────────────────────────────────────────────
 let playerName    = localStorage.getItem('rev_name')    || '';
@@ -200,15 +222,15 @@ function sndNoise(dur, vol=0.3, freq=600) {
   } catch(e){}
 }
 const SFX = {
-  shoot:    ()=>sndTone(900,400,0.08,0.08,'square'),
-  hit:      ()=>{ sndNoise(0.25,0.4,300); sndTone(120,60,0.25,0.2,'sawtooth'); },
-  enemyDie: ()=>{ sndNoise(0.18,0.25,500); sndTone(220,80,0.18,0.12); },
-  coin:     ()=>{ sndTone(1200,1600,0.06,0.12); setTimeout(()=>sndTone(1600,2000,0.06,0.1),60); },
-  powerup:  ()=>{ [0,80,160].forEach((t,i)=>setTimeout(()=>sndTone([600,800,1000][i],[800,1000,1300][i],0.12,0.15),t)); },
-  special:  ()=>{ sndTone(200,800,0.4,0.3,'sawtooth'); sndTone(400,1200,0.4,0.2); },
-  ready:    ()=>{ sndTone(600,1200,0.2,0.25,'square'); setTimeout(()=>sndTone(800,1600,0.25,0.3,'square'),200); },
-  wave:     ()=>{ [0,150,300].forEach((t,i)=>setTimeout(()=>sndTone([400,600,800][i],[600,800,1200][i],0.2,0.2),t)); },
-  laser:    ()=>{ sndTone(80,400,0.5,0.35,'sawtooth'); sndTone(2000,500,0.5,0.15); },
+  shoot:    ()=>sndTone(900,400,0.08,0.05,'square'),
+  hit:      ()=>{ sndNoise(0.25,0.22,300); sndTone(120,60,0.25,0.13,'sawtooth'); },
+  enemyDie: ()=>{ sndNoise(0.18,0.14,500); sndTone(220,80,0.18,0.08); },
+  coin:     ()=>{ sndTone(1200,1600,0.06,0.08); setTimeout(()=>sndTone(1600,2000,0.06,0.07),60); },
+  powerup:  ()=>{ [0,80,160].forEach((t,i)=>setTimeout(()=>sndTone([600,800,1000][i],[800,1000,1300][i],0.12,0.09),t)); },
+  special:  ()=>{ sndTone(200,800,0.4,0.2,'sawtooth'); sndTone(400,1200,0.4,0.14); },
+  ready:    ()=>{ sndTone(600,1200,0.2,0.16,'square'); setTimeout(()=>sndTone(800,1600,0.25,0.2,'square'),200); },
+  wave:     ()=>{ [0,150,300].forEach((t,i)=>setTimeout(()=>sndTone([400,600,800][i],[600,800,1200][i],0.2,0.13),t)); },
+  laser:    ()=>{ sndTone(80,400,0.5,0.22,'sawtooth'); sndTone(2000,500,0.5,0.10); },
 };
 
 // ── STATE ─────────────────────────────────────────────────────────────────
@@ -780,6 +802,7 @@ function startGame(){
 // ── INPUT ─────────────────────────────────────────────────────────────────
 canvas.addEventListener('touchstart',e=>{
   e.preventDefault();
+  startMusic();
   const t=e.touches[0],r=canvas.getBoundingClientRect();
   const tx=(t.clientX-r.left)*(W/r.width),ty=(t.clientY-r.top)*(H/r.height);
   if(state==='start'){showNameModal();return;}
@@ -791,6 +814,7 @@ canvas.addEventListener('touchstart',e=>{
 canvas.addEventListener('touchmove',e=>{e.preventDefault();const t=e.touches[0],r=canvas.getBoundingClientRect();touchX=(t.clientX-r.left)*(W/r.width);},{passive:false});
 canvas.addEventListener('touchend',e=>{e.preventDefault();touching=false;},{passive:false});
 canvas.addEventListener('click',e=>{
+  startMusic();
   const r=canvas.getBoundingClientRect();
   const cx=(e.clientX-r.left)*(W/r.width),cy=(e.clientY-r.top)*(H/r.height);
   if(state==='start'){showNameModal();return;}
