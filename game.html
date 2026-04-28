@@ -408,8 +408,10 @@ function drawHUD(){
   glow('#00d4ff',10);ctx.fillStyle='#00d4ff';ctx.font='bold 22px monospace';ctx.fillText(score.toLocaleString(),10,38);noGlow();
   ctx.textAlign='center';ctx.font='10px monospace';ctx.fillStyle='rgba(255,255,255,0.28)';ctx.fillText('BEST: '+highScore.toLocaleString(),W/2,18);
   glow('#ffd700',8);ctx.fillStyle='rgba(255,210,0,0.8)';ctx.font='bold 12px monospace';ctx.fillText('WAVE '+waveNum,W/2,36);noGlow();
-  // Vidas
-  for(let i=0;i<lives;i++){ctx.save();ctx.translate(W-14-i*26,22);if(imgOk('nave'))ctx.drawImage(IMGS.nave,-11,-13,22,26);ctx.restore();}
+  // Vidas — corações visíveis
+  ctx.textAlign='right';ctx.font='10px monospace';ctx.fillStyle='rgba(255,120,120,0.6)';ctx.fillText('VIDAS',W-8,14);
+  glow('#ff4444',14);ctx.fillStyle='#ff5555';ctx.font='bold 22px monospace';
+  ctx.fillText('♥'.repeat(lives)+'♡'.repeat(Math.max(0,3-lives)),W-8,36);noGlow();
   // Nome do jogador
   ctx.textAlign='center';ctx.font='11px monospace';ctx.fillStyle='rgba(200,170,255,0.6)';ctx.fillText(playerName,W/2,55);
   // Combo
@@ -460,8 +462,8 @@ function spawnWave(){
       let hp=g.t===1?1:g.t===2?3:5;if(waveNum>3)hp+=Math.floor((waveNum-3)/2);
       const ew=g.t===1?50:g.t===2?65:80;
       // tipo 1 começa a atirar na onda 3; todos com sTimer menor = mais agressivo
-      const sMin=waveNum<3?99999:Math.max(60,160-waveNum*12);
-      const sMax=Math.max(100,280-waveNum*18);
+      const sMin=waveNum<3?99999:Math.max(80,190-waveNum*10);
+      const sMax=Math.max(120,320-waveNum*18);
       enemies.push({x:sx+i*sp,y:yOff,bx:sx+i*sp,by:yOff,t:g.t,hp,mhp:hp,phase:rnd(0,Math.PI*2),amp:14+i*2.5,spd:0.18+waveNum*0.03,sTimer:rnd(sMin,sMax)|0,entered:false,entryY:yOff,w:ew,h:ew});
     }
     yOff+=80;
@@ -512,11 +514,11 @@ function update(){
     if(!e.entered){e.y+=1.6;if(e.y>=e.entryY)e.entered=true;return;}
     e.phase+=0.014;e.x=e.bx+Math.sin(e.phase)*e.amp;e.by+=e.spd*0.07;e.y=e.by+Math.sin(e.phase*0.55)*7;
     const shoots=e.t>=2||(e.t===1&&waveNum>=3);
-    if(shoots){e.sTimer--;if(e.sTimer<=0){const sMin=Math.max(60,160-waveNum*12),sMax=Math.max(100,280-waveNum*18);e.sTimer=rnd(sMin,sMax)|0;const a=Math.atan2(P.y-e.y,P.x-e.x);const spd=2.2+waveNum*0.15;eBullets.push({x:e.x,y:e.y+e.h/2,vx:Math.cos(a)*spd,vy:Math.sin(a)*spd+0.5});}}
+    if(shoots){e.sTimer--;if(e.sTimer<=0){const sMin=Math.max(80,190-waveNum*10),sMax=Math.max(120,320-waveNum*18);e.sTimer=rnd(sMin,sMax)|0;const a=Math.atan2(P.y-e.y,P.x-e.x);const spd=1.8+waveNum*0.12;eBullets.push({x:e.x,y:e.y+e.h/2,vx:Math.cos(a)*spd,vy:Math.sin(a)*spd+0.5});}}
   });
   enemies=enemies.filter(e=>e.y<H+80);
   asteroidTimer++;
-  if(asteroidTimer>=Math.max(100,220-waveNum*15)){
+  if(asteroidTimer>=Math.max(130,260-waveNum*14)){
     asteroidTimer=0;
     const sizes=['grande','medio','medio','pequeno','pequeno'];
     const sz=sizes[Math.floor(Math.random()*sizes.length)];
@@ -594,7 +596,7 @@ function drawTutorial(){
   items.forEach((item,i)=>{
     const y=85+i*82;
     ctx.fillStyle='rgba(255,255,255,0.04)';roundRect(12,y-2,W-24,70,10);ctx.fill();
-    if(imgOk(item.icon)){glow(item.col,10);ctx.drawImage(IMGS[item.icon],18,y+6,46,46);noGlow();}
+    if(imgOk(item.icon)){removeDarkBg(item.icon);glow(item.col,10);const src=cleanImgs[item.icon]||IMGS[item.icon];ctx.drawImage(src,18,y+6,46,46);noGlow();}
     ctx.textAlign='left';glow(item.col,8);ctx.fillStyle=item.col;ctx.font='bold 12px monospace';ctx.fillText(item.title,75,y+22);noGlow();
     ctx.fillStyle='rgba(220,220,255,0.75)';ctx.font='12px monospace';ctx.fillText(item.desc,75,y+42);
   });
