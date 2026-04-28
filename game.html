@@ -255,12 +255,12 @@ const LAYERS = [
 LAYERS.forEach(L=>{for(let i=0;i<60;i++)L.stars.push({x:Math.random()*W,y:Math.random()*H});});
 
 // ── PLAYER ────────────────────────────────────────────────────────────────
-const P = { x:W/2,y:H-120,targetX:W/2,w:70,h:80,bullets:[],shotTimer:0,shotDelay:13,invTimer:0,hasShield:false };
+const P = { x:W/2,y:H-120,targetX:W/2,targetY:H-120,w:70,h:80,bullets:[],shotTimer:0,shotDelay:13,invTimer:0,hasShield:false };
 let enemies=[],eBullets=[],particles=[],powerups=[],coins=[],asteroids=[];
 let asteroidTimer=0;
 
 // ── INPUT ─────────────────────────────────────────────────────────────────
-let touchX=null,touching=false;
+let touchX=null,touchY=null,touching=false;
 const keys={l:false,r:false};
 
 // ── HELPERS ───────────────────────────────────────────────────────────────
@@ -512,10 +512,12 @@ function update(){
   if(flashAlpha>0)flashAlpha*=0.82;
   if(comboTimer>0){comboTimer--;if(comboTimer<=0)combo=0;}
   if(activePower.type){activePower.timer--;if(activePower.timer<=0){activePower={type:null,timer:0,max:0};P.shotDelay=13;}}
-  if(touching&&touchX!==null)P.targetX=touchX;
+  if(touching&&touchX!==null){P.targetX=touchX;P.targetY=touchY||P.targetY;}
   if(keys.l)P.targetX-=5;if(keys.r)P.targetX+=5;
   P.targetX=Math.max(P.w/2,Math.min(W-P.w/2,P.targetX));
+  P.targetY=Math.max(H*0.32,Math.min(H-P.h/2-10,P.targetY));
   P.x=lerp(P.x,P.targetX,0.22);
+  P.y=lerp(P.y,P.targetY,0.18);
   thruster(P.x,P.y+P.h/2-4);
   P.shotTimer--;
   if(P.shotTimer<=0){
@@ -785,7 +787,7 @@ function loop(){
 function startGame(){
   state='wave_intro';waveTimer=70;score=0;lives=3;waveNum=0;
   enemies=[];eBullets=[];particles=[];P.bullets=[];powerups=[];coins=[];asteroids=[];
-  P.x=P.targetX=W/2;P.invTimer=0;P.hasShield=false;
+  P.x=P.targetX=W/2;P.y=P.targetY=H-120;P.invTimer=0;P.hasShield=false;
   combo=0;comboTimer=0;chargeKills=0;specialReady=false;specialActive=false;specialTimer=0;flashAlpha=0;specialReadyAnim=0;
   activePower={type:null,timer:0,max:0};P.shotDelay=13;asteroidTimer=0;
 }
@@ -800,9 +802,9 @@ canvas.addEventListener('touchstart',e=>{
   if(state==='tutorial'){startGame();return;}
   if(state==='gameover'){startGame();return;}
   if(specialReady&&tx>=BTN.x&&tx<=BTN.x+BTN.w&&ty>=BTN.y&&ty<=BTN.y+BTN.h){fireSpecial();return;}
-  touchX=tx;touching=true;
+  touchX=tx;touchY=ty;touching=true;
 },{passive:false});
-canvas.addEventListener('touchmove',e=>{e.preventDefault();const t=e.touches[0],r=canvas.getBoundingClientRect();touchX=(t.clientX-r.left)*(W/r.width);},{passive:false});
+canvas.addEventListener('touchmove',e=>{e.preventDefault();const t=e.touches[0],r=canvas.getBoundingClientRect();touchX=(t.clientX-r.left)*(W/r.width);touchY=(t.clientY-r.top)*(H/r.height);},{passive:false});
 canvas.addEventListener('touchend',e=>{e.preventDefault();touching=false;},{passive:false});
 canvas.addEventListener('click',e=>{
   startMusic();
@@ -813,7 +815,7 @@ canvas.addEventListener('click',e=>{
   if(state==='gameover'){startGame();return;}
   if(specialReady&&cx>=BTN.x&&cx<=BTN.x+BTN.w&&cy>=BTN.y&&cy<=BTN.y+BTN.h)fireSpecial();
 });
-canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect();P.targetX=(e.clientX-r.left)*(W/r.width);});
+canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect();P.targetX=(e.clientX-r.left)*(W/r.width);P.targetY=(e.clientY-r.top)*(H/r.height);});
 document.addEventListener('keydown',e=>{
   if(e.key==='ArrowLeft'||e.key==='a')keys.l=true;
   if(e.key==='ArrowRight'||e.key==='d')keys.r=true;
