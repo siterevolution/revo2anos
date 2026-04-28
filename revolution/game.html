@@ -127,6 +127,7 @@ const IMG_LIST = {
 let loaded = 0;
 const total = Object.keys(IMG_LIST).length;
 let logoProcessed = null;
+const cleanImgs = {}; // imagens sem fundo cinza
 
 function loadAll(cb) {
   Object.entries(IMG_LIST).forEach(([k, src]) => {
@@ -154,6 +155,61 @@ function processLogo() {
     logoProcessed = oc;
   } catch(e) { logoProcessed = IMGS.logo; }
 }
+// Remove fundo escuro/cinza dos ícones de power-up
+function removeDarkBg(key) {
+  if (!imgOk(key) || cleanImgs[key]) return;
+  const img = IMGS[key];
+  const oc = document.createElement('canvas');
+  oc.width = img.naturalWidth; oc.height = img.naturalHeight;
+  const ot = oc.getContext('2d'); ot.drawImage(img, 0, 0);
+  try {
+    const data = ot.getImageData(0, 0, oc.width, oc.height);
+    const d = data.data;
+    // pega cor do canto (0,0) como cor de fundo
+    const br=d[0],bg=d[1],bb=d[2];
+    for (let i = 0; i < d.length; i += 4) {
+      const dist = Math.abs(d[i]-br)+Math.abs(d[i+1]-bg)+Math.abs(d[i+2]-bb);
+      if (dist < 60) d[i+3] = Math.round(d[i+3] * Math.max(0, dist/60));
+    }
+    ot.putImageData(data, 0, 0); cleanImgs[key] = oc;
+  } catch(e) { cleanImgs[key] = img; }
+}
+
+// ── SOM (Web Audio API) ───────────────────────────────────────────────────
+let _ac = null;
+function ac() { if(!_ac) _ac = new (window.AudioContext||window.webkitAudioContext)(); return _ac; }
+function sndTone(freq, freq2, dur, vol=0.18, type='sine') {
+  try { const a=ac(),o=a.createOscillator(),g=a.createGain();
+    o.connect(g);g.connect(a.destination);o.type=type;
+    o.frequency.setValueAtTime(freq,a.currentTime);
+    if(freq2) o.frequency.exponentialRampToValueAtTime(freq2,a.currentTime+dur);
+    g.gain.setValueAtTime(vol,a.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+dur);
+    o.start();o.stop(a.currentTime+dur);
+  } catch(e){}
+}
+function sndNoise(dur, vol=0.3, freq=600) {
+  try { const a=ac(),buf=a.createBuffer(1,a.sampleRate*dur,a.sampleRate),d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1;
+    const src=a.createBufferSource(),flt=a.createBiquadFilter(),g=a.createGain();
+    flt.type='lowpass';flt.frequency.value=freq;
+    src.buffer=buf;src.connect(flt);flt.connect(g);g.connect(a.destination);
+    g.gain.setValueAtTime(vol,a.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+dur);
+    src.start();src.stop(a.currentTime+dur);
+  } catch(e){}
+}
+const SFX = {
+  shoot:    ()=>sndTone(900,400,0.08,0.08,'square'),
+  hit:      ()=>{ sndNoise(0.25,0.4,300); sndTone(120,60,0.25,0.2,'sawtooth'); },
+  enemyDie: ()=>{ sndNoise(0.18,0.25,500); sndTone(220,80,0.18,0.12); },
+  coin:     ()=>{ sndTone(1200,1600,0.06,0.12); setTimeout(()=>sndTone(1600,2000,0.06,0.1),60); },
+  powerup:  ()=>{ [0,80,160].forEach((t,i)=>setTimeout(()=>sndTone([600,800,1000][i],[800,1000,1300][i],0.12,0.15),t)); },
+  special:  ()=>{ sndTone(200,800,0.4,0.3,'sawtooth'); sndTone(400,1200,0.4,0.2); },
+  ready:    ()=>{ sndTone(600,1200,0.2,0.25,'square'); setTimeout(()=>sndTone(800,1600,0.25,0.3,'square'),200); },
+  wave:     ()=>{ [0,150,300].forEach((t,i)=>setTimeout(()=>sndTone([400,600,800][i],[600,800,1200][i],0.2,0.2),t)); },
+  laser:    ()=>{ sndTone(80,400,0.5,0.35,'sawtooth'); sndTone(2000,500,0.5,0.15); },
+};
 
 // ── STATE ─────────────────────────────────────────────────────────────────
 let state = 'loading';
@@ -255,9 +311,14 @@ function drawAsteroid(ast){
 }
 function drawPowerup(pu){
   const km={laser:'p1',rapid:'p3',shield:'p4',triple:'p5',missile:'p6',mega:'p7'};
-  const bob=Math.sin(frame*0.09+pu.x*0.01)*4;
-  ctx.save();ctx.translate(pu.x,pu.y+bob);glow('#ffffff',14);
-  if(imgOk(km[pu.type]))ctx.drawImage(IMGS[km[pu.type]],-30,-30,60,60);
+  const k=km[pu.type];
+  removeDarkBg(k); // remove fundo cinza lazy
+  const bob=Math.sin(frame*0.09+pu.x*0.01)*5;
+  const pulse=Math.sin(frame*0.12+pu.x)*0.15+0.85;
+  ctx.save();ctx.translate(pu.x,pu.y+bob);ctx.scale(pulse,pulse);
+  glow('#cc88ff',22);
+  const src=cleanImgs[k]||IMGS[k];
+  if(src)ctx.drawImage(src,-40,-40,80,80);
   noGlow();ctx.restore();
 }
 function drawCoin(c){
@@ -402,7 +463,7 @@ function spawnWave(){
 
 function fireSpecial(){
   if(!specialReady||specialActive)return;
-  specialActive=true;specialTimer=SPECIAL_DUR;specialReady=false;chargeKills=0;shakeAmt=22;flashAlpha=0.55;
+  SFX.laser();specialActive=true;specialTimer=SPECIAL_DUR;specialReady=false;chargeKills=0;shakeAmt=22;flashAlpha=0.55;
   explode(P.x,P.y-P.h/2,'#cc00ff',25,7);explode(P.x,P.y-P.h/2,'#fff',10,10);
 }
 function collectPower(type){
@@ -427,6 +488,7 @@ function update(){
   P.shotTimer--;
   if(P.shotTimer<=0){
     P.shotTimer=P.shotDelay;const vy=-10;
+    SFX.shoot();
     if(activePower.type==='triple'){P.bullets.push({x:P.x,y:P.y-P.h/2,vx:0,vy});P.bullets.push({x:P.x,y:P.y-P.h/2,vx:-2.5,vy:vy*0.95});P.bullets.push({x:P.x,y:P.y-P.h/2,vx:2.5,vy:vy*0.95});}
     else if(activePower.type==='missile'){P.bullets.push({x:P.x,y:P.y-P.h/2,vx:0,vy:-6,homing:true});}
     else if(activePower.type==='mega'){P.bullets.push({x:P.x,y:P.y-P.h/2,vx:0,vy});P.bullets.push({x:P.x-12,y:P.y-P.h/2+10,vx:-1,vy:vy*0.98});P.bullets.push({x:P.x+12,y:P.y-P.h/2+10,vx:1,vy:vy*0.98});}
@@ -455,8 +517,8 @@ function update(){
     asteroids.push({x:rnd(d.w,W-d.w),y:-d.h,vx:rnd(-0.8,0.8),vy:d.sp+rnd(0,0.8),angle:rnd(0,Math.PI*2),rotSpd:rnd(-0.03,0.03),size:sz,w:d.w,h:d.h});
   }
   for(let i=asteroids.length-1;i>=0;i--){const ast=asteroids[i];ast.x+=ast.vx;ast.y+=ast.vy;ast.angle+=ast.rotSpd;if(ast.y>H+100)asteroids.splice(i,1);}
-  for(let i=powerups.length-1;i>=0;i--){const pu=powerups[i];pu.y+=1.0;if(pu.y>H+40){powerups.splice(i,1);continue;}if(Math.abs(pu.x-P.x)<35&&Math.abs(pu.y-P.y)<35){collectPower(pu.type);explode(pu.x,pu.y,'#ffff00',12,4);powerups.splice(i,1);}}
-  for(let i=coins.length-1;i>=0;i--){const c=coins[i];c.y+=1.0;if(c.y>H+40){coins.splice(i,1);continue;}if(Math.abs(c.x-P.x)<30&&Math.abs(c.y-P.y)<30){score+=500;combo++;comboTimer=80;explode(c.x,c.y,'#ffd700',8,3);coins.splice(i,1);}}
+  for(let i=powerups.length-1;i>=0;i--){const pu=powerups[i];pu.y+=1.0;if(pu.y>H+40){powerups.splice(i,1);continue;}if(Math.abs(pu.x-P.x)<40&&Math.abs(pu.y-P.y)<40){collectPower(pu.type);SFX.powerup();explode(pu.x,pu.y,'#ffff00',12,4);powerups.splice(i,1);}}
+  for(let i=coins.length-1;i>=0;i--){const c=coins[i];c.y+=1.0;if(c.y>H+40){coins.splice(i,1);continue;}if(Math.abs(c.x-P.x)<30&&Math.abs(c.y-P.y)<30){score+=500;combo++;comboTimer=80;SFX.coin();explode(c.x,c.y,'#ffd700',8,3);coins.splice(i,1);}}
   if(specialActive){
     specialTimer--;const bw=22;
     for(let ei=enemies.length-1;ei>=0;ei--){const e=enemies[ei];if(!e.entered)continue;if(Math.abs(e.x-P.x)<bw+e.w*0.4){const cols=['#ff00ee','#00ffcc','#ff6600'];explode(e.x,e.y,cols[e.t-1],22,5.5);explode(e.x,e.y,'#fff',8,9);score+=(e.t===1?100:e.t===2?200:450)*Math.max(1,combo);combo++;comboTimer=100;enemies.splice(ei,1);}}
@@ -472,7 +534,7 @@ function update(){
         if(e.hp<=0){
           explode(e.x,e.y,cols[e.t-1],28,5.5);explode(e.x,e.y,'#fff',10,9);
           score+=(e.t===1?100:e.t===2?200:450)*Math.max(1,combo);combo++;comboTimer=100;shakeAmt=6;
-          chargeKills++;if(chargeKills>=CHARGE_MAX){specialReady=true;specialReadyAnim=160;}
+          SFX.enemyDie();chargeKills++;if(chargeKills>=CHARGE_MAX){specialReady=true;specialReadyAnim=160;SFX.ready();}
           const r=Math.random();
           if(r<0.12){const tp=['laser','rapid','shield','triple','missile','mega'];powerups.push({x:e.x,y:e.y,type:tp[Math.floor(Math.random()*tp.length)]});}
           else if(r<0.32){coins.push({x:e.x,y:e.y});}
@@ -490,7 +552,7 @@ function update(){
   }
   tickParticles();
   if(enemies.length===0&&state==='playing'){state='wave_intro';waveTimer=90;}
-  if(state==='wave_intro'){waveTimer--;if(waveTimer<=0){state='playing';spawnWave();}}
+  if(state==='wave_intro'){waveTimer--;if(waveTimer<=0){state='playing';SFX.wave();spawnWave();}}
 }
 
 function hitPlayer(){
@@ -498,7 +560,7 @@ function hitPlayer(){
   lives--;P.invTimer=120;combo=0;chargeKills=0;specialReady=false;shakeAmt=16;
   activePower={type:null,timer:0,max:0};P.shotDelay=13;
   explode(P.x,P.y,'#00d4ff',22,5);
-  if(lives<=0)setTimeout(()=>{
+  SFX.hit();if(lives<=0)setTimeout(()=>{
     saveToRanking(playerName,score);
     if(score>highScore){highScore=score;localStorage.setItem('rev_hs',highScore);}
     saveScoreOnline(playerName, playerContact, score); // salva no servidor
