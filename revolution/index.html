@@ -570,6 +570,24 @@
             color: rgba(255,255,255,0.2); letter-spacing: 0.15em;
         }
 
+        /* ── FAQ ── */
+        .faq-list { display: flex; flex-direction: column; gap: 1px; }
+        .faq-item {
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding: 1.6rem 0;
+        }
+        .faq-item:last-child { border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .faq-q {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600; font-size: 0.95rem;
+            color: #fff; margin-bottom: 0.7rem;
+            cursor: default;
+        }
+        .faq-a {
+            font-size: 0.85rem; color: rgba(255,255,255,0.45);
+            line-height: 1.8;
+        }
+
         /* ── RESPONSIVE ── */
         @media (max-width: 640px) {
             .slots { grid-template-columns: repeat(2, 1fr); }
@@ -699,6 +717,48 @@
             <div class="tier-price">—</div>
             <div class="tier-sub">Em breve</div>
         </div>
+    </div>
+</section>
+
+<div class="hr"></div>
+
+<!-- ══════ FAQ ══════ -->
+<section class="section" id="faq">
+    <div class="sec-label">Dúvidas</div>
+    <div class="sec-title">PERGUNTAS FREQUENTES</div>
+    <div class="faq-list">
+
+        <div class="faq-item">
+            <div class="faq-q">O que é o presente secreto?</div>
+            <div class="faq-a">Uma surpresa exclusiva que só quem garantir a pré-venda receberá no dia do evento. Não vamos revelar antes — parte da magia é a surpresa. O que podemos dizer: vale muito a pena. 🎁<br><br>
+            Você receberá mais detalhes na abertura do 1º lote — <strong style="color:rgba(255,255,255,0.7)">fique atento ao seu e-mail!</strong></div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">Como retiro os itens da pré-venda?</div>
+            <div class="faq-a">No dia do evento, dirija-se à nossa loja com os QR codes de cada item. Códigos já validados não serão aceitos.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">Qual é a política de reembolso?</div>
+            <div class="faq-a">Reembolso ou troca de titularidade são permitidos dentro de 7 dias da compra, no mesmo lote. Se houve mudança de lote dentro dos 7 dias, é possível somente troca de titularidade com pagamento do upgrade.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">Como transfiro meu ingresso?</div>
+            <div class="faq-a">Reembolso ou troca de titularidade são permitidos dentro de 7 dias da compra, no mesmo lote. Se houve mudança de lote dentro dos 7 dias, é possível somente troca de titularidade com pagamento do upgrade.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">Haverá venda de ingresso na hora?</div>
+            <div class="faq-a">Sujeito à disponibilidade, podendo ocorrer com preço diferenciado e limite bastante restrito. Garanta o seu com antecedência.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">Como funciona a entrada no evento?</div>
+            <div class="faq-a">Apresente o QR code do ingresso e um documento com foto na entrada. O evento opera com entrada única — quem sair não poderá retornar com o mesmo ingresso.</div>
+        </div>
+
     </div>
 </section>
 
