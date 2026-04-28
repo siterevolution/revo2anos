@@ -188,7 +188,7 @@ function removeDarkBg(key) {
     const data = ot.getImageData(0, 0, oc.width, oc.height);
     const d = data.data;
     // se o canto já é transparente, imagem já tem fundo removido — usa direto
-    if(d[3] < 10){ cleanImgs[key] = img; return; }
+    if(d[3] < 200){ cleanImgs[key] = img; return; }
     // pega cor do canto (0,0) como cor de fundo
     const br=d[0],bg=d[1],bb=d[2];
     for (let i = 0; i < d.length; i += 4) {
@@ -799,7 +799,7 @@ canvas.addEventListener('touchstart',e=>{
   const tx=(t.clientX-r.left)*(W/r.width),ty=(t.clientY-r.top)*(H/r.height);
   if(state==='start'){showNameModal();return;}
   if(state==='tutorial'){startGame();return;}
-  if(state==='gameover'){state='tutorial';return;}
+  if(state==='gameover'){startGame();return;}
   if(specialReady&&tx>=BTN.x&&tx<=BTN.x+BTN.w&&ty>=BTN.y&&ty<=BTN.y+BTN.h){fireSpecial();return;}
   touchX=tx;touching=true;
 },{passive:false});
@@ -811,7 +811,7 @@ canvas.addEventListener('click',e=>{
   const cx=(e.clientX-r.left)*(W/r.width),cy=(e.clientY-r.top)*(H/r.height);
   if(state==='start'){showNameModal();return;}
   if(state==='tutorial'){startGame();return;}
-  if(state==='gameover'){state='tutorial';return;}
+  if(state==='gameover'){startGame();return;}
   if(specialReady&&cx>=BTN.x&&cx<=BTN.x+BTN.w&&cy>=BTN.y&&cy<=BTN.y+BTN.h)fireSpecial();
 });
 canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect();P.targetX=(e.clientX-r.left)*(W/r.width);});
