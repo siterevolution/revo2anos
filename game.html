@@ -342,7 +342,7 @@ function drawPowerup(pu){
   ctx.save();ctx.translate(pu.x,pu.y+bob);ctx.scale(pulse,pulse);
   glow('#cc88ff',22);
   const src=cleanImgs[k]||IMGS[k];
-  if(src)ctx.drawImage(src,-40,-40,80,80);
+  if(src){ctx.globalCompositeOperation='screen';ctx.drawImage(src,-40,-40,80,80);ctx.globalCompositeOperation='source-over';}
   noGlow();ctx.restore();
 }
 function drawCoin(c){
@@ -620,7 +620,7 @@ function drawTutorial(){
   items.forEach((item,i)=>{
     const y=85+i*82;
     ctx.fillStyle='rgba(255,255,255,0.04)';roundRect(12,y-2,W-24,70,10);ctx.fill();
-    if(imgOk(item.icon)){removeDarkBg(item.icon);glow(item.col,10);const src=cleanImgs[item.icon]||IMGS[item.icon];ctx.drawImage(src,18,y+6,46,46);noGlow();}
+    if(imgOk(item.icon)){removeDarkBg(item.icon);glow(item.col,10);const src=cleanImgs[item.icon]||IMGS[item.icon];ctx.globalCompositeOperation='screen';ctx.drawImage(src,18,y+6,46,46);ctx.globalCompositeOperation='source-over';noGlow();}
     ctx.textAlign='left';glow(item.col,8);ctx.fillStyle=item.col;ctx.font='bold 12px monospace';ctx.fillText(item.title,75,y+22);noGlow();
     ctx.fillStyle='rgba(220,220,255,0.75)';ctx.font='12px monospace';ctx.fillText(item.desc,75,y+42);
   });
