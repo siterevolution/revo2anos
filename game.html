@@ -548,7 +548,7 @@ function update(){
   if(P.invTimer<=0){
     for(let bi=eBullets.length-1;bi>=0;bi--){const b=eBullets[bi];if(b.x>P.x-P.w/2+10&&b.x<P.x+P.w/2-10&&b.y>P.y-P.h/2+10&&b.y<P.y+P.h/2-10){eBullets.splice(bi,1);hitPlayer();break;}}
     for(let ei=enemies.length-1;ei>=0;ei--){const e=enemies[ei];if(!e.entered)continue;if(Math.abs(e.x-P.x)<(P.w+e.w)/2-20&&Math.abs(e.y-P.y)<(P.h+e.h)/2-20){explode(e.x,e.y,'#ff00ee',12,4);enemies.splice(ei,1);hitPlayer();break;}}
-    for(let ai=asteroids.length-1;ai>=0;ai--){const a=asteroids[ai];if(Math.abs(a.x-P.x)<(P.w+a.w)/2-15&&Math.abs(a.y-P.y)<(P.h+a.h)/2-15){explode(a.x,a.y,'#aaaaaa',20,5);explode(a.x,a.y,'#ff8800',10,8);asteroids.splice(ai,1);hitPlayer();break;}}
+    for(let ai=asteroids.length-1;ai>=0;ai--){const a=asteroids[ai];if(Math.abs(a.x-P.x)<(P.w+a.w)/2-15&&Math.abs(a.y-P.y)<(P.h+a.h)/2-15){explode(a.x,a.y,'#aaaaaa',20,5);explode(a.x,a.y,'#ff8800',10,8);asteroids.splice(ai,1);if(P.hasShield){P.hasShield=false;shakeAmt=8;explode(P.x,P.y,'#00aaff',15,4);SFX.hit();}else{hitPlayer();}break;}}
   }
   tickParticles();
   if(enemies.length===0&&state==='playing'){state='wave_intro';waveTimer=90;}
