@@ -444,8 +444,12 @@ function drawHUD(){
 
 // ── WAVES ─────────────────────────────────────────────────────────────────
 const WAVES=[
-  [{t:1,n:8}],[{t:1,n:6},{t:2,n:4}],[{t:1,n:6},{t:2,n:4},{t:3,n:2}],
-  [{t:1,n:8},{t:2,n:6},{t:3,n:3}],[{t:1,n:10},{t:2,n:6},{t:3,n:4}]
+  [{t:1,n:8}],
+  [{t:1,n:8},{t:2,n:4}],
+  [{t:1,n:8},{t:2,n:5},{t:3,n:2}],
+  [{t:1,n:10},{t:2,n:6},{t:3,n:3}],
+  [{t:1,n:10},{t:2,n:7},{t:3,n:4}],
+  [{t:1,n:12},{t:2,n:8},{t:3,n:5}]
 ];
 function spawnWave(){
   waveNum++;enemies=[];eBullets=[];
@@ -453,9 +457,12 @@ function spawnWave(){
   cfg.forEach(g=>{
     const sp=Math.min(55,(W-70)/g.n),sx=(W-sp*(g.n-1))/2;
     for(let i=0;i<g.n;i++){
-      let hp=g.t===1?1:g.t===2?2:4;if(waveNum>3)hp+=Math.floor((waveNum-3)/2);
+      let hp=g.t===1?1:g.t===2?3:5;if(waveNum>3)hp+=Math.floor((waveNum-3)/2);
       const ew=g.t===1?50:g.t===2?65:80;
-      enemies.push({x:sx+i*sp,y:yOff,bx:sx+i*sp,by:yOff,t:g.t,hp,mhp:hp,phase:rnd(0,Math.PI*2),amp:14+i*2.5,spd:0.16+waveNum*0.025,sTimer:rnd(140,280)|0,entered:false,entryY:yOff,w:ew,h:ew});
+      // tipo 1 começa a atirar na onda 3; todos com sTimer menor = mais agressivo
+      const sMin=waveNum<3?99999:Math.max(60,160-waveNum*12);
+      const sMax=Math.max(100,280-waveNum*18);
+      enemies.push({x:sx+i*sp,y:yOff,bx:sx+i*sp,by:yOff,t:g.t,hp,mhp:hp,phase:rnd(0,Math.PI*2),amp:14+i*2.5,spd:0.18+waveNum*0.03,sTimer:rnd(sMin,sMax)|0,entered:false,entryY:yOff,w:ew,h:ew});
     }
     yOff+=80;
   });
@@ -504,15 +511,17 @@ function update(){
   enemies.forEach(e=>{
     if(!e.entered){e.y+=1.6;if(e.y>=e.entryY)e.entered=true;return;}
     e.phase+=0.014;e.x=e.bx+Math.sin(e.phase)*e.amp;e.by+=e.spd*0.07;e.y=e.by+Math.sin(e.phase*0.55)*7;
-    if(e.t>=2){e.sTimer--;if(e.sTimer<=0){e.sTimer=rnd(140,300)|0;const a=Math.atan2(P.y-e.y,P.x-e.x);eBullets.push({x:e.x,y:e.y+e.h/2,vx:Math.cos(a)*2.2,vy:Math.sin(a)*2.2+0.5});}}
+    const shoots=e.t>=2||(e.t===1&&waveNum>=3);
+    if(shoots){e.sTimer--;if(e.sTimer<=0){const sMin=Math.max(60,160-waveNum*12),sMax=Math.max(100,280-waveNum*18);e.sTimer=rnd(sMin,sMax)|0;const a=Math.atan2(P.y-e.y,P.x-e.x);const spd=2.2+waveNum*0.15;eBullets.push({x:e.x,y:e.y+e.h/2,vx:Math.cos(a)*spd,vy:Math.sin(a)*spd+0.5});}}
   });
   enemies=enemies.filter(e=>e.y<H+80);
   asteroidTimer++;
-  if(asteroidTimer>=220){
+  if(asteroidTimer>=Math.max(100,220-waveNum*15)){
     asteroidTimer=0;
     const sizes=['grande','medio','medio','pequeno','pequeno'];
     const sz=sizes[Math.floor(Math.random()*sizes.length)];
-    const dm={grande:{w:75,h:75,sp:0.7},medio:{w:52,h:52,sp:1.1},pequeno:{w:35,h:35,sp:1.6}};
+    const wBonus=1+waveNum*0.12;
+    const dm={grande:{w:75,h:75,sp:0.7*wBonus},medio:{w:52,h:52,sp:1.1*wBonus},pequeno:{w:35,h:35,sp:1.6*wBonus}};
     const d=dm[sz];
     asteroids.push({x:rnd(d.w,W-d.w),y:-d.h,vx:rnd(-0.8,0.8),vy:d.sp+rnd(0,0.8),angle:rnd(0,Math.PI*2),rotSpd:rnd(-0.03,0.03),size:sz,w:d.w,h:d.h});
   }
