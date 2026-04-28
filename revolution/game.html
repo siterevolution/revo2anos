@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Revolution — Space Defender</title>
+<title>Revolution — Além das Estrelas</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 body { background:#000; display:flex; align-items:center; justify-content:center; width:100vw; height:100vh; overflow:hidden; }
@@ -550,7 +550,7 @@ function drawStart(){
     const src=logoProcessed||IMGS.logo,lw=Math.min(W-30,320),lh=lw*(IMGS.logo.naturalHeight/IMGS.logo.naturalWidth);
     glow('#cc00ff',25*p);ctx.drawImage(src,(W-lw)/2,H*0.03,lw,lh);noGlow();
   }else{glow('#cc00ff',45*p);ctx.fillStyle='#ff00ff';ctx.font='bold 44px monospace';ctx.fillText('REVOLUTION',W/2,H*0.14);noGlow();}
-  glow('#00d4ff',18);ctx.fillStyle='#00d4ff';ctx.font='bold 17px monospace';ctx.fillText('SPACE DEFENDER',W/2,H*0.22);noGlow();
+  glow('#00d4ff',18);ctx.fillStyle='#00d4ff';ctx.font='bold 17px monospace';ctx.fillText('ALÉM DAS ESTRELAS',W/2,H*0.22);noGlow();
   if(imgOk('nave')){glow('#0088ff',14);ctx.drawImage(IMGS.nave,W/2-35,H*0.27,70,80);noGlow();}
   if(imgOk('e1')){glow('#ff00ee',10);ctx.drawImage(IMGS.e1,W/2-115,H*0.46,50,50);noGlow();}
   if(imgOk('e2')){glow('#00ffcc',10);ctx.drawImage(IMGS.e2,W/2-25,H*0.46,60,60);noGlow();}
