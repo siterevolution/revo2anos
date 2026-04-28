@@ -570,7 +570,7 @@ function update(){
         if(e.hp<=0){
           explode(e.x,e.y,cols[e.t-1],28,5.5);explode(e.x,e.y,'#fff',10,9);
           score+=(e.t===1?40:e.t===2?80:180)*Math.max(1,combo);combo++;comboTimer=100;shakeAmt=6;
-          SFX.enemyDie();chargeKills++;if(chargeKills>=CHARGE_MAX){specialReady=true;specialReadyAnim=160;SFX.ready();}
+          SFX.enemyDie();if(chargeKills<CHARGE_MAX){chargeKills++;if(chargeKills===CHARGE_MAX){specialReady=true;specialReadyAnim=160;SFX.ready();}}
           const r=Math.random();
           if(r<0.12){const tp=['laser','rapid','shield','triple','missile','mega'];powerups.push({x:e.x,y:e.y,type:tp[Math.floor(Math.random()*tp.length)]});}
           else if(r<0.32){coins.push({x:e.x,y:e.y});}
