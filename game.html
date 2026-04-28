@@ -187,6 +187,8 @@ function removeDarkBg(key) {
   try {
     const data = ot.getImageData(0, 0, oc.width, oc.height);
     const d = data.data;
+    // se o canto já é transparente, imagem já tem fundo removido — usa direto
+    if(d[3] < 10){ cleanImgs[key] = img; return; }
     // pega cor do canto (0,0) como cor de fundo
     const br=d[0],bg=d[1],bb=d[2];
     for (let i = 0; i < d.length; i += 4) {
@@ -243,7 +245,7 @@ let specialReadyAnim = 0;
 const CHARGE_MAX = 8;
 let chargeKills = 0, specialReady = false, specialActive = false, specialTimer = 0;
 const SPECIAL_DUR = 55;
-const BTN = { x: W-92, y: H-70, w: 82, h: 55 };
+const BTN = { x: W-118, y: H-90, w: 108, h: 76 };
 let activePower = { type: null, timer: 0, max: 0 };
 
 // ── ESTRELAS ──────────────────────────────────────────────────────────────
@@ -655,8 +657,7 @@ function drawStart(){
   roundRect(W/2-115,H*0.75-26,230,52,14);ctx.fill();ctx.stroke();
   ctx.fillStyle='#00ff88';ctx.font='bold 20px monospace';ctx.fillText('TOQUE PARA JOGAR',W/2,H*0.75+8);
   ctx.fillStyle='rgba(200,200,255,0.45)';ctx.font='12px monospace';
-  ctx.fillText('Acumule pontos → troque por descontos!',W/2,H*0.9);
-  ctx.fillText('🏆 Top 3 do ranking ganham prêmios!',W/2,H*0.9+20);
+  ctx.fillText('🏆 Top 3 do ranking ganham prêmios!',W/2,H*0.9);
   noGlow();drawParticles();
 }
 
@@ -719,20 +720,11 @@ function drawGameOver(){
     ctx.fillText(`${mc[i]} ${nm.substring(0,10)}`,W/2-100,y);
     ctx.textAlign='right';ctx.fillText(e.score.toLocaleString(),W/2+100,y);noGlow();
   });
-  // Desconto baseado na pontuação
-  const tiers=[{pts:5000,label:'5% desconto',col:'#aaaaaa'},{pts:15000,label:'10% desconto',col:'#00ccff'},{pts:30000,label:'20% desconto',col:'#cc44ff'},{pts:60000,label:'DRINK GRÁTIS',col:'#ffaa00'}];
-  ctx.textAlign='center';ctx.font='11px monospace';ctx.fillStyle='rgba(255,255,255,0.35)';ctx.fillText('TROQUE NA ENTRADA:',W/2,H*0.62);
-  tiers.forEach((t,i)=>{
-    const ok=score>=t.pts,y=H*0.66+i*22;
-    if(ok){glow(t.col,10);ctx.fillStyle=t.col;ctx.font='bold 12px monospace';}
-    else{noGlow();ctx.fillStyle='rgba(140,140,140,0.35)';ctx.font='12px monospace';}
-    ctx.fillText((ok?'✓ ':' ')+t.pts.toLocaleString()+' pts → '+t.label,W/2,y);
-  });
   // Botão jogar novamente
   const bp=Math.sin(frame*0.09)*0.2+0.8;
   glow('#00ff88',16*bp);ctx.fillStyle='rgba(0,255,136,0.13)';ctx.strokeStyle=`rgba(0,255,136,${0.85*bp})`;ctx.lineWidth=2;
-  roundRect(W/2-115,H*0.88-24,230,46,12);ctx.fill();ctx.stroke();
-  ctx.fillStyle='#00ff88';ctx.font='bold 17px monospace';ctx.fillText('JOGAR NOVAMENTE',W/2,H*0.88+8);
+  roundRect(W/2-115,H*0.72-24,230,46,12);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#00ff88';ctx.font='bold 17px monospace';ctx.fillText('JOGAR NOVAMENTE',W/2,H*0.72+8);
   noGlow();drawParticles();
 }
 
