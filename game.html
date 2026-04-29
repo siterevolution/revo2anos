@@ -692,31 +692,38 @@ function drawRanking(){
 // ── GAME OVER ─────────────────────────────────────────────────────────────
 function drawGameOver(){
   ctx.textAlign='center';
-  if(imgOk('logo')&&logoProcessed){const lw=220,lh=lw*(IMGS.logo.naturalHeight/IMGS.logo.naturalWidth);ctx.globalAlpha=0.85;ctx.drawImage(logoProcessed,(W-lw)/2,H*0.01,lw,lh);ctx.globalAlpha=1;}
-  glow('#ff0044',35);ctx.fillStyle='#ff2255';ctx.font='bold 36px monospace';ctx.fillText('GAME OVER',W/2,H*0.18);noGlow();
-  // Pontuação do jogador
-  ctx.fillStyle='rgba(200,170,255,0.7)';ctx.font='13px monospace';ctx.fillText(playerName,W/2,H*0.24);
-  glow('#00d4ff',15);ctx.fillStyle='rgba(0,190,220,0.55)';ctx.font='12px monospace';ctx.fillText('PONTUAÇÃO',W/2,H*0.29);
-  ctx.fillStyle='#00d4ff';ctx.font='bold 28px monospace';ctx.fillText(score.toLocaleString(),W/2,H*0.35);noGlow();
-  if(score>0&&score>=highScore){glow('#ffff00',22);ctx.fillStyle='#ffff00';ctx.font='bold 15px monospace';ctx.fillText('★ NOVO RECORDE! ★',W/2,H*0.41);noGlow();}
-  // Ranking top 5
+  // Logo compacto
+  if(imgOk('logo')&&logoProcessed){const lw=160,lh=lw*(IMGS.logo.naturalHeight/IMGS.logo.naturalWidth);ctx.globalAlpha=0.9;ctx.drawImage(logoProcessed,(W-lw)/2,6,lw,lh);ctx.globalAlpha=1;}
+  glow('#ff0044',30);ctx.fillStyle='#ff2255';ctx.font='bold 28px monospace';ctx.fillText('GAME OVER',W/2,H*0.15);noGlow();
+  // Nome + pontuação compactos
+  ctx.fillStyle='rgba(200,170,255,0.7)';ctx.font='12px monospace';ctx.fillText(playerName,W/2,H*0.20);
+  glow('#00d4ff',12);ctx.fillStyle='#00d4ff';ctx.font='bold 22px monospace';ctx.fillText(score.toLocaleString(),W/2,H*0.26);noGlow();
+  if(score>0&&score>=highScore){glow('#ffff00',18);ctx.fillStyle='#ffff00';ctx.font='bold 13px monospace';ctx.fillText('★ NOVO RECORDE! ★',W/2,H*0.31);noGlow();}
+  // Ranking top 10
   const src=onlineRanking||getRanking().map(e=>({nickname:e.name,score:e.score}));
-  const rk=src.slice(0,5);
+  const rk=src.slice(0,10);
   function goCol(i){return i<3?'#ffd700':i<6?'#00ee88':'#cc77ff';}
-  ctx.fillStyle='rgba(255,210,0,0.7)';ctx.font='bold 12px monospace';
-  ctx.fillText(onlineRanking?'🏆 TOP 10 GLOBAL':'🏆 TOP 10 (sincronizando...)',W/2,H*0.45);
+  ctx.textAlign='center';ctx.fillStyle='rgba(255,210,0,0.8)';ctx.font='bold 12px monospace';
+  ctx.fillText(onlineRanking?'🏆 TOP 10 GLOBAL':'🏆 TOP 10 (sincronizando...)',W/2,H*0.35);
+  const rowH=Math.floor((H*0.56)/10); // distribui espaço disponível entre 10 linhas
   rk.forEach((e,i)=>{
-    const col=goCol(i),y=H*0.49+i*28,nm=(e.nickname||e.name||'???');
+    const col=goCol(i),y=H*0.38+i*rowH,nm=(e.nickname||e.name||'???');
+    const rgb=i<3?'255,210,0':i<6?'0,220,130':'180,100,255';
+    ctx.fillStyle=`rgba(${rgb},0.07)`;roundRect(10,y-14,W-20,rowH-2,5);ctx.fill();
     ctx.textAlign='left';
-    glow(col,7);ctx.fillStyle=col;ctx.font='bold 12px monospace';
-    ctx.fillText(`${i+1}° ${nm.substring(0,10)}`,W/2-105,y);
-    ctx.textAlign='right';ctx.fillText(e.score.toLocaleString(),W/2+105,y);noGlow();
+    glow(col,6);ctx.fillStyle=col;ctx.font=`bold ${i<3?13:12}px monospace`;
+    ctx.fillText(`${i+1}°`,14,y+2);
+    ctx.fillStyle=i<3?col:'rgba(220,215,255,0.85)';ctx.font=`${i<3?'bold ':''}12px monospace`;
+    ctx.fillText(nm.substring(0,12),36,y+2);
+    ctx.textAlign='right';ctx.fillStyle=col;ctx.font=`bold ${i<3?13:12}px monospace`;
+    ctx.fillText(e.score.toLocaleString(),W-12,y+2);noGlow();
   });
-  // Botão jogar novamente
+  // Botão
+  const btnY=H*0.38+10*rowH+10;
   const bp=Math.sin(frame*0.09)*0.2+0.8;
   glow('#00ff88',16*bp);ctx.fillStyle='rgba(0,255,136,0.13)';ctx.strokeStyle=`rgba(0,255,136,${0.85*bp})`;ctx.lineWidth=2;
-  roundRect(W/2-115,H*0.72-24,230,46,12);ctx.fill();ctx.stroke();
-  ctx.textAlign='center';ctx.fillStyle='#00ff88';ctx.font='bold 17px monospace';ctx.fillText('JOGAR NOVAMENTE',W/2,H*0.72+8);
+  roundRect(W/2-115,btnY,230,44,12);ctx.fill();ctx.stroke();
+  ctx.textAlign='center';ctx.fillStyle='#00ff88';ctx.font='bold 16px monospace';ctx.fillText('JOGAR NOVAMENTE',W/2,btnY+28);
   noGlow();drawParticles();
 }
 
