@@ -42,13 +42,13 @@ canvas { display:block; touch-action:none; }
 <!-- Modal de nome -->
 <div id="nameModal">
   <h2>⚡ REVOLUTION ⚡</h2>
-  <p>Crie seu apelido para o ranking.<br>Os 3 primeiros ganham prêmios!</p>
+  <p>Crie seu apelido para o ranking.<br>Top 10 ganham prêmios da Revolution!</p>
   <input id="playerName" type="text" maxlength="16" placeholder="APELIDO (ex: SPACEJÃO)" autocomplete="off">
   <input id="playerContact" type="text" maxlength="40" placeholder="Instagram ou WhatsApp (privado)" autocomplete="off"
     style="background:rgba(255,255,255,0.05);border:2px solid rgba(0,200,255,0.4);border-radius:10px;color:#fff;font:14px monospace;padding:11px 16px;width:260px;text-align:center;outline:none;">
   <p style="font-size:11px;color:rgba(150,200,255,0.5);max-width:260px;text-align:center">🔒 Seu contato é privado — só a Revolution vê, para te avisar se ganhar</p>
   <button id="btnStartName">JOGAR AGORA!</button>
-  <p style="font-size:11px;color:rgba(150,130,200,0.6)">🏆 1º Ingresso completo + Kit + Surpresa<br>🥈 2º Camisa Revolution<br>🥉 3º 20% de desconto</p>
+  <p style="font-size:11px;color:rgba(150,130,200,0.6)">🎟️ 1°-3° · 1 par de ingressos<br>👕 4°-6° · Camisa Revolution<br>🏷️ 7°-10° · 20% de desconto</p>
 </div>
 
 <script>
@@ -627,11 +627,11 @@ function drawTutorial(){
   });
   // Prêmios
   const ty=80+items.length*80+6;
-  ctx.fillStyle='rgba(255,210,0,0.07)';roundRect(10,ty,W-20,78,10);ctx.fill();
-  ctx.textAlign='center';glow('#ffd700',10);ctx.fillStyle='#ffd700';ctx.font='bold 14px monospace';ctx.fillText('🏆 RANKING DE PRÊMIOS',W/2,ty+20);noGlow();
-  ctx.fillStyle='rgba(255,220,100,0.9)';ctx.font='13px monospace';
-  ctx.fillText('🥇 Ingresso completo + Kit + Surpresa Revolution',W/2,ty+40);
-  ctx.fillText('🥈 Camisa Revolution   🥉 20% de desconto',W/2,ty+58);
+  ctx.fillStyle='rgba(255,210,0,0.07)';roundRect(10,ty,W-20,88,10);ctx.fill();
+  ctx.textAlign='center';glow('#ffd700',10);ctx.fillStyle='#ffd700';ctx.font='bold 14px monospace';ctx.fillText('🏆 RANKING DE PRÊMIOS',W/2,ty+18);noGlow();
+  ctx.fillStyle='rgba(255,220,100,0.9)';ctx.font='12px monospace';ctx.fillText('🎟️ 1°-3° · 1 par de ingressos',W/2,ty+36);
+  ctx.fillStyle='rgba(100,255,180,0.9)';ctx.fillText('👕 4°-6° · Camisa Revolution',W/2,ty+52);
+  ctx.fillStyle='rgba(200,150,255,0.9)';ctx.fillText('🏷️ 7°-10° · 20% de desconto',W/2,ty+68);
   // Botão
   const bp=Math.sin(frame*0.1)*0.2+0.8;
   glow('#00ff88',18*bp);ctx.fillStyle='rgba(0,255,136,0.15)';ctx.strokeStyle=`rgba(0,255,136,${0.9*bp})`;ctx.lineWidth=2;
@@ -657,42 +657,34 @@ function drawStart(){
   roundRect(W/2-115,H*0.75-26,230,52,14);ctx.fill();ctx.stroke();
   ctx.fillStyle='#00ff88';ctx.font='bold 20px monospace';ctx.fillText('TOQUE PARA JOGAR',W/2,H*0.75+8);
   ctx.fillStyle='rgba(200,200,255,0.45)';ctx.font='12px monospace';
-  ctx.fillText('🏆 Top 3 do ranking ganham prêmios!',W/2,H*0.9);
+  ctx.fillText('🏆 Top 10 do ranking ganham prêmios!',W/2,H*0.9);
   noGlow();drawParticles();
 }
 
 // ── RANKING ───────────────────────────────────────────────────────────────
 function drawRanking(){
-  // usa ranking online se disponível, senão usa localStorage
   const src = onlineRanking || getRanking().map(e=>({nickname:e.name,score:e.score}));
   const r = src.slice(0,10);
-  const prizes=['🥇 Ingresso + Kit','🥈 Camisa','🥉 20% OFF'];
-  const medalCols=['#ffd700','#cccccc','#cd7f32'];
+  const prizes=[
+    '🎟️ 1 par de ingressos','🎟️ 1 par de ingressos','🎟️ 1 par de ingressos',
+    '👕 Camisa Revolution','👕 Camisa Revolution','👕 Camisa Revolution',
+    '🏷️ 20% de desconto','🏷️ 20% de desconto','🏷️ 20% de desconto','🏷️ 20% de desconto'
+  ];
+  function pCol(i){return i<3?'#ffd700':i<6?'#00ee88':'#cc77ff';}
   ctx.textAlign='center';
-  glow('#ffd700',20);ctx.fillStyle='#ffd700';ctx.font='bold 24px monospace';ctx.fillText('🏆 RANKING GLOBAL',W/2,50);noGlow();
-  if(!onlineRanking){
-    ctx.fillStyle='rgba(0,200,255,0.5)';ctx.font='11px monospace';ctx.fillText('⏳ sincronizando...', W/2, 70);
-  } else {
-    ctx.fillStyle='rgba(255,220,100,0.6)';ctx.font='12px monospace';ctx.fillText('Top 3 ganham prêmios da Revolution!',W/2,70);
-  }
+  glow('#ffd700',20);ctx.fillStyle='#ffd700';ctx.font='bold 22px monospace';ctx.fillText('🏆 RANKING GLOBAL',W/2,44);noGlow();
+  if(!onlineRanking){ctx.fillStyle='rgba(0,200,255,0.5)';ctx.font='11px monospace';ctx.fillText('⏳ sincronizando...',W/2,62);}
+  else{ctx.fillStyle='rgba(255,220,100,0.6)';ctx.font='11px monospace';ctx.fillText('Top 10 ganham prêmios da Revolution!',W/2,62);}
   r.forEach((entry,i)=>{
-    const y=88+i*50,isTop=i<3;
-    const nm = entry.nickname || entry.name || '???';
-    ctx.fillStyle=isTop?`rgba(255,210,0,0.08)`:'rgba(255,255,255,0.04)';
-    roundRect(10,y,W-20,42,8);ctx.fill();
-    if(isTop){ctx.strokeStyle=`rgba(${i===0?'255,210,0':i===1?'200,200,200':'180,100,40'},0.4)`;ctx.lineWidth=1;roundRect(10,y,W-20,42,8);ctx.stroke();}
+    const col=pCol(i),y=72+i*46,nm=entry.nickname||entry.name||'???';
+    const rgb=i<3?'255,210,0':i<6?'0,220,130':'180,100,255';
+    ctx.fillStyle=`rgba(${rgb},0.07)`;roundRect(10,y,W-20,38,7);ctx.fill();
+    ctx.strokeStyle=`rgba(${rgb},0.28)`;ctx.lineWidth=1;roundRect(10,y,W-20,38,7);ctx.stroke();
     ctx.textAlign='left';
-    if(isTop){glow(medalCols[i],12);ctx.fillStyle=medalCols[i];ctx.font='bold 16px monospace';ctx.fillText(`${i+1}°`,18,y+26);noGlow();}
-    else{ctx.fillStyle='rgba(180,180,200,0.5)';ctx.font='14px monospace';ctx.fillText(`${i+1}°`,18,y+26);}
-    ctx.fillStyle=isTop?medalCols[i]:'rgba(200,200,220,0.8)';
-    ctx.font=isTop?'bold 14px monospace':'13px monospace';
-    ctx.fillText(nm.substring(0,14),45,y+16);
-    if(isTop){ctx.fillStyle='rgba(255,220,100,0.6)';ctx.font='10px monospace';ctx.fillText(prizes[i],45,y+32);}
-    ctx.textAlign='right';
-    glow(isTop?medalCols[i]:'#00d4ff',isTop?10:5);
-    ctx.fillStyle=isTop?medalCols[i]:'#00d4ff';
-    ctx.font=isTop?'bold 15px monospace':'13px monospace';
-    ctx.fillText(entry.score.toLocaleString(),W-16,y+26);noGlow();
+    glow(col,10);ctx.fillStyle=col;ctx.font='bold 14px monospace';ctx.fillText(`${i+1}°`,15,y+24);noGlow();
+    ctx.fillStyle=col;ctx.font='bold 13px monospace';ctx.fillText(nm.substring(0,13),40,y+14);
+    ctx.fillStyle=`rgba(${rgb},0.75)`;ctx.font='10px monospace';ctx.fillText(prizes[i],40,y+30);
+    ctx.textAlign='right';glow(col,8);ctx.fillStyle=col;ctx.font='bold 13px monospace';ctx.fillText(entry.score.toLocaleString(),W-12,y+24);noGlow();
   });
   if(r.length===0){ctx.fillStyle='rgba(180,150,220,0.5)';ctx.font='14px monospace';ctx.textAlign='center';ctx.fillText('Seja o primeiro a pontuar!',W/2,140);}
 }
@@ -707,24 +699,24 @@ function drawGameOver(){
   glow('#00d4ff',15);ctx.fillStyle='rgba(0,190,220,0.55)';ctx.font='12px monospace';ctx.fillText('PONTUAÇÃO',W/2,H*0.29);
   ctx.fillStyle='#00d4ff';ctx.font='bold 28px monospace';ctx.fillText(score.toLocaleString(),W/2,H*0.35);noGlow();
   if(score>0&&score>=highScore){glow('#ffff00',22);ctx.fillStyle='#ffff00';ctx.font='bold 15px monospace';ctx.fillText('★ NOVO RECORDE! ★',W/2,H*0.41);noGlow();}
-  // Ranking top 3
+  // Ranking top 5
   const src=onlineRanking||getRanking().map(e=>({nickname:e.name,score:e.score}));
-  const rk=src.slice(0,3);
-  const mc=['🥇','🥈','🥉'],mc2=['#ffd700','#cccccc','#cd7f32'];
-  ctx.fillStyle='rgba(255,210,0,0.7)';ctx.font='bold 13px monospace';
-  ctx.fillText(onlineRanking?'🏆 TOP 3 GLOBAL':'🏆 TOP 3 (sincronizando...)',W/2,H*0.46);
+  const rk=src.slice(0,5);
+  function goCol(i){return i<3?'#ffd700':i<6?'#00ee88':'#cc77ff';}
+  ctx.fillStyle='rgba(255,210,0,0.7)';ctx.font='bold 12px monospace';
+  ctx.fillText(onlineRanking?'🏆 TOP 10 GLOBAL':'🏆 TOP 10 (sincronizando...)',W/2,H*0.45);
   rk.forEach((e,i)=>{
-    const y=H*0.50+i*30,nm=(e.nickname||e.name||'???');
+    const col=goCol(i),y=H*0.49+i*28,nm=(e.nickname||e.name||'???');
     ctx.textAlign='left';
-    glow(mc2[i],8);ctx.fillStyle=mc2[i];ctx.font='bold 13px monospace';
-    ctx.fillText(`${mc[i]} ${nm.substring(0,10)}`,W/2-100,y);
-    ctx.textAlign='right';ctx.fillText(e.score.toLocaleString(),W/2+100,y);noGlow();
+    glow(col,7);ctx.fillStyle=col;ctx.font='bold 12px monospace';
+    ctx.fillText(`${i+1}° ${nm.substring(0,10)}`,W/2-105,y);
+    ctx.textAlign='right';ctx.fillText(e.score.toLocaleString(),W/2+105,y);noGlow();
   });
   // Botão jogar novamente
   const bp=Math.sin(frame*0.09)*0.2+0.8;
   glow('#00ff88',16*bp);ctx.fillStyle='rgba(0,255,136,0.13)';ctx.strokeStyle=`rgba(0,255,136,${0.85*bp})`;ctx.lineWidth=2;
   roundRect(W/2-115,H*0.72-24,230,46,12);ctx.fill();ctx.stroke();
-  ctx.fillStyle='#00ff88';ctx.font='bold 17px monospace';ctx.fillText('JOGAR NOVAMENTE',W/2,H*0.72+8);
+  ctx.textAlign='center';ctx.fillStyle='#00ff88';ctx.font='bold 17px monospace';ctx.fillText('JOGAR NOVAMENTE',W/2,H*0.72+8);
   noGlow();drawParticles();
 }
 
