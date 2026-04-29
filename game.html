@@ -593,7 +593,7 @@ function update(){
 
 function hitPlayer(){
   if(P.hasShield){P.hasShield=false;shakeAmt=8;explode(P.x,P.y,'#00aaff',15,4);return;}
-  lives--;P.invTimer=120;combo=0;chargeKills=0;specialReady=false;shakeAmt=16;
+  lives--;score=Math.max(0,score-500);P.invTimer=120;combo=0;comboTimer=0;chargeKills=0;specialReady=false;shakeAmt=16;
   activePower={type:null,timer:0,max:0};P.shotDelay=13;
   explode(P.x,P.y,'#00d4ff',22,5);
   SFX.hit();if(lives<=0)setTimeout(()=>{
