@@ -554,10 +554,10 @@ function update(){
   }
   for(let i=asteroids.length-1;i>=0;i--){const ast=asteroids[i];ast.x+=ast.vx;ast.y+=ast.vy;ast.angle+=ast.rotSpd;if(ast.y>H+100)asteroids.splice(i,1);}
   for(let i=powerups.length-1;i>=0;i--){const pu=powerups[i];pu.y+=1.0;if(pu.y>H+40){powerups.splice(i,1);continue;}if(Math.abs(pu.x-P.x)<40&&Math.abs(pu.y-P.y)<40){collectPower(pu.type);SFX.powerup();explode(pu.x,pu.y,'#ffff00',12,4);powerups.splice(i,1);}}
-  for(let i=coins.length-1;i>=0;i--){const c=coins[i];c.y+=1.0;if(c.y>H+40){coins.splice(i,1);continue;}if(Math.abs(c.x-P.x)<30&&Math.abs(c.y-P.y)<30){score+=150;combo++;comboTimer=80;SFX.coin();explode(c.x,c.y,'#ffd700',8,3);coins.splice(i,1);}}
+  for(let i=coins.length-1;i>=0;i--){const c=coins[i];c.y+=1.0;if(c.y>H+40){coins.splice(i,1);continue;}if(Math.abs(c.x-P.x)<30&&Math.abs(c.y-P.y)<30){score+=150;combo++;comboTimer=50;SFX.coin();explode(c.x,c.y,'#ffd700',8,3);coins.splice(i,1);}}
   if(specialActive){
     specialTimer--;const bw=22;
-    for(let ei=enemies.length-1;ei>=0;ei--){const e=enemies[ei];if(!e.entered)continue;if(Math.abs(e.x-P.x)<bw+e.w*0.4){const cols=['#ff00ee','#00ffcc','#ff6600'];explode(e.x,e.y,cols[e.t-1],22,5.5);explode(e.x,e.y,'#fff',8,9);score+=(e.t===1?40:e.t===2?80:180)*Math.max(1,combo);combo++;comboTimer=100;enemies.splice(ei,1);}}
+    for(let ei=enemies.length-1;ei>=0;ei--){const e=enemies[ei];if(!e.entered)continue;if(Math.abs(e.x-P.x)<bw+e.w*0.4){const cols=['#ff00ee','#00ffcc','#ff6600'];explode(e.x,e.y,cols[e.t-1],22,5.5);explode(e.x,e.y,'#fff',8,9);score+=(e.t===1?40:e.t===2?80:180)*Math.min(4,Math.max(1,combo));combo++;comboTimer=50;enemies.splice(ei,1);}}
     eBullets=eBullets.filter(b=>Math.abs(b.x-P.x)>=bw);
     if(specialTimer<=0)specialActive=false;
   }
@@ -569,7 +569,7 @@ function update(){
         const cols=['#ff00ee','#00ffcc','#ff6600'];explode(b.x,b.y,cols[e.t-1],6,3);e.hp--;
         if(e.hp<=0){
           explode(e.x,e.y,cols[e.t-1],28,5.5);explode(e.x,e.y,'#fff',10,9);
-          score+=(e.t===1?40:e.t===2?80:180)*Math.max(1,combo);combo++;comboTimer=100;shakeAmt=6;
+          score+=(e.t===1?40:e.t===2?80:180)*Math.min(4,Math.max(1,combo));combo++;comboTimer=50;shakeAmt=6;
           SFX.enemyDie();if(chargeKills<CHARGE_MAX){chargeKills++;if(chargeKills===CHARGE_MAX){specialReady=true;specialReadyAnim=160;SFX.ready();}}
           const r=Math.random();
           if(r<0.12){const tp=['laser','rapid','shield','triple','missile','mega'];powerups.push({x:e.x,y:e.y,type:tp[Math.floor(Math.random()*tp.length)]});}
@@ -587,7 +587,7 @@ function update(){
     for(let ai=asteroids.length-1;ai>=0;ai--){const a=asteroids[ai];if(Math.abs(a.x-P.x)<(P.w+a.w)/2-15&&Math.abs(a.y-P.y)<(P.h+a.h)/2-15){explode(a.x,a.y,'#aaaaaa',20,5);explode(a.x,a.y,'#ff8800',10,8);asteroids.splice(ai,1);if(P.hasShield){P.hasShield=false;shakeAmt=8;explode(P.x,P.y,'#00aaff',15,4);SFX.hit();}else{hitPlayer();}break;}}
   }
   tickParticles();
-  if(enemies.length===0&&state==='playing'){state='wave_intro';waveTimer=90;}
+  if(enemies.length===0&&state==='playing'){score+=500;flashAlpha=0.18;state='wave_intro';waveTimer=90;}
   if(state==='wave_intro'){waveTimer--;if(waveTimer<=0){state='playing';SFX.wave();spawnWave();}}
 }
 
