@@ -113,7 +113,26 @@ function showNameModal() {
 }
 function hideNameModal() {
   const n = nameInput.value.trim().toUpperCase() || 'ANÔNIMO';
-  const c = contactInput.value.trim() || 'não informado';
+  const c = contactInput.value.trim();
+  if (!c) {
+    contactInput.style.border = '2px solid #ff4444';
+    contactInput.style.boxShadow = '0 0 10px #ff444488';
+    contactInput.placeholder = '⚠️ Obrigatório para jogar!';
+    contactInput.focus();
+    // Shake animation
+    contactInput.animate([
+      { transform: 'translateX(0)' },
+      { transform: 'translateX(-8px)' },
+      { transform: 'translateX(8px)' },
+      { transform: 'translateX(-6px)' },
+      { transform: 'translateX(6px)' },
+      { transform: 'translateX(0)' }
+    ], { duration: 300, easing: 'ease-out' });
+    return;
+  }
+  // Reset visual caso estava com erro
+  contactInput.style.border = '2px solid rgba(0,200,255,0.4)';
+  contactInput.style.boxShadow = '';
   playerName = n; playerContact = c;
   localStorage.setItem('rev_name', n);
   localStorage.setItem('rev_contact', c);
@@ -123,6 +142,14 @@ function hideNameModal() {
 btnStart.addEventListener('click', hideNameModal);
 nameInput.addEventListener('keydown',    e => { if (e.key === 'Enter') contactInput.focus(); });
 contactInput.addEventListener('keydown', e => { if (e.key === 'Enter') hideNameModal(); });
+// Resetar borda vermelha quando começar a digitar
+contactInput.addEventListener('input', () => {
+  if (contactInput.value.trim()) {
+    contactInput.style.border = '2px solid rgba(0,200,255,0.4)';
+    contactInput.style.boxShadow = '';
+    contactInput.placeholder = 'Instagram ou WhatsApp (privado)';
+  }
+});
 
 // ── RANKING (localStorage) ────────────────────────────────────────────────
 function getRanking() {
@@ -263,10 +290,16 @@ let asteroidTimer=0;
 let touchX=null,touchY=null,touching=false;
 const keys={l:false,r:false};
 
+// ── DETECÇÃO DE DISPOSITIVO ───────────────────────────────────────────────
+const isMobile = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+const MAX_PARTICLES = isMobile ? 70 : 200;
+const THRUSTER_FREQ = isMobile ? 3 : 1; // adiciona partícula de propulsor a cada N frames
+const GLOW_SCALE = isMobile ? 0.4 : 1.0; // reduz blur no celular
+
 // ── HELPERS ───────────────────────────────────────────────────────────────
 const rnd=(a,b)=>a+Math.random()*(b-a);
 const lerp=(a,b,t)=>a+(b-a)*t;
-function glow(col,blur){ctx.shadowColor=col;ctx.shadowBlur=blur;}
+function glow(col,blur){ctx.shadowColor=col;ctx.shadowBlur=blur*GLOW_SCALE;}
 function noGlow(){ctx.shadowBlur=0;}
 function imgOk(k){return IMGS[k]&&IMGS[k].complete&&IMGS[k].naturalWidth>0;}
 
@@ -277,7 +310,10 @@ function explode(x,y,col,n,spd){
   particles.push({x,y,vx:0,vy:0,life:1,decay:0.055,sz:0,maxSz:70,col,kind:'ring'});
 }
 function thruster(x,y){particles.push({x:x+rnd(-5,5),y,vx:rnd(-0.4,0.4),vy:rnd(1.2,3.2),life:1,decay:rnd(0.09,0.16),sz:rnd(3,8),col:Math.random()>0.5?'#00d4ff':'#fff',kind:'thrust'});}
-function tickParticles(){for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.x+=p.vx;p.y+=p.vy;p.vy+=0.04;p.life-=p.decay;if(p.life<=0)particles.splice(i,1);}}
+function tickParticles(){
+  if(particles.length>MAX_PARTICLES)particles.splice(0,particles.length-MAX_PARTICLES);
+  for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.x+=p.vx;p.y+=p.vy;p.vy+=0.04;p.life-=p.decay;if(p.life<=0)particles.splice(i,1);}
+}
 function drawParticles(){
   particles.forEach(p=>{
     ctx.globalAlpha=Math.max(0,p.life);
@@ -288,21 +324,31 @@ function drawParticles(){
   ctx.globalAlpha=1;
 }
 
-// ── FUNDO ─────────────────────────────────────────────────────────────────
-function drawBG(){
-  ctx.fillStyle='#04001a';ctx.fillRect(0,0,W,H);
+// ── FUNDO (cache estático para não redesenhar toda frame) ─────────────────
+let bgCache = null;
+function buildBgCache(){
+  bgCache = document.createElement('canvas');
+  bgCache.width = W; bgCache.height = H;
+  const bc = bgCache.getContext('2d');
+  bc.fillStyle='#04001a'; bc.fillRect(0,0,W,H);
   if(imgOk('fundo')){
     const iw=IMGS.fundo.naturalWidth,ih=IMGS.fundo.naturalHeight;
     const sc=Math.max(W/iw,H/ih),dw=iw*sc,dh=ih*sc;
-    ctx.drawImage(IMGS.fundo,(W-dw)/2,(H-dh)/2,dw,dh);
+    bc.drawImage(IMGS.fundo,(W-dw)/2,(H-dh)/2,dw,dh);
   }
-  const vg=ctx.createLinearGradient(0,0,W,0);
+  const vg=bc.createLinearGradient(0,0,W,0);
   vg.addColorStop(0,'rgba(0,0,10,0.5)');vg.addColorStop(0.15,'rgba(0,0,10,0)');
   vg.addColorStop(0.85,'rgba(0,0,10,0)');vg.addColorStop(1,'rgba(0,0,10,0.5)');
-  ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
+  bc.fillStyle=vg; bc.fillRect(0,0,W,H);
+}
+function drawBG(){
+  if(!bgCache) buildBgCache();
+  ctx.drawImage(bgCache,0,0); // copia o fundo de uma vez (muito mais rápido)
   LAYERS.forEach(L=>{
     ctx.fillStyle=`rgba(255,255,255,${L.op})`;
-    L.stars.forEach(s=>{ctx.beginPath();ctx.arc(s.x,s.y,L.sz/2,0,Math.PI*2);ctx.fill();s.y+=L.spd;if(s.y>H){s.y=0;s.x=Math.random()*W;}});
+    ctx.beginPath(); // batch: todas as estrelas da camada num único path
+    L.stars.forEach(s=>{ctx.moveTo(s.x+L.sz/2,s.y);ctx.arc(s.x,s.y,L.sz/2,0,Math.PI*2);s.y+=L.spd;if(s.y>H){s.y=0;s.x=Math.random()*W;}});
+    ctx.fill();
   });
 }
 
@@ -397,7 +443,7 @@ function drawLaser(){
   ctx.beginPath();ctx.moveTo(x-bw/2,0);ctx.lineTo(x-bw/2,y1);ctx.stroke();
   ctx.beginPath();ctx.moveTo(x+bw/2,0);ctx.lineTo(x+bw/2,y1);ctx.stroke();
   noGlow();ctx.globalAlpha=1;
-  if(Math.random()>0.35)particles.push({x:x+rnd(-bw,bw),y:rnd(0,y1),vx:rnd(-1,1),vy:0,life:1,decay:rnd(0.08,0.15),sz:rnd(2,8),col:'#dd88ff',kind:'glow'});
+  if(Math.random()>(isMobile?0.72:0.35))particles.push({x:x+rnd(-bw,bw),y:rnd(0,y1),vx:rnd(-1,1),vy:0,life:1,decay:rnd(0.08,0.15),sz:rnd(2,8),col:'#dd88ff',kind:'glow'});
 }
 
 // ── ANIMAÇÃO ESPECIAL CARREGADO ───────────────────────────────────────────
@@ -518,7 +564,7 @@ function update(){
   P.targetY=Math.max(H*0.32,Math.min(H-P.h/2-10,P.targetY));
   P.x=lerp(P.x,P.targetX,0.22);
   P.y=lerp(P.y,P.targetY,0.18);
-  thruster(P.x,P.y+P.h/2-4);
+  if(frame%THRUSTER_FREQ===0)thruster(P.x,P.y+P.h/2-4);
   P.shotTimer--;
   if(P.shotTimer<=0){
     P.shotTimer=P.shotDelay;const vy=-10;
