@@ -829,11 +829,22 @@ function loop(){
 
 // ── RESET ─────────────────────────────────────────────────────────────────
 function startGame(){
-  state='wave_intro';waveTimer=70;score=0;lives=3;waveNum=0;
-  enemies=[];eBullets=[];particles=[];P.bullets=[];powerups=[];coins=[];asteroids=[];
-  P.x=P.targetX=W/2;P.y=P.targetY=H-120;P.invTimer=0;P.hasShield=false;
-  combo=0;comboTimer=0;chargeKills=0;specialReady=false;specialActive=false;specialTimer=0;flashAlpha=0;specialReadyAnim=0;
-  activePower={type:null,timer:0,max:0};P.shotDelay=13;asteroidTimer=0;
+  // Fecha o AudioContext para liberar memória acumulada de sons
+  if(_ac){ try{ _ac.close(); }catch(e){} _ac=null; musicStarted=false; }
+
+  // Esvazia arrays sem criar novos objetos (mais eficiente pro GC)
+  enemies.length=0; eBullets.length=0; particles.length=0;
+  P.bullets.length=0; powerups.length=0; coins.length=0; asteroids.length=0;
+
+  // Reinicia estado
+  state='wave_intro'; waveTimer=70; score=0; lives=3; waveNum=0; frame=0;
+  P.x=P.targetX=W/2; P.y=P.targetY=H-120; P.invTimer=0; P.hasShield=false;
+  combo=0; comboTimer=0; chargeKills=0; specialReady=false; specialActive=false;
+  specialTimer=0; flashAlpha=0; specialReadyAnim=0; shakeAmt=0; shakeX=0; shakeY=0;
+  activePower={type:null,timer:0,max:0}; P.shotDelay=13; asteroidTimer=0;
+
+  // Reinicia música se estava tocando
+  try{ const b=document.getElementById('bgm'); if(b){ b.currentTime=0; b.play().catch(()=>{}); musicStarted=true; } }catch(e){}
 }
 
 // ── INPUT ─────────────────────────────────────────────────────────────────
