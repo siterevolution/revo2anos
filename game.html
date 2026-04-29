@@ -77,7 +77,7 @@ let onlineRanking = null; // ranking carregado do servidor
 async function loadOnlineRanking() {
   try {
     const r = await fetch(
-      SUPA_URL + '/rest/v1/scores?select=nickname,score&order=score.desc&limit=10',
+      SUPA_URL + '/rest/v1/best_scores?select=nickname,score&order=score.desc&limit=10',
       { headers: SUPA_HDR }
     );
     if (r.ok) { onlineRanking = await r.json(); }
