@@ -291,6 +291,49 @@ const SPECIAL_DUR = 55;
 const BTN = { x: W-118, y: H-90, w: 108, h: 76 };
 let activePower = { type: null, timer: 0, max: 0 };
 
+// ── ANTI-CHEAT ────────────────────────────────────────────────────────────
+// Chaves aleatórias por sessão — mudam a cada carregamento da página
+const _SK  = (Math.random()*0xFFFFFF|0) ^ 0xC0FFEE;
+const _SK2 = (Math.random()*0xFFFFFF|0) ^ 0xDEAD15;
+let _scoreXOR = 0  ^ _SK;   // shadow do score (score XOR _SK deve sempre = _scoreXOR)
+let _livesXOR = 3  ^ _SK2;  // shadow de lives
+let _lastFrameTs  = 0;       // detecta pausa via debugger
+
+// Toda adição de score passa por aqui — atualiza o shadow junto
+function _addScore(delta) {
+  score = Math.max(0, score + delta);
+  _scoreXOR = score ^ _SK;
+}
+// Toda mudança de lives passa por aqui
+function _setLives(n) {
+  lives = (n < 0) ? 0 : (n > 3) ? 0 : n; // > 3 vidas = cheat → força 0
+  _livesXOR = lives ^ _SK2;
+}
+// Verifica integridade: retorna false se detectar adulteração
+function _integrityOK() {
+  if ((score ^ _SK)  !== _scoreXOR)       return false; // score alterado no console
+  if ((lives ^ _SK2) !== _livesXOR)       return false; // lives alterado no console
+  if (P.invTimer > 130)                   return false; // invencibilidade infinita
+  if (P.shotDelay < 3)                    return false; // cadência impossível
+  if (combo > 60)                         return false; // combo impossível
+  if (specialTimer > SPECIAL_DUR + 5)     return false; // laser infinito
+  if (specialActive && specialTimer <= 0) return false; // laser sem timer ativo
+  return true;
+}
+// Ao detectar cheat: zera score, força game over (sem avisar o jogador)
+function _killCheat() {
+  score = 0; _scoreXOR = 0 ^ _SK;
+  _setLives(0);
+  state = 'gameover';
+}
+// DevTools aberto detectado via tamanho de janela
+setInterval(() => {
+  if (state !== 'playing' && state !== 'wave_intro') return;
+  const wGap = window.outerWidth  - window.innerWidth  > 200;
+  const hGap = window.outerHeight - window.innerHeight > 200;
+  if (wGap || hGap) _killCheat();
+}, 3000);
+
 // ── ESTRELAS ──────────────────────────────────────────────────────────────
 const LAYERS = [
   {stars:[],spd:0.3,sz:0.8,op:0.2},{stars:[],spd:0.9,sz:1.4,op:0.35},{stars:[],spd:1.8,sz:2.2,op:0.6}
@@ -616,10 +659,10 @@ function update(){
   }
   for(let i=asteroids.length-1;i>=0;i--){const ast=asteroids[i];ast.x+=ast.vx;ast.y+=ast.vy;ast.angle+=ast.rotSpd;if(ast.y>H+100)asteroids.splice(i,1);}
   for(let i=powerups.length-1;i>=0;i--){const pu=powerups[i];pu.y+=1.0;if(pu.y>H+40){powerups.splice(i,1);continue;}if(Math.abs(pu.x-P.x)<40&&Math.abs(pu.y-P.y)<40){collectPower(pu.type);SFX.powerup();explode(pu.x,pu.y,'#ffff00',12,4);powerups.splice(i,1);}}
-  for(let i=coins.length-1;i>=0;i--){const c=coins[i];c.y+=1.0;if(c.y>H+40){coins.splice(i,1);continue;}if(Math.abs(c.x-P.x)<30&&Math.abs(c.y-P.y)<30){score+=150;combo++;comboTimer=50;SFX.coin();explode(c.x,c.y,'#ffd700',8,3);coins.splice(i,1);}}
+  for(let i=coins.length-1;i>=0;i--){const c=coins[i];c.y+=1.0;if(c.y>H+40){coins.splice(i,1);continue;}if(Math.abs(c.x-P.x)<30&&Math.abs(c.y-P.y)<30){_addScore(150);combo++;comboTimer=50;SFX.coin();explode(c.x,c.y,'#ffd700',8,3);coins.splice(i,1);}}
   if(specialActive){
     specialTimer--;const bw=22;
-    for(let ei=enemies.length-1;ei>=0;ei--){const e=enemies[ei];if(!e.entered)continue;if(Math.abs(e.x-P.x)<bw+e.w*0.4){const cols=['#ff00ee','#00ffcc','#ff6600'];explode(e.x,e.y,cols[e.t-1],22,5.5);explode(e.x,e.y,'#fff',8,9);score+=(e.t===1?40:e.t===2?80:180)*Math.min(4,Math.max(1,combo));combo++;comboTimer=50;enemies.splice(ei,1);}}
+    for(let ei=enemies.length-1;ei>=0;ei--){const e=enemies[ei];if(!e.entered)continue;if(Math.abs(e.x-P.x)<bw+e.w*0.4){const cols=['#ff00ee','#00ffcc','#ff6600'];explode(e.x,e.y,cols[e.t-1],22,5.5);explode(e.x,e.y,'#fff',8,9);_addScore((e.t===1?40:e.t===2?80:180)*Math.min(4,Math.max(1,combo)));combo++;comboTimer=50;enemies.splice(ei,1);}}
     eBullets=eBullets.filter(b=>Math.abs(b.x-P.x)>=bw);
     if(specialTimer<=0)specialActive=false;
   }
@@ -631,7 +674,7 @@ function update(){
         const cols=['#ff00ee','#00ffcc','#ff6600'];explode(b.x,b.y,cols[e.t-1],6,3);e.hp--;
         if(e.hp<=0){
           explode(e.x,e.y,cols[e.t-1],28,5.5);explode(e.x,e.y,'#fff',10,9);
-          score+=(e.t===1?40:e.t===2?80:180)*Math.min(4,Math.max(1,combo));combo++;comboTimer=50;shakeAmt=6;
+          _addScore((e.t===1?40:e.t===2?80:180)*Math.min(4,Math.max(1,combo)));combo++;comboTimer=50;shakeAmt=6;
           SFX.enemyDie();if(chargeKills<CHARGE_MAX){chargeKills++;if(chargeKills===CHARGE_MAX){specialReady=true;specialReadyAnim=160;SFX.ready();}}
           const r=Math.random();
           if(r<0.12){const tp=['laser','rapid','shield','triple','missile','mega'];powerups.push({x:e.x,y:e.y,type:tp[Math.floor(Math.random()*tp.length)]});}
@@ -649,13 +692,15 @@ function update(){
     for(let ai=asteroids.length-1;ai>=0;ai--){const a=asteroids[ai];if(Math.abs(a.x-P.x)<(P.w+a.w)/2-15&&Math.abs(a.y-P.y)<(P.h+a.h)/2-15){explode(a.x,a.y,'#aaaaaa',20,5);explode(a.x,a.y,'#ff8800',10,8);asteroids.splice(ai,1);if(P.hasShield){P.hasShield=false;shakeAmt=8;explode(P.x,P.y,'#00aaff',15,4);SFX.hit();}else{hitPlayer();}break;}}
   }
   tickParticles();
-  if(enemies.length===0&&state==='playing'){score+=500;flashAlpha=0.18;state='wave_intro';waveTimer=90;}
+  // ── Verificação de integridade a cada 3 segundos (180 frames) ─────────────
+  if(frame%180===0){const ts=performance.now();if(_lastFrameTs>0&&ts-_lastFrameTs>6000)_killCheat();_lastFrameTs=ts;if(!_integrityOK())_killCheat();}
+  if(enemies.length===0&&state==='playing'){_addScore(500);flashAlpha=0.18;state='wave_intro';waveTimer=90;}
   if(state==='wave_intro'){waveTimer--;if(waveTimer<=0){state='playing';SFX.wave();spawnWave();}}
 }
 
 function hitPlayer(){
   if(P.hasShield){P.hasShield=false;shakeAmt=8;explode(P.x,P.y,'#00aaff',15,4);return;}
-  lives--;score=Math.max(0,score-5000);P.invTimer=120;combo=0;comboTimer=0;chargeKills=0;specialReady=false;shakeAmt=16;
+  _setLives(lives-1);_addScore(-5000);P.invTimer=120;combo=0;comboTimer=0;chargeKills=0;specialReady=false;shakeAmt=16;
   activePower={type:null,timer:0,max:0};P.shotDelay=13;
   explode(P.x,P.y,'#00d4ff',22,5);
   SFX.hit();if(lives<=0)setTimeout(()=>{
@@ -867,8 +912,9 @@ function startGame(){
   enemies.length=0; eBullets.length=0; particles.length=0;
   P.bullets.length=0; powerups.length=0; coins.length=0; asteroids.length=0;
 
-  // Reinicia estado
-  state='wave_intro'; waveTimer=70; score=0; lives=3; waveNum=0; frame=0;
+  // Reinicia estado (usa funções protegidas para recriar shadows corretos)
+  state='wave_intro'; waveTimer=70; score=0; _scoreXOR=0^_SK; _setLives(3); waveNum=0; frame=0;
+  _lastFrameTs=0;
   P.x=P.targetX=W/2; P.y=P.targetY=H-120; P.invTimer=0; P.hasShield=false;
   combo=0; comboTimer=0; chargeKills=0; specialReady=false; specialActive=false;
   specialTimer=0; flashAlpha=0; specialReadyAnim=0; shakeAmt=0; shakeX=0; shakeY=0;
