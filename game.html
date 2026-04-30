@@ -93,10 +93,14 @@ async function saveScoreOnline(nickname, contact, score) {
         sig:   _challenge.sig
       })
     });
+    const data = await r.json().catch(()=>({}));
     if (r.status === 429) {
-      // Rate limit — avisa o jogador de forma amigável
-      _scoreSaveMsg = 'aguarde 5 minutos para enviar outra pontuação';
-      _scoreSaveMsgTimer = 300;
+      _scoreSaveMsg = '⏳ aguarde 5 minutos para enviar outra pontuação';
+      _scoreSaveMsgTimer = 400;
+    } else if (r.status === 403 && data.error) {
+      // Banido — mostra o motivo e quanto tempo falta
+      _scoreSaveMsg = '🚫 ' + data.error;
+      _scoreSaveMsgTimer = 600;
     }
   } catch(e) {}
 }
