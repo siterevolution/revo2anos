@@ -3,11 +3,11 @@
 
 const SUPA_URL = process.env.SUPA_URL;
 const SUPA_KEY = process.env.SUPA_SERVICE_KEY;
-const MAX_SCORE       = 1000000;
-const MAX_AGE_MS      = 10 * 60 * 1000;  // requisição expira em 10 min
-const MAX_PLAY_MS     = 4 * 60 * 60 * 1000; // máx 4h de sessão
-const CHALLENGE_MAX_AGE = 20 * 60 * 1000;   // desafio expira em 20 min
-const MAX_PTS_PER_SEC = 2000; // limite mais apertado: top players fazem ~940 pts/s
+const MAX_SCORE         = 1000000;
+const MAX_PLAY_MS       = 4 * 60 * 60 * 1000; // máx 4h de sessão
+const CHALLENGE_MAX_AGE = 20 * 60 * 1000;      // desafio expira em 20 min
+const MAX_PTS_PER_SEC   = 1500; // margem segura acima do top legítimo (~940 pts/s)
+const RATE_LIMIT_MS     = 5 * 60 * 1000; // 1 envio a cada 5 minutos por nickname
 
 const ALLOWED_ORIGINS = [
   'https://www.revo2anos.com',
@@ -43,25 +43,13 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Contato obrigatório' });
   }
 
-  // ── Validação de tempo de jogo (anti-bot) ──────────────────────────────
-  const pt = typeof playTime === 'number' ? playTime : 0;
-  if (pt < 0 || pt > MAX_PLAY_MS) {
-    return res.status(400).json({ error: 'Tempo de jogo inválido' });
-  }
-  const minTimeMs = (score / MAX_PTS_PER_SEC) * 1000;
-  if (pt < minTimeMs) {
-    console.warn(`FRAUDE tempo: score=${score} em ${pt}ms (mín: ${Math.round(minTimeMs)}ms) nick=${nickname}`);
-    return res.status(400).json({ error: 'Pontuação inválida para o tempo de jogo' });
-  }
-
   // ── Validação do timestamp da requisição ────────────────────────────────
   const now = Date.now();
-  if (!timestamp || Math.abs(now - timestamp) > MAX_AGE_MS) {
+  if (!timestamp || Math.abs(now - timestamp) > 10 * 60 * 1000) {
     return res.status(400).json({ error: 'Requisição expirada' });
   }
 
-  // ── Validação do desafio servidor (sem segredo no cliente) ──────────────
-  // O desafio prova que o cliente passou pelo /api/get-challenge antes de salvar
+  // ── Validação do desafio servidor ───────────────────────────────────────
   if (!nonce || !ts || !sig) {
     return res.status(403).json({ error: 'Desafio ausente' });
   }
@@ -72,6 +60,41 @@ export default async function handler(req, res) {
   if (sig !== expectedSig) {
     console.warn(`FRAUDE desafio: nick=${nickname} score=${score}`);
     return res.status(403).json({ error: 'Desafio inválido' });
+  }
+
+  // ── Validação de tempo REAL pelo servidor ───────────────────────────────
+  // O desafio é emitido no início do jogo — o servidor sabe exatamente
+  // quanto tempo passou desde lá. Ignora o que o cliente declara.
+  const actualElapsedMs = now - ts;
+  const minTimeMs = (score / MAX_PTS_PER_SEC) * 1000;
+
+  if (actualElapsedMs < minTimeMs) {
+    console.warn(`FRAUDE tempo real: score=${score} em ${actualElapsedMs}ms (mín: ${Math.round(minTimeMs)}ms) nick=${nickname}`);
+    return res.status(400).json({ error: 'Pontuação incompatível com o tempo de jogo' });
+  }
+  if (actualElapsedMs > MAX_PLAY_MS) {
+    console.warn(`FRAUDE sessão longa: ${actualElapsedMs}ms nick=${nickname}`);
+    return res.status(400).json({ error: 'Sessão expirada, jogue novamente' });
+  }
+
+  // ── Rate limiting — máx 1 envio por nickname a cada 5 minutos ──────────
+  const normalizedNick = nickname.trim().substring(0, 16).toUpperCase();
+  try {
+    const rateWindow = new Date(now - RATE_LIMIT_MS).toISOString();
+    const rateRes = await fetch(
+      `${SUPA_URL}/rest/v1/scores?nickname=eq.${encodeURIComponent(normalizedNick)}&created_at=gte.${rateWindow}&select=id&limit=1`,
+      { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
+    );
+    if (rateRes.ok) {
+      const recent = await rateRes.json();
+      if (recent.length > 0) {
+        console.warn(`RATE LIMIT: nick=${normalizedNick}`);
+        return res.status(429).json({ error: 'Aguarde 5 minutos antes de enviar outra pontuação' });
+      }
+    }
+  } catch(e) {
+    // Se a checagem falhar, permite passar (não bloqueia jogador legítimo)
+    console.error('Rate limit check error:', e);
   }
 
   // ── Salva no Supabase ───────────────────────────────────────────────────
@@ -85,7 +108,7 @@ export default async function handler(req, res) {
         'Prefer': 'return=minimal'
       },
       body: JSON.stringify({
-        nickname: nickname.trim().substring(0, 16).toUpperCase(),
+        nickname: normalizedNick,
         contact:  contact.trim().substring(0, 40),
         score:    Math.floor(score)
       })

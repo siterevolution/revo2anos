@@ -63,8 +63,9 @@ canvas.width = W; canvas.height = H;
 // Usa sistema de desafio: servidor assina um nonce, cliente só repassa
 
 // ── RASTREAMENTO DE TEMPO DE JOGO ─────────────────────────────────────────
-let firstPlayMs  = null; // momento em que o jogador começou a jogar de verdade
-let _challenge   = null; // desafio assinado pelo servidor (obtido em startGame)
+let _challenge       = null; // desafio assinado pelo servidor (obtido em startGame)
+let _scoreSaveMsg    = '';   // mensagem de feedback do servidor (rate limit, etc.)
+let _scoreSaveMsgTimer = 0;
 
 // Busca desafio assinado do servidor — sem segredo no cliente
 async function loadChallenge() {
@@ -79,20 +80,24 @@ async function loadChallenge() {
 async function saveScoreOnline(nickname, contact, score) {
   if (!_challenge) return; // sem desafio válido do servidor = não salva
   try {
-    const playTime  = firstPlayMs ? (Date.now() - firstPlayMs) : 0;
     const timestamp = Date.now();
-    await fetch('/api/save-score', {
+    const r = await fetch('/api/save-score', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         nickname, contact,
         score:     Math.floor(score),
-        timestamp, playTime,
+        timestamp,
         nonce: _challenge.nonce,
         ts:    _challenge.ts,
         sig:   _challenge.sig
       })
     });
+    if (r.status === 429) {
+      // Rate limit — avisa o jogador de forma amigável
+      _scoreSaveMsg = 'aguarde 5 minutos para enviar outra pontuação';
+      _scoreSaveMsgTimer = 300;
+    }
   } catch(e) {}
 }
 
@@ -842,8 +847,18 @@ function drawGameOver(){
   ctx.textAlign='center';ctx.font='9px monospace';
   ctx.fillStyle='rgba(255,255,255,0.2)';
   ctx.fillText('⏱️ 24h=-10%  48h=-19%  72h=sai · qualquer partida mantém posição',W/2,rulesY);
+  // Mensagem de rate limit / servidor
+  if(_scoreSaveMsgTimer>0){
+    _scoreSaveMsgTimer--;
+    const alpha=Math.min(1,_scoreSaveMsgTimer/30);
+    ctx.globalAlpha=alpha;
+    ctx.fillStyle='rgba(255,80,80,0.18)';roundRect(10,rulesY+14,W-20,22,6);ctx.fill();
+    ctx.fillStyle='#ff8888';ctx.font='10px monospace';ctx.textAlign='center';
+    ctx.fillText('⏳ '+_scoreSaveMsg,W/2,rulesY+29);
+    ctx.globalAlpha=1;
+  }
   // Botão
-  const btnY=rulesY+16;
+  const btnY=rulesY+(_scoreSaveMsgTimer>0?40:16);
   const bp=Math.sin(frame*0.09)*0.2+0.8;
   glow('#00ff88',16*bp);ctx.fillStyle='rgba(0,255,136,0.13)';ctx.strokeStyle=`rgba(0,255,136,${0.85*bp})`;ctx.lineWidth=2;
   roundRect(W/2-115,btnY,230,44,12);ctx.fill();ctx.stroke();
@@ -946,9 +961,8 @@ function loop(ts){
 
 // ── RESET ─────────────────────────────────────────────────────────────────
 function startGame(){
-  // Marca o momento do primeiro jogo real (acumula entre tentativas)
-  if(!firstPlayMs) firstPlayMs = Date.now();
-  // Obtém desafio fresco do servidor para validar o score ao final
+  // Obtém desafio fresco do servidor — o ts do desafio marca o início da partida
+  // O servidor usará esse ts para calcular o tempo real decorrido (anti-fraude)
   loadChallenge();
 
   // Fecha o AudioContext para liberar memória acumulada de sons
