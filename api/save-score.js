@@ -4,7 +4,12 @@
 const SUPA_URL = process.env.SUPA_URL;
 const SUPA_KEY = process.env.SUPA_SERVICE_KEY; // chave secreta (service role)
 const MAX_SCORE = 1000000;
-const MAX_AGE_MS = 10 * 60 * 1000; // requisição expira em 10 minutos
+const MAX_AGE_MS = 10 * 60 * 1000;      // requisição expira em 10 minutos
+const MAX_PLAY_MS = 4 * 60 * 60 * 1000; // máximo 4h de sessão (razoável)
+
+// Pontos máximos humanamente possíveis por segundo (limite bem generoso)
+// Top players fazem ~940 pts/s — 3000 pts/s é improvável para humano
+const MAX_PTS_PER_SECOND = 3000;
 
 export default async function handler(req, res) {
   // Só aceita POST
@@ -12,7 +17,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Método não permitido' });
   }
 
-  const { nickname, contact, score, timestamp, token } = req.body || {};
+  const { nickname, contact, score, timestamp, token, playTime } = req.body || {};
 
   // ── Validações básicas ──────────────────────────────────────────────────
   if (!nickname || !contact || score === undefined) {
@@ -25,15 +30,27 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Contato obrigatório' });
   }
 
-  // ── Validação de tempo (evita replay attacks) ───────────────────────────
+  // ── Validação de tempo de jogo (anti-bot) ──────────────────────────────
+  const pt = typeof playTime === 'number' ? playTime : 0;
+  if (pt < 0 || pt > MAX_PLAY_MS) {
+    return res.status(400).json({ error: 'Tempo de jogo inválido' });
+  }
+  const minTimeMs = (score / MAX_PTS_PER_SECOND) * 1000;
+  if (pt < minTimeMs) {
+    // Pontuação muito alta para o tempo jogado — fraude detectada
+    console.warn(`FRAUDE: score=${score} em ${pt}ms (mín esperado: ${Math.round(minTimeMs)}ms) nick=${nickname}`);
+    return res.status(400).json({ error: 'Pontuação inválida para o tempo de jogo' });
+  }
+
+  // ── Validação de tempo de requisição (evita replay attacks) ────────────
   const now = Date.now();
   if (!timestamp || Math.abs(now - timestamp) > MAX_AGE_MS) {
     return res.status(400).json({ error: 'Requisição expirada' });
   }
 
-  // ── Validação do token HMAC ─────────────────────────────────────────────
+  // ── Validação do token HMAC (inclui playTime — não pode ser falsificado) ─
   const secret = process.env.SCORE_SECRET || 'REV2026';
-  const expectedToken = await gerarToken(score, contact, timestamp, secret);
+  const expectedToken = await gerarToken(score, contact, timestamp, pt, secret);
   if (token !== expectedToken) {
     return res.status(403).json({ error: 'Token inválido' });
   }
@@ -68,10 +85,10 @@ export default async function handler(req, res) {
   }
 }
 
-// Gera token HMAC-SHA256
-async function gerarToken(score, contact, timestamp, secret) {
+// Gera token HMAC-SHA256 (score + contact + timestamp + playTime)
+async function gerarToken(score, contact, timestamp, playTime, secret) {
   const encoder = new TextEncoder();
-  const data = `${Math.floor(score)}:${contact.trim()}:${timestamp}`;
+  const data = `${Math.floor(score)}:${contact.trim()}:${timestamp}:${Math.floor(playTime)}`;
   const key = await crypto.subtle.importKey(
     'raw', encoder.encode(secret),
     { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']

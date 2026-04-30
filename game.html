@@ -62,10 +62,13 @@ canvas.width = W; canvas.height = H;
 // ── SERVIDOR — nenhuma chave exposta aqui ────────────────────────────────
 const SCORE_SECRET = 'REV2026';
 
-// Gera token HMAC para validação no servidor
-async function gerarToken(score, contact, timestamp) {
+// ── RASTREAMENTO DE TEMPO DE JOGO ─────────────────────────────────────────
+let firstPlayMs = null; // momento em que o jogador começou a jogar de verdade
+
+// Gera token HMAC para validação no servidor (inclui playTime para não ser falsificável)
+async function gerarToken(score, contact, timestamp, playTime) {
   const encoder = new TextEncoder();
-  const data = `${Math.floor(score)}:${contact.trim()}:${timestamp}`;
+  const data = `${Math.floor(score)}:${contact.trim()}:${timestamp}:${Math.floor(playTime)}`;
   const key = await crypto.subtle.importKey(
     'raw', encoder.encode(SCORE_SECRET),
     { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
@@ -77,12 +80,13 @@ async function gerarToken(score, contact, timestamp) {
 // Salva via servidor — banco nunca é acessado direto pelo jogo
 async function saveScoreOnline(nickname, contact, score) {
   try {
+    const playTime = firstPlayMs ? (Date.now() - firstPlayMs) : 0;
     const timestamp = Date.now();
-    const token = await gerarToken(score, contact, timestamp);
+    const token = await gerarToken(score, contact, timestamp, playTime);
     await fetch('/api/save-score', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nickname, contact, score: Math.floor(score), timestamp, token })
+      body: JSON.stringify({ nickname, contact, score: Math.floor(score), timestamp, token, playTime })
     });
   } catch(e) {}
 }
@@ -853,6 +857,9 @@ function loop(){
 
 // ── RESET ─────────────────────────────────────────────────────────────────
 function startGame(){
+  // Marca o momento do primeiro jogo real (acumula entre tentativas)
+  if(!firstPlayMs) firstPlayMs = Date.now();
+
   // Fecha o AudioContext para liberar memória acumulada de sons
   if(_ac){ try{ _ac.close(); }catch(e){} _ac=null; musicStarted=false; }
 
