@@ -944,9 +944,6 @@ var CFG = {
 
 <script>
 // ── RANKING MODAL ──────────────────────────────────────────────────────────
-const SUPA_URL = 'https://keeteojjqidcnlztstso.supabase.co';
-const SUPA_KEY = 'sb_publishable_DcttVhiYR6yxIyao1HHtQw_X3tExn4s';
-
 async function abrirRanking() {
   const modal = document.getElementById('rankingModal');
   modal.style.display = 'flex';
@@ -956,10 +953,7 @@ async function abrirRanking() {
   lista.innerHTML = '<p style="text-align:center;color:rgba(255,255,255,.3);padding:20px 0;">Carregando...</p>';
 
   try {
-    const r = await fetch(
-      SUPA_URL + '/rest/v1/best_scores?select=nickname,score&order=score.desc&limit=10',
-      { headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY } }
-    );
+    const r = await fetch('/api/get-ranking');
     const data = await r.json();
 
     if (!data || data.length === 0) {

@@ -59,10 +59,7 @@ const H = window.innerHeight;
 canvas.width = W; canvas.height = H;
 
 
-// ── SUPABASE (só leitura do ranking — escrita vai pelo servidor) ──────────
-const SUPA_URL = 'https://keeteojjqidcnlztstso.supabase.co';
-const SUPA_KEY = 'sb_publishable_DcttVhiYR6yxIyao1HHtQw_X3tExn4s';
-const SUPA_HDR = { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY };
+// ── SERVIDOR — nenhuma chave exposta aqui ────────────────────────────────
 const SCORE_SECRET = 'REV2026';
 
 // Gera token HMAC para validação no servidor
@@ -77,7 +74,7 @@ async function gerarToken(score, contact, timestamp) {
   return btoa(String.fromCharCode(...new Uint8Array(sig)));
 }
 
-// Salva via função do servidor (nunca direto no Supabase)
+// Salva via servidor — banco nunca é acessado direto pelo jogo
 async function saveScoreOnline(nickname, contact, score) {
   try {
     const timestamp = Date.now();
@@ -87,16 +84,14 @@ async function saveScoreOnline(nickname, contact, score) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ nickname, contact, score: Math.floor(score), timestamp, token })
     });
-  } catch(e) { console.log('save error', e); }
+  } catch(e) {}
 }
 
+// Ranking também vem do servidor — zero chave no frontend
 let onlineRanking = null;
 async function loadOnlineRanking() {
   try {
-    const r = await fetch(
-      SUPA_URL + '/rest/v1/best_scores?select=nickname,score&order=score.desc&limit=10',
-      { headers: SUPA_HDR }
-    );
+    const r = await fetch('/api/get-ranking');
     if (r.ok) { onlineRanking = await r.json(); }
   } catch(e) { onlineRanking = null; }
 }
