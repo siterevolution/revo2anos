@@ -961,7 +961,7 @@ document.addEventListener('keydown',e=>{
   if((e.key===' '||e.key==='Enter')&&(state==='start'))showNameModal();
   if((e.key===' '||e.key==='Enter')&&state==='tutorial')startGame();
   if((e.key===' '||e.key==='Enter')&&state==='gameover'){state='tutorial';}
-  if((e.key==='x'||e.key==='Shift')&&state==='playing')fireSpecial();
+  if((e.key==='x'||e.key==='Shift'||e.key===' ')&&state==='playing'){e.preventDefault();fireSpecial();}
 });
 document.addEventListener('keyup',e=>{
   if(e.key==='ArrowLeft'||e.key==='a')keys.l=false;
