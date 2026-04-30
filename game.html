@@ -907,10 +907,40 @@ function animateBG(){
   if(state==='start')thruster(W/2,H*0.27+80);
 }
 
-function loop(){
-  if(state==='loading'){if(loaded>=total)state='start';draw();}
-  else if(state==='playing'||state==='wave_intro'){update();draw();}
-  else{animateBG();draw();}
+// ── LOOP COM TEMPO FIXO (60fps de lógica, visual suave em qualquer Hz) ───
+// Garante mesma velocidade em monitores 60Hz, 120Hz, 144Hz, 240Hz
+const TARGET_MS = 1000 / 60; // ~16.67ms por frame de lógica
+let _loopPrev = 0;
+let _loopAccum = 0;
+
+// Ao voltar de outra aba: zera timers para não disparar falso positivo no anti-cheat
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) {
+    _loopPrev  = 0;
+    _loopAccum = 0;
+    _lastFrameTs = 0; // reseta gap-check do anti-cheat
+  }
+});
+
+function loop(ts){
+  const elapsed = ts - (_loopPrev || ts);
+  _loopPrev = ts;
+
+  if(state==='loading'){
+    if(loaded>=total)state='start';
+    draw();
+  } else if(state==='playing'||state==='wave_intro'){
+    // Acumula tempo real decorrido e roda update() em passos fixos de 16.67ms
+    _loopAccum += Math.min(elapsed, 100); // cap de 100ms evita espiral de morte
+    while(_loopAccum >= TARGET_MS){
+      update();
+      _loopAccum -= TARGET_MS;
+    }
+    draw();
+  } else {
+    animateBG();
+    draw();
+  }
   requestAnimationFrame(loop);
 }
 
