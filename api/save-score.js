@@ -1,23 +1,36 @@
-// Função servidor — valida e salva pontuação com segurança
-// A chave do Supabase fica APENAS aqui, nunca no frontend
+// Função servidor — valida e salva pontuação com segurança total
+// Segredo NUNCA exposto no frontend — usa sistema de desafio servidor
 
 const SUPA_URL = process.env.SUPA_URL;
-const SUPA_KEY = process.env.SUPA_SERVICE_KEY; // chave secreta (service role)
-const MAX_SCORE = 1000000;
-const MAX_AGE_MS = 10 * 60 * 1000;      // requisição expira em 10 minutos
-const MAX_PLAY_MS = 4 * 60 * 60 * 1000; // máximo 4h de sessão (razoável)
+const SUPA_KEY = process.env.SUPA_SERVICE_KEY;
+const MAX_SCORE       = 1000000;
+const MAX_AGE_MS      = 10 * 60 * 1000;  // requisição expira em 10 min
+const MAX_PLAY_MS     = 4 * 60 * 60 * 1000; // máx 4h de sessão
+const CHALLENGE_MAX_AGE = 20 * 60 * 1000;   // desafio expira em 20 min
+const MAX_PTS_PER_SEC = 2000; // limite mais apertado: top players fazem ~940 pts/s
 
-// Pontos máximos humanamente possíveis por segundo (limite bem generoso)
-// Top players fazem ~940 pts/s — 3000 pts/s é improvável para humano
-const MAX_PTS_PER_SECOND = 3000;
+const ALLOWED_ORIGINS = [
+  'https://www.revo2anos.com',
+  'https://revo2anos.com'
+];
 
 export default async function handler(req, res) {
-  // Só aceita POST
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método não permitido' });
+  // ── CORS — bloqueia origens externas ────────────────────────────────────
+  const origin = req.headers.origin || '';
+  if (ALLOWED_ORIGINS.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  } else if (origin) {
+    return res.status(403).json({ error: 'Origem não autorizada' });
   }
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Método não permitido' });
 
-  const { nickname, contact, score, timestamp, token, playTime } = req.body || {};
+  const secret = process.env.SCORE_SECRET;
+  if (!secret) return res.status(500).json({ error: 'Configuração ausente' });
+
+  const { nickname, contact, score, timestamp, playTime, nonce, ts, sig } = req.body || {};
 
   // ── Validações básicas ──────────────────────────────────────────────────
   if (!nickname || !contact || score === undefined) {
@@ -26,7 +39,7 @@ export default async function handler(req, res) {
   if (typeof score !== 'number' || score < 0 || score > MAX_SCORE) {
     return res.status(400).json({ error: 'Pontuação inválida' });
   }
-  if (!contact || contact.trim() === '' || contact === 'não informado') {
+  if (!contact.trim() || contact === 'não informado') {
     return res.status(400).json({ error: 'Contato obrigatório' });
   }
 
@@ -35,24 +48,30 @@ export default async function handler(req, res) {
   if (pt < 0 || pt > MAX_PLAY_MS) {
     return res.status(400).json({ error: 'Tempo de jogo inválido' });
   }
-  const minTimeMs = (score / MAX_PTS_PER_SECOND) * 1000;
+  const minTimeMs = (score / MAX_PTS_PER_SEC) * 1000;
   if (pt < minTimeMs) {
-    // Pontuação muito alta para o tempo jogado — fraude detectada
-    console.warn(`FRAUDE: score=${score} em ${pt}ms (mín esperado: ${Math.round(minTimeMs)}ms) nick=${nickname}`);
+    console.warn(`FRAUDE tempo: score=${score} em ${pt}ms (mín: ${Math.round(minTimeMs)}ms) nick=${nickname}`);
     return res.status(400).json({ error: 'Pontuação inválida para o tempo de jogo' });
   }
 
-  // ── Validação de tempo de requisição (evita replay attacks) ────────────
+  // ── Validação do timestamp da requisição ────────────────────────────────
   const now = Date.now();
   if (!timestamp || Math.abs(now - timestamp) > MAX_AGE_MS) {
     return res.status(400).json({ error: 'Requisição expirada' });
   }
 
-  // ── Validação do token HMAC (inclui playTime — não pode ser falsificado) ─
-  const secret = process.env.SCORE_SECRET || 'REV2026';
-  const expectedToken = await gerarToken(score, contact, timestamp, pt, secret);
-  if (token !== expectedToken) {
-    return res.status(403).json({ error: 'Token inválido' });
+  // ── Validação do desafio servidor (sem segredo no cliente) ──────────────
+  // O desafio prova que o cliente passou pelo /api/get-challenge antes de salvar
+  if (!nonce || !ts || !sig) {
+    return res.status(403).json({ error: 'Desafio ausente' });
+  }
+  if (typeof ts !== 'number' || Math.abs(now - ts) > CHALLENGE_MAX_AGE) {
+    return res.status(400).json({ error: 'Desafio expirado' });
+  }
+  const expectedSig = await hmacSHA256(`${nonce}:${ts}`, secret);
+  if (sig !== expectedSig) {
+    console.warn(`FRAUDE desafio: nick=${nickname} score=${score}`);
+    return res.status(403).json({ error: 'Desafio inválido' });
   }
 
   // ── Salva no Supabase ───────────────────────────────────────────────────
@@ -67,28 +86,22 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         nickname: nickname.trim().substring(0, 16).toUpperCase(),
-        contact: contact.trim().substring(0, 40),
-        score: Math.floor(score)
+        contact:  contact.trim().substring(0, 40),
+        score:    Math.floor(score)
       })
     });
 
-    if (r.ok) {
-      return res.status(200).json({ ok: true });
-    } else {
-      const err = await r.text();
-      console.error('Supabase error:', err);
-      return res.status(500).json({ error: 'Erro ao salvar' });
-    }
+    if (r.ok) return res.status(200).json({ ok: true });
+    console.error('Supabase error:', await r.text());
+    return res.status(500).json({ error: 'Erro ao salvar' });
   } catch (e) {
     console.error('Fetch error:', e);
     return res.status(500).json({ error: 'Erro interno' });
   }
 }
 
-// Gera token HMAC-SHA256 (score + contact + timestamp + playTime)
-async function gerarToken(score, contact, timestamp, playTime, secret) {
+async function hmacSHA256(data, secret) {
   const encoder = new TextEncoder();
-  const data = `${Math.floor(score)}:${contact.trim()}:${timestamp}:${Math.floor(playTime)}`;
   const key = await crypto.subtle.importKey(
     'raw', encoder.encode(secret),
     { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']

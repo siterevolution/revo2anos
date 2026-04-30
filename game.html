@@ -59,34 +59,39 @@ const H = window.innerHeight;
 canvas.width = W; canvas.height = H;
 
 
-// ── SERVIDOR — nenhuma chave exposta aqui ────────────────────────────────
-const SCORE_SECRET = 'REV2026';
+// ── SERVIDOR — zero segredos no frontend ─────────────────────────────────
+// Usa sistema de desafio: servidor assina um nonce, cliente só repassa
 
 // ── RASTREAMENTO DE TEMPO DE JOGO ─────────────────────────────────────────
-let firstPlayMs = null; // momento em que o jogador começou a jogar de verdade
+let firstPlayMs  = null; // momento em que o jogador começou a jogar de verdade
+let _challenge   = null; // desafio assinado pelo servidor (obtido em startGame)
 
-// Gera token HMAC para validação no servidor (inclui playTime para não ser falsificável)
-async function gerarToken(score, contact, timestamp, playTime) {
-  const encoder = new TextEncoder();
-  const data = `${Math.floor(score)}:${contact.trim()}:${timestamp}:${Math.floor(playTime)}`;
-  const key = await crypto.subtle.importKey(
-    'raw', encoder.encode(SCORE_SECRET),
-    { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
-  );
-  const sig = await crypto.subtle.sign('HMAC', key, encoder.encode(data));
-  return btoa(String.fromCharCode(...new Uint8Array(sig)));
+// Busca desafio assinado do servidor — sem segredo no cliente
+async function loadChallenge() {
+  try {
+    const r = await fetch('/api/get-challenge');
+    if (r.ok) _challenge = await r.json();
+    else _challenge = null;
+  } catch(e) { _challenge = null; }
 }
 
 // Salva via servidor — banco nunca é acessado direto pelo jogo
 async function saveScoreOnline(nickname, contact, score) {
+  if (!_challenge) return; // sem desafio válido do servidor = não salva
   try {
-    const playTime = firstPlayMs ? (Date.now() - firstPlayMs) : 0;
+    const playTime  = firstPlayMs ? (Date.now() - firstPlayMs) : 0;
     const timestamp = Date.now();
-    const token = await gerarToken(score, contact, timestamp, playTime);
     await fetch('/api/save-score', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nickname, contact, score: Math.floor(score), timestamp, token, playTime })
+      body: JSON.stringify({
+        nickname, contact,
+        score:     Math.floor(score),
+        timestamp, playTime,
+        nonce: _challenge.nonce,
+        ts:    _challenge.ts,
+        sig:   _challenge.sig
+      })
     });
   } catch(e) {}
 }
@@ -904,6 +909,8 @@ function loop(){
 function startGame(){
   // Marca o momento do primeiro jogo real (acumula entre tentativas)
   if(!firstPlayMs) firstPlayMs = Date.now();
+  // Obtém desafio fresco do servidor para validar o score ao final
+  loadChallenge();
 
   // Fecha o AudioContext para liberar memória acumulada de sons
   if(_ac){ try{ _ac.close(); }catch(e){} _ac=null; musicStarted=false; }
