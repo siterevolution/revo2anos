@@ -3,7 +3,7 @@
 
 const SUPA_URL = process.env.SUPA_URL;
 const SUPA_KEY = process.env.SUPA_SERVICE_KEY; // chave secreta (service role)
-const MAX_SCORE = 2000000;
+const MAX_SCORE = 1000000;
 const MAX_AGE_MS = 10 * 60 * 1000; // requisição expira em 10 minutos
 
 export default async function handler(req, res) {
