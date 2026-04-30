@@ -882,6 +882,15 @@ function draw(){
     if(flashAlpha>0.01){ctx.globalAlpha=flashAlpha;ctx.fillStyle='rgba(180,0,255,1)';ctx.fillRect(0,0,W,H);ctx.globalAlpha=1;}
     drawSpecialReadyAnim();
     drawHUD();
+    // Aviso "clique para travar o mouse" — só no PC, some em 3s
+    if(!isMobile&&plHintAlpha>0.01){
+      plHintAlpha*=0.988; // fade out gradual
+      ctx.save();ctx.globalAlpha=plHintAlpha*0.82;
+      ctx.fillStyle='rgba(0,0,0,0.55)';ctx.beginPath();ctx.roundRect(W/2-110,H-48,220,28,8);ctx.fill();
+      ctx.fillStyle='#fff';ctx.font='12px monospace';ctx.textAlign='center';
+      ctx.fillText('🖱️ Clique para travar o mouse no jogo',W/2,H-29);
+      ctx.restore();
+    }
     if(state==='wave_intro'){
       const t1=waveTimer/90,a=Math.min(t1*3,1)*Math.min((1-t1)*3,1);
       ctx.globalAlpha=a;glow('#00d4ff',35);ctx.fillStyle='#00d4ff';ctx.font='bold 40px monospace';ctx.textAlign='center';
@@ -945,6 +954,17 @@ canvas.addEventListener('touchstart',e=>{
 },{passive:false});
 canvas.addEventListener('touchmove',e=>{e.preventDefault();const t=e.touches[0],r=canvas.getBoundingClientRect();touchX=(t.clientX-r.left)*(W/r.width);touchY=(t.clientY-r.top)*(H/r.height);},{passive:false});
 canvas.addEventListener('touchend',e=>{e.preventDefault();touching=false;},{passive:false});
+// ── POINTER LOCK (PC) — mouse preso no canvas durante o jogo ─────────────
+let pointerLocked = false;
+let plHintAlpha   = 0; // transparência do aviso "clique para travar mouse"
+
+if (!isMobile) {
+  document.addEventListener('pointerlockchange', () => {
+    pointerLocked = document.pointerLockElement === canvas;
+    if (pointerLocked) plHintAlpha = 0; // sumiu: está travado
+  });
+}
+
 canvas.addEventListener('click',e=>{
   startMusic();
   const r=canvas.getBoundingClientRect();
@@ -952,9 +972,28 @@ canvas.addEventListener('click',e=>{
   if(state==='start'){showNameModal();return;}
   if(state==='tutorial'){startGame();return;}
   if(state==='gameover'){startGame();return;}
+  // Durante o jogo: trava o mouse no canvas (PC)
+  if(!isMobile && (state==='playing'||state==='wave_intro')){
+    canvas.requestPointerLock();
+  }
   if(specialReady&&cx>=BTN.x&&cx<=BTN.x+BTN.w&&cy>=BTN.y&&cy<=BTN.y+BTN.h)fireSpecial();
 });
-canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect();P.targetX=(e.clientX-r.left)*(W/r.width);P.targetY=(e.clientY-r.top)*(H/r.height);});
+
+canvas.addEventListener('mousemove',e=>{
+  if(pointerLocked){
+    // Movimento relativo enquanto o mouse está travado
+    const scale=canvas.getBoundingClientRect().width/W||1;
+    P.targetX+=e.movementX/scale;
+    P.targetY+=e.movementY/scale;
+  } else {
+    // Movimento absoluto normal (mouse solto)
+    const r=canvas.getBoundingClientRect();
+    P.targetX=(e.clientX-r.left)*(W/r.width);
+    P.targetY=(e.clientY-r.top)*(H/r.height);
+    // Mostra aviso para travar o mouse se estiver jogando no PC
+    if(!isMobile&&(state==='playing'||state==='wave_intro'))plHintAlpha=1;
+  }
+});
 document.addEventListener('keydown',e=>{
   if(e.key==='ArrowLeft'||e.key==='a')keys.l=true;
   if(e.key==='ArrowRight'||e.key==='d')keys.r=true;
