@@ -59,21 +59,38 @@ const H = window.innerHeight;
 canvas.width = W; canvas.height = H;
 
 
-// ── SUPABASE ─────────────────────────────────────────────────────────────
+// ── SUPABASE (só leitura do ranking — escrita vai pelo servidor) ──────────
 const SUPA_URL = 'https://keeteojjqidcnlztstso.supabase.co';
 const SUPA_KEY = 'sb_publishable_DcttVhiYR6yxIyao1HHtQw_X3tExn4s';
-const SUPA_HDR = { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY, 'Content-Type': 'application/json' };
+const SUPA_HDR = { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY };
+const SCORE_SECRET = 'REV2026';
 
+// Gera token HMAC para validação no servidor
+async function gerarToken(score, contact, timestamp) {
+  const encoder = new TextEncoder();
+  const data = `${Math.floor(score)}:${contact.trim()}:${timestamp}`;
+  const key = await crypto.subtle.importKey(
+    'raw', encoder.encode(SCORE_SECRET),
+    { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
+  );
+  const sig = await crypto.subtle.sign('HMAC', key, encoder.encode(data));
+  return btoa(String.fromCharCode(...new Uint8Array(sig)));
+}
+
+// Salva via função do servidor (nunca direto no Supabase)
 async function saveScoreOnline(nickname, contact, score) {
   try {
-    await fetch(SUPA_URL + '/rest/v1/scores', {
-      method: 'POST', headers: SUPA_HDR,
-      body: JSON.stringify({ nickname, contact, score })
+    const timestamp = Date.now();
+    const token = await gerarToken(score, contact, timestamp);
+    await fetch('/api/save-score', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nickname, contact, score: Math.floor(score), timestamp, token })
     });
   } catch(e) { console.log('save error', e); }
 }
 
-let onlineRanking = null; // ranking carregado do servidor
+let onlineRanking = null;
 async function loadOnlineRanking() {
   try {
     const r = await fetch(
