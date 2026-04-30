@@ -750,6 +750,13 @@ function drawRanking(){
     ctx.textAlign='right';glow(col,8);ctx.fillStyle=col;ctx.font='bold 13px monospace';ctx.fillText(entry.score.toLocaleString(),W-12,y+24);noGlow();
   });
   if(r.length===0){ctx.fillStyle='rgba(180,150,220,0.5)';ctx.font='14px monospace';ctx.textAlign='center';ctx.fillText('Seja o primeiro a pontuar!',W/2,140);}
+  // Regras de inatividade
+  const ry=72+10*46+14;
+  ctx.textAlign='center';ctx.font='10px monospace';
+  ctx.fillStyle='rgba(255,255,255,0.18)';
+  ctx.fillText('⏱️  24h sem jogar = -10% · 48h = -19% · 72h = sai do ranking',W/2,ry);
+  ctx.fillStyle='rgba(255,255,255,0.12)';
+  ctx.fillText('Qualquer partida com o mesmo contato conta para manter posição',W/2,ry+15);
 }
 
 // ── GAME OVER ─────────────────────────────────────────────────────────────
@@ -781,8 +788,13 @@ function drawGameOver(){
     ctx.textAlign='right';ctx.fillStyle=col;ctx.font=`bold ${i<3?13:12}px monospace`;
     ctx.fillText(e.score.toLocaleString(),W-12,y+2);noGlow();
   });
+  // Regras de inatividade (compacto)
+  const rulesY=H*0.38+10*rowH+6;
+  ctx.textAlign='center';ctx.font='9px monospace';
+  ctx.fillStyle='rgba(255,255,255,0.2)';
+  ctx.fillText('⏱️ 24h=-10%  48h=-19%  72h=sai · qualquer partida mantém posição',W/2,rulesY);
   // Botão
-  const btnY=H*0.38+10*rowH+10;
+  const btnY=rulesY+16;
   const bp=Math.sin(frame*0.09)*0.2+0.8;
   glow('#00ff88',16*bp);ctx.fillStyle='rgba(0,255,136,0.13)';ctx.strokeStyle=`rgba(0,255,136,${0.85*bp})`;ctx.lineWidth=2;
   roundRect(W/2-115,btnY,230,44,12);ctx.fill();ctx.stroke();
