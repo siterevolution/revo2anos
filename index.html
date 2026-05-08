@@ -183,10 +183,10 @@
 
     /* ── BOTÕES CTA PRINCIPAIS ── */
     .btn-cta {
-      display: flex; align-items: center; justify-content: space-between;
+      display: flex; align-items: center; justify-content: center;
       border-radius: 14px; padding: 18px 24px; text-decoration: none;
       transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
-      border: none; cursor: pointer; width: 100%; text-align: left;
+      border: none; cursor: pointer; width: 100%; text-align: center;
     }
     .btn-cta-site {
       background: linear-gradient(90deg, #6D28D9, #8B5CF6 45%, #06B6D4);
@@ -198,12 +198,12 @@
       filter: brightness(1.12);
     }
     .btn-cta-comissario {
-      background: linear-gradient(90deg, #B45309, #F59E0B 45%, #EF4444);
-      box-shadow: 0 4px 28px rgba(180,83,9,.5);
+      background: linear-gradient(90deg, #BE185D, #EC4899 45%, #A855F7);
+      box-shadow: 0 4px 28px rgba(190,24,93,.5);
     }
     .btn-cta-comissario:hover {
       transform: translateY(-3px);
-      box-shadow: 0 10px 48px rgba(239,68,68,.6);
+      box-shadow: 0 10px 48px rgba(236,72,153,.6);
       filter: brightness(1.12);
     }
     .btn-cta:active { transform: translateY(0); filter: brightness(.95); }
@@ -302,18 +302,16 @@
            class="btn-cta btn-cta-site">
           <div>
             <p style="font-size:1.05rem;font-weight:900;color:#fff;margin:0 0 3px;letter-spacing:.05em;text-transform:uppercase;">Comprar pelo Site</p>
-            <p style="font-size:.72rem;color:rgba(255,255,255,.7);margin:0;font-weight:500;">Parcelado em até <strong style="color:#fff;font-weight:800;">12x sem juros</strong></p>
+            <p style="font-size:.72rem;color:rgba(255,255,255,.75);margin:0;font-weight:500;">Parcelado em até <strong style="color:#fff;font-weight:800;">12x sem juros</strong></p>
           </div>
-          <svg width="22" height="22" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
 
         <!-- Comprar com Comissário -->
         <button onclick="abrirModalComissario()" class="btn-cta btn-cta-comissario">
           <div>
             <p style="font-size:1.05rem;font-weight:900;color:#fff;margin:0 0 3px;letter-spacing:.05em;text-transform:uppercase;">Comprar com Comissário</p>
-            <p style="font-size:.72rem;color:rgba(255,255,255,.7);margin:0;font-weight:500;">Sem taxa · pagamento somente via <strong style="color:#fff;font-weight:800;">Pix</strong></p>
+            <p style="font-size:.72rem;color:rgba(255,255,255,.75);margin:0;font-weight:500;">Sem taxa · pagamento somente via <strong style="color:#fff;font-weight:800;">Pix</strong></p>
           </div>
-          <svg width="22" height="22" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
 
       </div>
