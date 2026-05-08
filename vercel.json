@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/game.html",
+      "destination": "/",
+      "permanent": false
+    }
+  ]
+}
