@@ -5,7 +5,7 @@ const SUPA_URL = process.env.SUPA_URL;
 const SUPA_KEY = process.env.SUPA_SERVICE_KEY;
 const MAX_SCORE         = 1000000;
 const MAX_PLAY_MS       = 4 * 60 * 60 * 1000;
-const CHALLENGE_MAX_AGE = 20 * 60 * 1000;
+const CHALLENGE_MAX_AGE = 2 * 60 * 60 * 1000;
 const MAX_PTS_PER_SEC   = 1500;
 const RATE_LIMIT_MS     = 5 * 60 * 1000;
 
