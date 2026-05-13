@@ -139,6 +139,8 @@
     .secret-card::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background: conic-gradient(transparent,rgba(139,92,246,.12),transparent 30%); animation: spin-glow 4s linear infinite; }
     .secret-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(139,92,246,.25); }
     @keyframes spin-glow { to { transform: rotate(360deg); } }
+    @keyframes gradShift { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+    @keyframes pulse { 0%,100%{box-shadow:0 4px 32px rgba(109,40,217,.6)} 50%{box-shadow:0 4px 48px rgba(6,182,212,.8)} }
     .secret-inner { position: relative; z-index: 1; }
 
     /* ── BTN PRIMARY ── */
@@ -258,15 +260,15 @@
 
     <!-- Subheadline -->
     <div class="reveal mt-3" style="transition-delay:.12s">
-      <p class="text-lg md:text-xl font-bold tracking-[.22em] text-white/75 uppercase">Pré-Venda Exclusiva</p>
+      <p class="text-lg md:text-xl font-bold tracking-[.22em] text-white/75 uppercase">18 &amp; 19 de Julho · Serra/ES</p>
       <p class="text-sm md:text-base text-white/55 mt-1 font-medium">
-        Vagas Limitadas
+        Sítio Vovó Hilda
       </p>
     </div>
 
     <!-- Countdown -->
     <div class="reveal mt-8 mb-8" style="transition-delay:.22s">
-      <p class="text-[.65rem] font-bold tracking-[.2em] uppercase text-white/40 mb-4">Pré-venda abre em</p>
+      <p class="text-[.65rem] font-bold tracking-[.2em] uppercase text-white/40 mb-4">A festa começa em</p>
       <div id="countdown" class="flex items-center justify-center gap-2 md:gap-4" aria-label="Contagem regressiva">
         <div class="cd-block glass px-4 py-3">
           <span class="cd-num" id="cd-d">00</span>
@@ -288,58 +290,7 @@
           <span class="cd-label">Seg</span>
         </div>
       </div>
-      <p id="cd-ended" class="hidden text-lg font-black text-green-400 tracking-widest uppercase mt-4">🚀 Pré-Venda Aberta! Garanta já a sua!</p>
-    </div>
-
-    <!-- CTA -->
-    <div class="reveal flex flex-col items-center gap-4" style="transition-delay:.32s;width:100%;max-width:640px;margin:0 auto;">
-
-      <!-- Card preço + Botões lado a lado -->
-      <div style="display:flex;flex-direction:column;gap:12px;width:100%;" class="md:flex-row md:items-stretch">
-        <div style="display:flex;flex-direction:row;align-items:stretch;gap:12px;width:100%;">
-
-          <!-- Card R$80 -->
-          <div class="glass flex flex-col items-center justify-center px-6 py-5 flex-shrink-0" style="min-width:170px;gap:6px;">
-            <p style="font-size:.55rem;font-weight:800;letter-spacing:.15em;color:rgba(255,255,255,.45);text-transform:uppercase;margin:0;text-align:center;">REVOLUTION 2 ANOS</p>
-            <p class="text-grad-amber" style="font-size:2.8rem;font-weight:900;line-height:1;margin:2px 0;">R$80</p>
-            <div style="width:100%;height:1px;background:rgba(255,255,255,.08);margin:2px 0;"></div>
-            <div style="display:flex;flex-direction:column;gap:3px;width:100%;">
-              <p style="font-size:.62rem;color:rgba(255,255,255,.5);margin:0;display:flex;align-items:center;gap:5px;"><span style="color:#8B5CF6;font-size:.7rem;">✦</span> Ingresso</p>
-              <p style="font-size:.62rem;color:rgba(255,255,255,.5);margin:0;display:flex;align-items:center;gap:5px;"><span style="color:#8B5CF6;font-size:.7rem;">✦</span> Copo Oficial</p>
-              <p style="font-size:.62rem;color:rgba(255,255,255,.5);margin:0;display:flex;align-items:center;gap:5px;"><span style="color:#8B5CF6;font-size:.7rem;">✦</span> Tirante</p>
-              <p style="font-size:.62rem;color:rgba(255,255,255,.5);margin:0;display:flex;align-items:center;gap:5px;"><span style="color:#F59E0B;font-size:.7rem;">✦</span> Presente Secreto</p>
-            </div>
-          </div>
-
-          <!-- Botões -->
-          <div style="display:flex;flex-direction:column;gap:10px;flex:1;">
-            <a href="https://www.sympla.com.br/evento/revolution-2-anos--alEm-das-estrelas/3421782" target="_blank" rel="noopener"
-               class="btn-cta btn-cta-site" style="flex:1;">
-              <div>
-                <p style="font-size:1rem;font-weight:900;color:#fff;margin:0 0 3px;letter-spacing:.05em;text-transform:uppercase;">Comprar pelo Site</p>
-                <p style="font-size:.7rem;color:rgba(255,255,255,.75);margin:0;font-weight:500;">Parcelado em até <strong style="color:#fff;font-weight:800;">12x sem juros</strong></p>
-              </div>
-            </a>
-            <button onclick="abrirModalComissario()" class="btn-cta btn-cta-comissario" style="flex:1;">
-              <div>
-                <p style="font-size:1rem;font-weight:900;color:#fff;margin:0 0 3px;letter-spacing:.05em;text-transform:uppercase;">Comprar com Comissário</p>
-                <p style="font-size:.7rem;color:rgba(255,255,255,.75);margin:0;font-weight:500;">Sem taxa · somente via <strong style="color:#fff;font-weight:800;">Pix</strong></p>
-              </div>
-            </button>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Grupo oficial — centralizado abaixo do bloco -->
-      <a href="https://chat.whatsapp.com/LPe1mHv9OnRLKXbpmF3UiT" target="_blank"
-         style="display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1.3rem;border-radius:999px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.04);color:rgba(255,255,255,.5);font-size:.8rem;font-weight:600;letter-spacing:.04em;text-decoration:none;transition:all .2s;"
-         onmouseover="this.style.borderColor='rgba(255,255,255,.3)';this.style.color='rgba(255,255,255,.8)'"
-         onmouseout="this.style.borderColor='rgba(255,255,255,.15)';this.style.color='rgba(255,255,255,.5)'">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="opacity:.7;flex-shrink:0;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Entrar no grupo oficial
-      </a>
-
+      <p id="cd-ended" class="hidden text-lg font-black tracking-widest uppercase mt-2" style="color:#a78bfa;">🎉 É hoje! Revolution 2 Anos!</p>
     </div>
 
   </div>
@@ -375,99 +326,6 @@
         </button>
       </div>
       <p class="text-white/20 text-xs mt-4 tracking-widest uppercase">Ranking encerrado · prêmios serão entregues no evento</p>
-    </div>
-  </section>
-
-  <div class="neon-line opacity-40"></div>
-
-  <!-- ════════════════════════════════════════
-       O QUE ESTÁ INCLUSO
-  ════════════════════════════════════════ -->
-  <section id="bundle" class="py-20 px-4" style="background:linear-gradient(180deg,rgba(10,10,15,.7),rgba(26,26,46,.75) 50%,rgba(10,10,15,.7))"
-           aria-labelledby="bundle-title">
-    <div class="max-w-6xl mx-auto">
-
-      <div class="text-center mb-12 reveal">
-        <h2 id="bundle-title" class="text-3xl md:text-5xl font-black mt-4 mb-4">
-          O que está <span class="text-grad">incluso</span>
-        </h2>
-        <p class="text-white/55 text-lg max-w-lg mx-auto">
-          Tudo que você precisa para viver a revolução.
-        </p>
-      </div>
-
-      <!-- Grid de cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-12 stagger">
-
-        <div class="glass p-6 text-center reveal">
-          <span class="text-5xl block mb-3" aria-hidden="true">🎟️</span>
-          <h3 class="font-bold text-base mb-2">Ingresso Revolution 2 Anos</h3>
-          <p class="text-white/50 text-sm leading-relaxed">Acesso completo ao evento mais esperado do ano em Serra/ES</p>
-        </div>
-
-        <div class="glass p-6 text-center reveal">
-          <span class="text-5xl block mb-3" aria-hidden="true">🥤</span>
-          <h3 class="font-bold text-base mb-2">Copo Oficial Exclusivo</h3>
-          <p class="text-white/50 text-sm leading-relaxed">Copo personalizado da Revolution 2 Anos para levar de recordação</p>
-        </div>
-
-        <div class="glass p-6 text-center reveal">
-          <span class="text-5xl block mb-3" aria-hidden="true">🎫</span>
-          <h3 class="font-bold text-base mb-2">Tirante Oficial</h3>
-          <p class="text-white/50 text-sm leading-relaxed">Tirante exclusivo com a identidade visual oficial do evento</p>
-        </div>
-
-        <!-- Presente secreto — destaque especial -->
-        <div class="secret-card p-6 text-center reveal">
-          <div class="secret-inner">
-            <span class="text-5xl block mb-3" aria-hidden="true">🎁</span>
-            <span class="badge badge-purple mb-2">Só na pré-venda</span>
-            <h3 class="font-bold text-base mb-2 text-grad mt-2">Presente Secreto</h3>
-            <p class="text-white/50 text-sm leading-relaxed">Surpresa especial <strong class="text-purple-300">exclusiva para quem garantir a pré-venda</strong>. Revela no evento!</p>
-          </div>
-        </div>
-
-      </div>
-
-
-    </div>
-  </section>
-
-  <div class="neon-line opacity-40"></div>
-
-  <!-- ════════════════════════════════════════
-       SEGREDO + URGÊNCIA
-  ════════════════════════════════════════ -->
-  <section id="urgencia" class="py-20 px-4 relative overflow-hidden" style="background:rgba(26,26,46,.75)"
-           aria-labelledby="urgency-title">
-    <div class="absolute inset-0 opacity-10 pointer-events-none" aria-hidden="true"
-         style="background:radial-gradient(circle at 30% 50%,#8B5CF6,transparent 55%),radial-gradient(circle at 70% 50%,#06B6D4,transparent 55%);"></div>
-
-    <div class="max-w-4xl mx-auto relative z-10 text-center">
-
-      <div class="reveal mb-6">
-        <span class="badge badge-amber">🔥 Últimas Vagas</span>
-      </div>
-
-      <div class="reveal" style="transition-delay:.1s">
-        <h2 id="urgency-title" class="text-3xl md:text-5xl font-black mb-5 leading-tight">
-          Só quem garantir a<br>
-          <span class="text-grad">pré-venda</span> desbloqueia<br>
-          o <span class="text-amber-400">presente secreto</span>
-        </h2>
-        <p class="text-white/55 text-lg max-w-xl mx-auto mb-12">
-          Quando as vagas acabarem, acabou.<br>Sem segunda chance, sem lista de espera.
-        </p>
-      </div>
-
-      <!-- Aviso de vagas limitadas -->
-      <div class="reveal glass inline-block px-10 py-8 mb-10 mx-auto w-full max-w-xs" style="transition-delay:.2s">
-        <span class="text-4xl block mb-3" aria-hidden="true">⚠️</span>
-        <p class="font-black text-xl text-white mb-1">Vagas Limitadas</p>
-        <p class="text-white/50 text-sm leading-relaxed">Quando esgotar, não tem mais.<br>Sem lista de espera.</p>
-      </div>
-
-
     </div>
   </section>
 
@@ -596,61 +454,6 @@
     </div>
   </section>
 
-  <div class="neon-line opacity-60"></div>
-
-  <!-- ════════════════════════════════════════
-       CTA FINAL
-  ════════════════════════════════════════ -->
-  <section id="cta-final" class="py-24 px-4 relative overflow-hidden" aria-labelledby="cta-title">
-    <div class="absolute inset-0 opacity-15 pointer-events-none" aria-hidden="true"
-         style="background:radial-gradient(ellipse at center,#8B5CF6,transparent 70%);"></div>
-    <div class="absolute inset-0 pointer-events-none" style="background:linear-gradient(180deg,#0A0A0F,#1a1a2e,#0A0A0F);opacity:.9" aria-hidden="true"></div>
-
-    <div class="max-w-4xl mx-auto relative z-10">
-      <div class="reveal text-center mb-10">
-        <p class="text-purple-400 text-xs font-bold tracking-[.25em] uppercase mb-4">Não perca essa chance</p>
-        <h2 id="cta-title" class="text-4xl md:text-6xl font-black mb-6 leading-tight">
-          Não fique de fora.<br>
-          <span class="text-grad">A Revolução espera você.</span>
-        </h2>
-        <p class="text-white/55 text-lg max-w-xl mx-auto">
-          Vagas limitadas. 1 presente secreto. 0 segunda chance.<br>
-          <strong class="text-white">Garanta o seu agora.</strong>
-        </p>
-      </div>
-
-      <!-- Preço + Botões lado a lado -->
-      <div class="reveal flex flex-col md:flex-row items-center gap-6">
-
-        <!-- Card de preço (esquerda) -->
-        <div class="glass flex flex-col items-center px-10 py-8 flex-shrink-0 w-full md:w-auto">
-          <p class="text-white/45 text-xs uppercase tracking-widest mb-1">Tudo isso por apenas</p>
-          <p class="text-6xl font-black text-grad-amber">R$80</p>
-          <p class="text-white/45 text-xs mt-2 text-center">Ingresso + Copo + Tirante + Presente Secreto</p>
-        </div>
-
-        <!-- Botões (direita) -->
-        <div style="display:flex;flex-direction:column;gap:12px;flex:1;width:100%;">
-
-          <a href="https://www.sympla.com.br/evento/revolution-2-anos--alEm-das-estrelas/3421782" target="_blank" rel="noopener"
-             class="btn-cta btn-cta-site">
-            <div>
-              <p style="font-size:1.05rem;font-weight:900;color:#fff;margin:0 0 3px;letter-spacing:.05em;text-transform:uppercase;">Comprar pelo Site</p>
-              <p style="font-size:.72rem;color:rgba(255,255,255,.75);margin:0;font-weight:500;">Parcelado em até <strong style="color:#fff;font-weight:800;">12x sem juros</strong></p>
-            </div>
-          </a>
-
-          <button onclick="abrirModalComissario()" class="btn-cta btn-cta-comissario">
-            <div>
-              <p style="font-size:1.05rem;font-weight:900;color:#fff;margin:0 0 3px;letter-spacing:.05em;text-transform:uppercase;">Comprar com Comissário</p>
-              <p style="font-size:.72rem;color:rgba(255,255,255,.75);margin:0;font-weight:500;">Sem taxa · pagamento somente via <strong style="color:#fff;font-weight:800;">Pix</strong></p>
-            </div>
-          </button>
-
-        </div>
-      </div>
-    </div>
-  </section>
 
 </main>
 
@@ -835,7 +638,7 @@
 /* ── CONFIGURAÇÕES — edite aqui ── */
 var CFG = {
   // [DATA_PRÉ_VENDA] — data/hora de abertura da pré-venda (formato ISO, horário local)
-  countdownTo: '2026-05-08T21:00:00',  // Abre 08/05 às 21h — fecha 10/05 às 21h
+  countdownTo: '2026-07-18T22:00:00',  // Festa 18/07 às 22h
   totalVacancies:   600,
   initialSold:      113,   // vagas já vendidas
   simInterval:    45000,   // ms entre cada simulação de venda
