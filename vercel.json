@@ -39,6 +39,10 @@
     {
       "source": "/feira-mix",
       "destination": "/feira-mix.html"
+    },
+    {
+      "source": "/materiais-divulgadores",
+      "destination": "/materiais-divulgadores.html"
     }
   ]
 }

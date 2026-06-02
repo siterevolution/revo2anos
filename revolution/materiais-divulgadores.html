@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Materiais de Divulgação — Revolution 2 Anos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;background:#07060f;color:#fff;min-height:100vh;overflow-x:hidden;padding-bottom:60px}
+    body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(124,58,237,0.2) 0%,transparent 60%);pointer-events:none;z-index:0}
+
+    .topo{text-align:center;padding:48px 24px 32px;position:relative;z-index:1}
+    .topo-logo{font-size:10px;font-weight:800;color:rgba(255,255,255,0.18);letter-spacing:.25em;text-transform:uppercase;margin-bottom:18px}
+    .topo-titulo{font-size:30px;font-weight:900;line-height:1.15;margin-bottom:8px}
+    .topo-titulo span{background:linear-gradient(135deg,#a855f7,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .topo-sub{font-size:15px;color:rgba(255,255,255,0.38);line-height:1.6;max-width:360px;margin:0 auto}
+
+    .wrap{max-width:760px;margin:0 auto;padding:0 20px;position:relative;z-index:1}
+
+    .aviso{background:rgba(139,92,246,0.07);border:1px solid rgba(139,92,246,0.2);border-radius:14px;padding:14px 18px;margin-bottom:28px;font-size:13px;color:rgba(255,255,255,0.5);line-height:1.6;text-align:center}
+    .aviso strong{color:#c4b5fd}
+
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+
+    .card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:12px;transition:all .2s;cursor:default}
+    .card:hover{background:rgba(139,92,246,0.07);border-color:rgba(139,92,246,0.25);transform:translateY(-2px)}
+
+    .card-icone{width:48px;height:48px;border-radius:12px;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.2);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:4px}
+    .card-titulo{font-size:15px;font-weight:800;line-height:1.3}
+    .card-desc{font-size:12px;color:rgba(255,255,255,0.38);line-height:1.5;flex:1}
+    .card-meta{display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid rgba(255,255,255,0.06)}
+    .card-tipo{font-size:10px;font-weight:700;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:.06em}
+    .btn-dl{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:10px;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;font-size:12px;font-weight:800;text-decoration:none;transition:opacity .15s;white-space:nowrap;box-shadow:0 4px 14px rgba(124,58,237,0.35)}
+    .btn-dl:hover{opacity:.88}
+
+    .loading{text-align:center;padding:60px 20px;color:rgba(255,255,255,0.3)}
+    .loading-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#a855f7;animation:pulse 1.2s ease-in-out infinite;margin:0 3px}
+    .loading-dot:nth-child(2){animation-delay:.2s}
+    .loading-dot:nth-child(3){animation-delay:.4s}
+    @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+
+    .empty{text-align:center;padding:80px 20px;color:rgba(255,255,255,0.25)}
+    .empty-icon{font-size:48px;margin-bottom:16px}
+
+    .rodape{text-align:center;padding:32px 20px 0;font-size:11px;color:rgba(255,255,255,0.12);position:relative;z-index:1}
+  </style>
+</head>
+<body>
+
+<div class="topo">
+  <div class="topo-logo">Revolution 2 Anos · Equipe de Divulgadores</div>
+  <div class="topo-titulo">📦 Materiais de <span>Divulgação</span></div>
+  <div class="topo-sub">Baixe as artes e arquivos oficiais para compartilhar nas suas redes</div>
+</div>
+
+<div class="wrap">
+  <div class="aviso">
+    Use sempre os materiais <strong>originais e sem alterações</strong>. Dúvidas? Fale com a equipe no grupo. 📲
+  </div>
+
+  <div id="grid-materiais" class="grid">
+    <div class="loading">
+      <div><span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span></div>
+      <div style="margin-top:14px;font-size:13px">Carregando materiais...</div>
+    </div>
+  </div>
+</div>
+
+<div class="rodape">Revolution 2 Anos · Julho 2026 · Serra, ES</div>
+
+<script>
+const WORKER = 'https://revolution-upload.contatoramishi.workers.dev'
+
+const ICONS = {
+  'image/':          '🖼️',
+  'video/':          '🎬',
+  'application/pdf': '📄',
+  'application/zip': '🗜️',
+}
+function getIcon(ct) {
+  for (const [k,v] of Object.entries(ICONS)) { if ((ct||'').startsWith(k)) return v }
+  return '📁'
+}
+function getLabel(ct) {
+  if ((ct||'').startsWith('image/'))  return 'Imagem'
+  if ((ct||'').startsWith('video/'))  return 'Vídeo'
+  if (ct === 'application/pdf')       return 'PDF'
+  if (ct === 'application/zip')       return 'ZIP'
+  return 'Arquivo'
+}
+function fmtBytes(b) {
+  if (!b) return ''
+  if (b < 1024*1024) return (b/1024).toFixed(0) + ' KB'
+  return (b/(1024*1024)).toFixed(1) + ' MB'
+}
+
+async function carregar() {
+  const grid = document.getElementById('grid-materiais')
+  try {
+    const r = await fetch(WORKER + '/materiais-div/list')
+    const d = await r.json()
+    const lista = d.materiais || []
+
+    if (lista.length === 0) {
+      grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="empty-icon">📦</div><div style="font-weight:700;font-size:15px;margin-bottom:6px">Nenhum material ainda</div><div style="font-size:13px">A equipe ainda não enviou materiais. Volte em breve!</div></div>`
+      return
+    }
+
+    grid.innerHTML = lista.map(m => {
+      const icon  = getIcon(m.tipo)
+      const label = getLabel(m.tipo)
+      const size  = fmtBytes(m.tamanho)
+      const url   = WORKER + '/materiais-div/file?key=' + encodeURIComponent(m.key)
+      return `
+      <div class="card">
+        <div class="card-icone">${icon}</div>
+        <div class="card-titulo">${escHtml(m.titulo)}</div>
+        ${m.descricao ? `<div class="card-desc">${escHtml(m.descricao)}</div>` : '<div class="card-desc"></div>'}
+        <div class="card-meta">
+          <div class="card-tipo">${label}${size ? ' · ' + size : ''}</div>
+          <a class="btn-dl" href="${url}" download="${escHtml(m.nomeArq || m.titulo)}" target="_blank">⬇ Baixar</a>
+        </div>
+      </div>`
+    }).join('')
+  } catch(e) {
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="empty-icon">⚠️</div><div>Erro ao carregar. Tente novamente.</div></div>`
+  }
+}
+
+function escHtml(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+}
+
+carregar()
+</script>
+</body>
+</html>
