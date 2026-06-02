@@ -30,6 +30,10 @@
     {
       "source": "/divulgador",
       "destination": "/divulgador.html"
+    },
+    {
+      "source": "/feira-mix",
+      "destination": "/feira-mix.html"
     }
   ]
 }
