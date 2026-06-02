@@ -8,346 +8,192 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
-    body{
-      font-family:'Inter',sans-serif;
-      background:#07060f;
-      color:#fff;
-      min-height:100vh;
-      padding:0 0 40px;
-      overflow-x:hidden;
-    }
-    body::before{
-      content:'';
-      position:fixed;inset:0;
-      background:
-        radial-gradient(ellipse 80% 50% at 50% -10%,rgba(124,58,237,0.25) 0%,transparent 60%),
-        radial-gradient(ellipse 60% 40% at 80% 100%,rgba(168,85,247,0.12) 0%,transparent 60%);
-      pointer-events:none;z-index:0;
-    }
+    body{font-family:'Inter',sans-serif;background:#07060f;color:#fff;min-height:100vh;padding:0 0 48px;overflow-x:hidden}
+    body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(124,58,237,0.22) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 80% 100%,rgba(168,85,247,0.1) 0%,transparent 60%);pointer-events:none;z-index:0}
 
-    /* ── HEADER TOPO ── */
-    .topo{
-      text-align:center;
-      padding:32px 24px 24px;
-      position:relative;z-index:1;
-    }
-    .topo-logo{
-      font-size:11px;font-weight:800;
-      color:rgba(255,255,255,0.2);
-      letter-spacing:.25em;text-transform:uppercase;
-      margin-bottom:20px;
-    }
-    .topo-emoji{ font-size:52px; margin-bottom:12px; display:block; }
-    .topo-titulo{
-      font-size:28px;font-weight:900;line-height:1.15;
-      margin-bottom:8px;
-    }
-    .topo-titulo span{
-      background:linear-gradient(135deg,#a855f7,#7c3aed);
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-    }
-    .topo-sub{
-      font-size:15px;color:rgba(255,255,255,0.4);
-      line-height:1.55;max-width:300px;margin:0 auto;
-    }
+    .topo{text-align:center;padding:28px 24px 20px;position:relative;z-index:1}
+    .topo-logo{font-size:10px;font-weight:800;color:rgba(255,255,255,0.18);letter-spacing:.25em;text-transform:uppercase;margin-bottom:16px}
+    .topo-emoji{font-size:48px;margin-bottom:10px;display:block}
+    .topo-titulo{font-size:26px;font-weight:900;line-height:1.15;margin-bottom:6px}
+    .topo-titulo span{background:linear-gradient(135deg,#a855f7,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .topo-sub{font-size:14px;color:rgba(255,255,255,0.38);line-height:1.55;max-width:280px;margin:0 auto}
 
-    /* ── WRAPPER ── */
-    .wrap{
-      max-width:440px;
-      margin:0 auto;
-      padding:0 20px;
-      position:relative;z-index:1;
-    }
+    .wrap{max-width:440px;margin:0 auto;padding:0 18px;position:relative;z-index:1}
 
-    /* ── CARD ── */
-    .card{
-      background:rgba(255,255,255,0.04);
-      border:1px solid rgba(139,92,246,0.2);
-      border-radius:20px;
-      padding:24px 20px;
-      margin-bottom:14px;
-    }
+    .card{background:rgba(255,255,255,0.04);border:1px solid rgba(139,92,246,0.18);border-radius:20px;padding:22px 18px;margin-bottom:12px}
 
-    /* ── LOGIN ── */
-    .login-titulo{
-      font-size:18px;font-weight:800;
-      margin-bottom:6px;text-align:center;
-    }
-    .login-sub{
-      font-size:13px;color:rgba(255,255,255,0.4);
-      text-align:center;margin-bottom:22px;line-height:1.5;
-    }
-    .campo-label{
-      font-size:13px;font-weight:700;
-      color:rgba(255,255,255,0.5);
-      margin-bottom:7px;display:flex;align-items:center;gap:6px;
-    }
-    .campo-dica{
-      font-size:11px;font-weight:400;
-      color:rgba(255,255,255,0.25);margin-left:auto;
-    }
-    .input-wrap{ position:relative;margin-bottom:14px; }
-    .input-icon{
-      position:absolute;left:14px;top:50%;transform:translateY(-50%);
-      font-size:16px;pointer-events:none;
-    }
-    input{
-      width:100%;
-      padding:14px 14px 14px 44px;
-      border-radius:12px;
-      background:rgba(255,255,255,0.05);
-      border:1.5px solid rgba(255,255,255,0.1);
-      color:#fff;font-size:16px;
-      outline:none;font-family:inherit;
-      transition:border-color .2s,background .2s;
-    }
-    input:focus{
-      border-color:rgba(139,92,246,0.7);
-      background:rgba(139,92,246,0.08);
-    }
-    input::placeholder{color:rgba(255,255,255,0.18);}
-    .btn-entrar{
-      width:100%;padding:16px;
-      border-radius:14px;
-      background:linear-gradient(135deg,#7c3aed,#6d28d9);
-      border:none;color:#fff;
-      font-size:16px;font-weight:800;
-      cursor:pointer;margin-top:4px;
-      transition:transform .15s,box-shadow .2s;
-      box-shadow:0 6px 24px rgba(124,58,237,0.35);
-      letter-spacing:.02em;
-    }
-    .btn-entrar:active{transform:scale(.97);}
-    .btn-entrar:disabled{opacity:.5;cursor:default;}
-    .erro{
-      background:rgba(239,68,68,0.1);
-      border:1px solid rgba(239,68,68,0.3);
-      border-radius:10px;padding:12px 14px;
-      font-size:13px;color:#fca5a5;
-      margin-bottom:14px;display:none;
-      text-align:center;line-height:1.5;
-    }
+    /* LOGIN */
+    .login-titulo{font-size:18px;font-weight:800;margin-bottom:5px;text-align:center}
+    .login-sub{font-size:13px;color:rgba(255,255,255,0.38);text-align:center;margin-bottom:20px;line-height:1.5}
+    .campo-label{font-size:13px;font-weight:700;color:rgba(255,255,255,0.48);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+    .campo-dica{font-size:11px;font-weight:400;color:rgba(255,255,255,0.22);margin-left:auto}
+    .input-wrap{position:relative;margin-bottom:12px}
+    .input-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none}
+    input{width:100%;padding:13px 13px 13px 42px;border-radius:12px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1);color:#fff;font-size:16px;outline:none;font-family:inherit;transition:border-color .2s,background .2s}
+    input:focus{border-color:rgba(139,92,246,0.7);background:rgba(139,92,246,0.07)}
+    input::placeholder{color:rgba(255,255,255,0.16)}
+    .btn-entrar{width:100%;padding:15px;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;color:#fff;font-size:15px;font-weight:800;cursor:pointer;margin-top:4px;transition:transform .15s,box-shadow .2s;box-shadow:0 6px 24px rgba(124,58,237,0.3);letter-spacing:.02em}
+    .btn-entrar:active{transform:scale(.97)}
+    .btn-entrar:disabled{opacity:.5;cursor:default}
+    .erro{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.28);border-radius:10px;padding:11px 14px;font-size:13px;color:#fca5a5;margin-bottom:12px;display:none;text-align:center;line-height:1.5}
 
-    /* ── SAUDAÇÃO ── */
-    .saudacao{
-      display:flex;align-items:center;gap:14px;
-      margin-bottom:20px;
-    }
-    .saud-avatar{
-      width:54px;height:54px;border-radius:50%;
-      background:linear-gradient(135deg,#7c3aed,#a855f7);
-      display:flex;align-items:center;justify-content:center;
-      font-size:24px;flex-shrink:0;
-      border:2.5px solid rgba(168,85,247,0.5);
-    }
-    .saud-nome{font-size:19px;font-weight:900;line-height:1.2;}
-    .saud-insta{font-size:13px;color:rgba(255,255,255,0.35);margin-top:3px;}
-    .btn-sair{
-      margin-left:auto;background:none;border:none;
-      color:rgba(255,255,255,0.2);font-size:12px;
-      cursor:pointer;padding:7px 10px;border-radius:8px;
-      font-family:inherit;transition:color .15s;
-    }
-    .btn-sair:hover{color:rgba(255,255,255,0.5);}
+    /* COMO FUNCIONA */
+    .cf-box{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:15px;margin-bottom:12px}
+    .cf-titulo{font-size:11px;font-weight:800;color:rgba(255,255,255,0.28);text-transform:uppercase;letter-spacing:.1em;margin-bottom:11px}
+    .cf-passo{display:flex;gap:11px;align-items:flex-start;margin-bottom:9px}
+    .cf-passo:last-child{margin-bottom:0}
+    .cf-num{width:22px;height:22px;border-radius:50%;background:rgba(168,85,247,0.18);border:1px solid rgba(168,85,247,0.32);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#c4b5fd;flex-shrink:0;margin-top:1px}
+    .cf-txt{font-size:13px;color:rgba(255,255,255,0.45);line-height:1.5}
+    .cf-txt strong{color:rgba(255,255,255,0.75)}
 
-    /* ── STATS ── */
-    .stats-titulo{
-      font-size:11px;font-weight:800;
-      color:rgba(255,255,255,0.25);
-      text-transform:uppercase;letter-spacing:.12em;
-      margin-bottom:12px;text-align:center;
-    }
-    .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
-    .stat{
-      background:rgba(255,255,255,0.04);
-      border:1px solid rgba(255,255,255,0.07);
-      border-radius:16px;padding:18px 12px;text-align:center;
-    }
-    .stat-icone{font-size:24px;margin-bottom:8px;}
-    .stat-num{font-size:38px;font-weight:900;line-height:1;margin-bottom:5px;}
-    .stat-nome{font-size:13px;font-weight:700;color:rgba(255,255,255,0.55);margin-bottom:3px;}
-    .stat-desc{font-size:11px;color:rgba(255,255,255,0.25);line-height:1.4;}
+    /* SAUDAÇÃO */
+    .saudacao{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+    .saud-avatar{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;border:2.5px solid rgba(168,85,247,0.45)}
+    .saud-nome{font-size:18px;font-weight:900;line-height:1.2}
+    .saud-insta{font-size:12px;color:rgba(255,255,255,0.32);margin-top:2px}
+    .btn-sair{margin-left:auto;background:none;border:none;color:rgba(255,255,255,0.18);font-size:12px;cursor:pointer;padding:6px 9px;border-radius:8px;font-family:inherit;transition:color .15s}
+    .btn-sair:hover{color:rgba(255,255,255,0.5)}
 
-    /* ── META ── */
-    .meta-card{
-      background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(109,40,217,0.06));
-      border:1px solid rgba(139,92,246,0.25);
-      border-radius:16px;padding:18px;
-    }
-    .meta-top{
-      display:flex;justify-content:space-between;
-      align-items:center;margin-bottom:14px;
-    }
-    .meta-left{}
-    .meta-label{font-size:12px;font-weight:800;color:#c4b5fd;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;}
-    .meta-frase{font-size:13px;color:rgba(255,255,255,0.5);}
-    .meta-frase strong{color:#fff;}
-    .meta-pct-badge{
-      font-size:22px;font-weight:900;color:#a855f7;
-      background:rgba(168,85,247,0.12);
-      border:1px solid rgba(168,85,247,0.25);
-      border-radius:12px;padding:8px 14px;
-      flex-shrink:0;
-    }
-    .bar-bg{height:10px;border-radius:999px;background:rgba(255,255,255,0.08);overflow:hidden;}
-    .bar-fill{height:100%;border-radius:999px;transition:width .8s cubic-bezier(.4,0,.2,1);}
-    .meta-info{
-      display:flex;justify-content:space-between;
-      margin-top:8px;font-size:11px;color:rgba(255,255,255,0.3);
-    }
-    .badge-batida{
-      display:inline-flex;align-items:center;gap:6px;
-      margin-top:12px;padding:8px 16px;border-radius:999px;
-      font-size:13px;font-weight:800;
-      background:rgba(16,185,129,0.15);
-      border:1px solid rgba(16,185,129,0.4);
-      color:#10b981;
-    }
+    /* NÍVEL */
+    .nivel-card{border-radius:18px;padding:20px;margin-bottom:12px;text-align:center;position:relative;overflow:hidden}
+    .nivel-card::before{content:'';position:absolute;top:-40%;left:-20%;width:140%;height:100%;border-radius:50%;opacity:.08;filter:blur(30px)}
+    .nivel-icon{font-size:44px;margin-bottom:8px;display:block;position:relative;z-index:1}
+    .nivel-tag{font-size:10px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;margin-bottom:6px;opacity:.7;position:relative;z-index:1}
+    .nivel-nome{font-size:24px;font-weight:900;line-height:1;position:relative;z-index:1;margin-bottom:14px}
 
-    /* ── LINK CARD ── */
-    .link-card{
-      background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(5,150,105,0.04));
-      border:1px solid rgba(16,185,129,0.2);
-      border-radius:20px;padding:22px 20px;
-    }
-    .link-header{text-align:center;margin-bottom:18px;}
-    .link-icone{font-size:32px;margin-bottom:8px;}
-    .link-titulo{font-size:17px;font-weight:900;margin-bottom:5px;}
-    .link-desc{font-size:13px;color:rgba(255,255,255,0.4);line-height:1.5;}
+    /* RECOMPENSA */
+    .recomp-box{background:rgba(0,0,0,0.25);border-radius:12px;padding:12px 14px;position:relative;z-index:1}
+    .recomp-titulo{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;opacity:.6}
+    .recomp-txt{font-size:14px;font-weight:700;line-height:1.4}
+    .recomp-sem{font-size:13px;color:rgba(255,255,255,0.35);font-style:italic}
 
-    .link-box{
-      background:rgba(0,0,0,0.35);
-      border:1.5px solid rgba(16,185,129,0.2);
-      border-radius:12px;padding:13px 14px;
-      display:flex;align-items:center;gap:10px;
-      margin-bottom:12px;
-    }
-    .link-url{
-      flex:1;font-family:monospace;font-size:12px;
-      color:rgba(255,255,255,0.45);
-      overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-    }
-    .btn-copiar{
-      flex-shrink:0;
-      padding:9px 18px;border-radius:10px;
-      background:rgba(16,185,129,0.15);
-      border:1.5px solid rgba(16,185,129,0.4);
-      color:#6ee7b7;font-size:13px;font-weight:800;
-      cursor:pointer;transition:all .15s;font-family:inherit;
-      white-space:nowrap;
-    }
-    .btn-copiar:hover{background:rgba(16,185,129,0.25);}
+    /* PROGRESSO PRÓX NÍVEL */
+    .prox-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:14px 16px;margin-bottom:12px}
+    .prox-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .prox-label{font-size:12px;font-weight:700;color:rgba(255,255,255,0.4)}
+    .prox-badge{font-size:11px;font-weight:800;padding:3px 10px;border-radius:999px;background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.3);color:#c4b5fd}
+    .bar-bg{height:8px;border-radius:999px;background:rgba(255,255,255,0.07);overflow:hidden}
+    .bar-fill{height:100%;border-radius:999px;transition:width .8s cubic-bezier(.4,0,.2,1)}
+    .prox-frase{font-size:12px;color:rgba(255,255,255,0.35);margin-top:7px;text-align:center}
+    .prox-frase strong{color:#c4b5fd}
 
-    .btn-compartilhar{
-      display:flex;align-items:center;justify-content:center;gap:10px;
-      width:100%;padding:17px;border-radius:14px;
-      background:linear-gradient(135deg,#16a34a,#22c55e);
-      color:#fff;font-size:16px;font-weight:800;
-      text-decoration:none;text-align:center;
-      box-shadow:0 8px 24px rgba(22,163,74,0.35);
-      transition:transform .15s,box-shadow .2s;
-      border:none;cursor:pointer;font-family:inherit;
-    }
-    .btn-compartilhar:active{transform:scale(.97);}
+    /* STATS */
+    .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+    .stat{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:16px 10px;text-align:center}
+    .stat-icone{font-size:22px;margin-bottom:7px}
+    .stat-num{font-size:34px;font-weight:900;line-height:1;margin-bottom:4px}
+    .stat-nome{font-size:12px;font-weight:700;color:rgba(255,255,255,0.5);margin-bottom:2px}
+    .stat-desc{font-size:10px;color:rgba(255,255,255,0.22);line-height:1.4}
 
-    .como-funciona{
-      background:rgba(255,255,255,0.02);
-      border:1px solid rgba(255,255,255,0.06);
-      border-radius:14px;padding:16px;margin-top:12px;
-    }
-    .cf-titulo{font-size:11px;font-weight:800;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;}
-    .cf-passo{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;}
-    .cf-passo:last-child{margin-bottom:0;}
-    .cf-num{
-      width:24px;height:24px;border-radius:50%;
-      background:rgba(168,85,247,0.2);border:1px solid rgba(168,85,247,0.35);
-      display:flex;align-items:center;justify-content:center;
-      font-size:11px;font-weight:900;color:#c4b5fd;flex-shrink:0;margin-top:1px;
-    }
-    .cf-txt{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.5;}
-    .cf-txt strong{color:rgba(255,255,255,0.8);}
+    /* SELETIVA */
+    .seletiva-badge{display:flex;align-items:center;gap:10px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:14px;padding:13px 16px;margin-bottom:12px}
+    .seletiva-icon{font-size:24px;flex-shrink:0}
+    .seletiva-txt{font-size:13px;font-weight:700;color:#fcd34d;line-height:1.4}
+    .seletiva-sub{font-size:11px;color:rgba(245,158,11,0.6);margin-top:2px}
 
-    .rodape{
-      text-align:center;padding:24px 20px 0;
-      font-size:11px;color:rgba(255,255,255,0.12);
-      position:relative;z-index:1;
-    }
+    /* CHECKLIST */
+    .check-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:16px;margin-bottom:12px}
+    .check-titulo{font-size:11px;font-weight:800;color:rgba(255,255,255,0.28);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
+    .check-item{display:flex;align-items:center;gap:10px;margin-bottom:10px;cursor:pointer}
+    .check-item:last-child{margin-bottom:0}
+    .check-box{width:20px;height:20px;border-radius:6px;border:1.5px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;font-size:11px}
+    .check-box.ok{background:rgba(16,185,129,0.2);border-color:rgba(16,185,129,0.5);color:#10b981}
+    .check-info{flex:1}
+    .check-nome{font-size:13px;font-weight:700;color:rgba(255,255,255,0.7)}
+    .check-desc{font-size:11px;color:rgba(255,255,255,0.3);margin-top:1px}
+    .check-aviso{font-size:10px;color:rgba(255,255,255,0.2);text-align:center;margin-top:8px;font-style:italic}
 
-    #tela-login{display:block;}
-    #tela-stats{display:none;}
+    /* LINK */
+    .link-card{background:linear-gradient(135deg,rgba(16,185,129,0.07),rgba(5,150,105,0.03));border:1px solid rgba(16,185,129,0.18);border-radius:18px;padding:20px}
+    .link-header{text-align:center;margin-bottom:15px}
+    .link-icone{font-size:28px;margin-bottom:7px}
+    .link-titulo{font-size:16px;font-weight:900;margin-bottom:4px}
+    .link-desc{font-size:12px;color:rgba(255,255,255,0.38);line-height:1.5}
+    .link-box{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.3);border:1.5px solid rgba(16,185,129,0.18);border-radius:11px;padding:11px 13px;margin-bottom:10px}
+    .link-url{flex:1;font-family:monospace;font-size:12px;color:rgba(255,255,255,0.42);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .btn-copiar{flex-shrink:0;padding:8px 15px;border-radius:9px;background:rgba(16,185,129,0.14);border:1.5px solid rgba(16,185,129,0.38);color:#6ee7b7;font-size:12px;font-weight:800;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap}
+    .btn-compartilhar{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:15px;border-radius:13px;background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;font-size:15px;font-weight:800;text-decoration:none;box-shadow:0 7px 22px rgba(22,163,74,0.3);transition:transform .15s;border:none;cursor:pointer;font-family:inherit}
+    .btn-compartilhar:active{transform:scale(.97)}
+
+    /* DESCLASSIFICADO */
+    .tela-desc{text-align:center;padding:20px 0}
+    .desc-icon{font-size:56px;margin-bottom:16px}
+    .desc-titulo{font-size:22px;font-weight:900;color:#ef4444;margin-bottom:10px}
+    .desc-msg{font-size:15px;color:rgba(255,255,255,0.5);line-height:1.65;max-width:300px;margin:0 auto 20px}
+    .desc-regras{background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);border-radius:14px;padding:16px;text-align:left}
+    .desc-regras-titulo{font-size:11px;font-weight:800;color:rgba(239,68,68,0.7);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+    .desc-regra{font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:7px;padding-left:14px;position:relative}
+    .desc-regra::before{content:'•';position:absolute;left:0;color:rgba(239,68,68,0.5)}
+
+    .rodape{text-align:center;padding:20px 20px 0;font-size:11px;color:rgba(255,255,255,0.1);position:relative;z-index:1}
+
+    #tela-login{display:block}
+    #tela-stats{display:none}
+    #tela-desc{display:none}
   </style>
 </head>
 <body>
 
-<!-- ══ HEADER ══ -->
 <div class="topo">
   <div class="topo-logo">Revolution 2 Anos</div>
-  <span class="topo-emoji">📣</span>
+  <span class="topo-emoji" id="topo-emoji">📣</span>
   <div class="topo-titulo">Área do <span>Divulgador</span></div>
-  <div class="topo-sub">Veja seus resultados e compartilhe seu link exclusivo</div>
+  <div class="topo-sub">Acompanhe seu nível, recompensas e resultados</div>
 </div>
 
 <div class="wrap">
 
-  <!-- ══ TELA DE LOGIN ══ -->
+  <!-- ══ LOGIN ══ -->
   <div id="tela-login">
     <div class="card">
       <div class="login-titulo">Entre na sua área</div>
       <div class="login-sub">Use o mesmo @ do Instagram que você se cadastrou</div>
-
       <div class="erro" id="erro-msg"></div>
-
-      <div class="campo-label">
-        Seu Instagram
-        <span class="campo-dica">sem o @</span>
-      </div>
+      <div class="campo-label">Seu Instagram <span class="campo-dica">sem o @</span></div>
       <div class="input-wrap">
         <span class="input-icon">📸</span>
-        <input type="text" id="inp-user"
-          placeholder="exemplo: joaosilva"
-          autocomplete="username"
-          autocapitalize="none"
-          autocorrect="off" />
+        <input type="text" id="inp-user" placeholder="exemplo: joaosilva" autocomplete="username" autocapitalize="none" autocorrect="off"/>
       </div>
-
       <div class="campo-label">Senha</div>
       <div class="input-wrap">
         <span class="input-icon">🔑</span>
-        <input type="password" id="inp-pass"
-          placeholder="Senha recebida da equipe"
-          autocomplete="current-password" />
+        <input type="password" id="inp-pass" placeholder="Senha recebida da equipe" autocomplete="current-password"/>
       </div>
-
-      <button class="btn-entrar" id="btn-entrar" onclick="fazerLogin()">
-        Entrar no painel →
-      </button>
+      <button class="btn-entrar" id="btn-entrar" onclick="fazerLogin()">Entrar no painel →</button>
     </div>
-
-    <!-- Como funciona -->
-    <div class="como-funciona">
+    <div class="cf-box">
       <div class="cf-titulo">📌 Como funciona</div>
-      <div class="cf-passo">
-        <div class="cf-num">1</div>
-        <div class="cf-txt">Entre com seu @ do Instagram e a senha que a equipe te passou</div>
-      </div>
-      <div class="cf-passo">
-        <div class="cf-num">2</div>
-        <div class="cf-txt">Copie seu <strong>link exclusivo</strong> e compartilhe nos seus stories e posts</div>
-      </div>
-      <div class="cf-passo">
-        <div class="cf-num">3</div>
-        <div class="cf-txt">Cada pessoa que comprar pelo seu link conta como <strong>1 venda</strong> pra você</div>
-      </div>
+      <div class="cf-passo"><div class="cf-num">1</div><div class="cf-txt">Entre com seu @ do Instagram e a senha da equipe</div></div>
+      <div class="cf-passo"><div class="cf-num">2</div><div class="cf-txt">Copie seu <strong>link exclusivo</strong> e compartilhe nos seus stories e posts</div></div>
+      <div class="cf-passo"><div class="cf-num">3</div><div class="cf-txt">Cada venda confirmada = <strong>+1 ponto</strong> e aproxima você do próximo nível 🎯</div></div>
     </div>
   </div>
 
-  <!-- ══ TELA DE STATS ══ -->
+  <!-- ══ DESCLASSIFICADO ══ -->
+  <div id="tela-desc">
+    <div class="card">
+      <div class="tela-desc">
+        <div class="desc-icon">🚫</div>
+        <div class="desc-titulo">Parceria encerrada</div>
+        <div class="desc-msg">Sua parceria foi encerrada por descumprimento das regras de visibilidade.</div>
+        <div class="desc-regras">
+          <div class="desc-regras-titulo">Regras da parceria</div>
+          <div class="desc-regra">Link de indicação visível na Bio do Instagram</div>
+          <div class="desc-regra">Mínimo de 2 postagens de conteúdo oficial por semana</div>
+          <div class="desc-regra">Resposta a chamados no grupo em até 24h</div>
+        </div>
+      </div>
+    </div>
+    <button onclick="sair()" style="width:100%;padding:13px;border-radius:12px;background:none;border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.3);font-size:13px;cursor:pointer;font-family:inherit">← Voltar ao login</button>
+  </div>
+
+  <!-- ══ STATS ══ -->
   <div id="tela-stats">
 
     <!-- Saudação -->
     <div class="card">
       <div class="saudacao">
-        <div class="saud-avatar">📣</div>
+        <div class="saud-avatar" id="s-avatar" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">📣</div>
         <div>
           <div class="saud-nome" id="s-nome">—</div>
           <div class="saud-insta" id="s-insta">—</div>
@@ -356,7 +202,6 @@
       </div>
 
       <!-- Stats -->
-      <div class="stats-titulo">Seus resultados</div>
       <div class="stats-grid">
         <div class="stat">
           <div class="stat-icone">🔗</div>
@@ -365,203 +210,302 @@
           <div class="stat-desc">pessoas que abriram seu link</div>
         </div>
         <div class="stat">
-          <div class="stat-icone">✅</div>
+          <div class="stat-icone">🏆</div>
           <div class="stat-num" id="s-vendas" style="color:#10b981">0</div>
-          <div class="stat-nome">Vendas</div>
-          <div class="stat-desc">passaportes vendidos por você</div>
+          <div class="stat-nome">Pontos</div>
+          <div class="stat-desc">vendas confirmadas</div>
         </div>
       </div>
     </div>
 
-    <!-- Meta -->
-    <div class="meta-card" id="meta-box" style="display:none;margin-bottom:14px;">
-      <div class="meta-top">
-        <div class="meta-left">
-          <div class="meta-label">🎯 Sua meta</div>
-          <div class="meta-frase">Você fez <strong id="s-vendas2">0</strong> de <strong id="s-meta">0</strong> vendas</div>
-        </div>
-        <div class="meta-pct-badge" id="s-pct-badge">0%</div>
-      </div>
-      <div class="bar-bg">
-        <div class="bar-fill" id="s-bar" style="width:0%"></div>
-      </div>
-      <div class="meta-info">
-        <span>0 vendas</span>
-        <span id="s-meta2">meta: 0</span>
-      </div>
-      <div class="badge-batida" id="s-badge" style="display:none">
-        🏆 Parabéns! Você bateu a meta!
+    <!-- Nível atual -->
+    <div class="nivel-card" id="nivel-card">
+      <span class="nivel-icon" id="nivel-icon">📣</span>
+      <div class="nivel-tag">Nível atual</div>
+      <div class="nivel-nome" id="nivel-nome">Candidato</div>
+      <div class="recomp-box" id="recomp-box">
+        <div class="recomp-titulo">🎁 Recompensa desbloqueada</div>
+        <div id="recomp-txt" class="recomp-sem">Continue indicando para desbloquear recompensas!</div>
       </div>
     </div>
 
-    <!-- Link de indicação -->
+    <!-- Próximo nível -->
+    <div class="prox-card" id="prox-card">
+      <div class="prox-top">
+        <div class="prox-label">🚀 Próximo nível</div>
+        <div class="prox-badge" id="prox-badge">—</div>
+      </div>
+      <div class="bar-bg"><div class="bar-fill" id="prox-bar" style="width:0%"></div></div>
+      <div class="prox-frase" id="prox-frase">—</div>
+    </div>
+
+    <!-- Badge seletiva -->
+    <div class="seletiva-badge" id="seletiva-badge" style="display:none">
+      <div class="seletiva-icon">⭐</div>
+      <div>
+        <div class="seletiva-txt">Aprovado para Seletiva de Comissário!</div>
+        <div class="seletiva-sub">A equipe entrará em contato em breve</div>
+      </div>
+    </div>
+
+    <!-- Checklist semanal -->
+    <div class="check-card">
+      <div class="check-titulo">📋 Checklist semanal</div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box" data-key="bio">✓</div>
+        <div class="check-info">
+          <div class="check-nome">Link na Bio do Instagram</div>
+          <div class="check-desc">Seu link de indicação deve estar visível na bio</div>
+        </div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box" data-key="post1">✓</div>
+        <div class="check-info">
+          <div class="check-nome">Post de conteúdo — semana 1</div>
+          <div class="check-desc">1ª postagem sobre o Revolution 2 Anos</div>
+        </div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box" data-key="post2">✓</div>
+        <div class="check-info">
+          <div class="check-nome">Post de conteúdo — semana 2</div>
+          <div class="check-desc">2ª postagem sobre o Revolution 2 Anos</div>
+        </div>
+      </div>
+      <div class="check-item" onclick="toggleCheck(this)">
+        <div class="check-box" data-key="grupo">✓</div>
+        <div class="check-info">
+          <div class="check-nome">Respondeu no grupo esta semana</div>
+          <div class="check-desc">Responder chamados em até 24h</div>
+        </div>
+      </div>
+      <div class="check-aviso">* Apenas lembrete visual — validação final é feita pela equipe</div>
+    </div>
+
+    <!-- Link -->
     <div class="link-card">
       <div class="link-header">
         <div class="link-icone">🚀</div>
         <div class="link-titulo">Seu link exclusivo</div>
-        <div class="link-desc">Compartilhe esse link nos seus stories e posts.<br>Cada clique é um possível passaporte vendido!</div>
+        <div class="link-desc">Compartilhe e cada clique é um possível ponto!</div>
       </div>
-
       <div class="link-box">
         <div class="link-url" id="s-link">—</div>
         <button class="btn-copiar" id="btn-copiar" onclick="copiarLink()">📋 Copiar</button>
       </div>
-
-      <button class="btn-compartilhar" onclick="compartilharLink()">
-        💬 Compartilhar via WhatsApp
-      </button>
-
-      <div class="como-funciona" style="margin-top:14px;">
-        <div class="cf-titulo">💡 Dica de como usar</div>
-        <div class="cf-passo">
-          <div class="cf-num">1</div>
-          <div class="cf-txt">Copie o link acima clicando em <strong>"📋 Copiar"</strong></div>
-        </div>
-        <div class="cf-passo">
-          <div class="cf-num">2</div>
-          <div class="cf-txt">Cole no seu <strong>story do Instagram</strong> como link ou mande no grupo</div>
-        </div>
-        <div class="cf-passo">
-          <div class="cf-num">3</div>
-          <div class="cf-txt">Quem clicar vai cair direto no WhatsApp já com a mensagem preenchida</div>
-        </div>
+      <button class="btn-compartilhar" onclick="compartilharLink()">💬 Compartilhar via WhatsApp</button>
+      <div class="cf-box" style="margin-top:12px;margin-bottom:0">
+        <div class="cf-titulo">💡 Dica de uso</div>
+        <div class="cf-passo"><div class="cf-num">1</div><div class="cf-txt">Copie o link e cole no <strong>story do Instagram</strong></div></div>
+        <div class="cf-passo"><div class="cf-num">2</div><div class="cf-txt">Quem clicar vai para o WhatsApp com a mensagem pronta</div></div>
+        <div class="cf-passo"><div class="cf-num">3</div><div class="cf-txt">Cada venda confirmada = <strong>+1 ponto no seu painel</strong></div></div>
       </div>
     </div>
 
   </div><!-- /tela-stats -->
-
-</div><!-- /wrap -->
+</div>
 
 <div class="rodape">Revolution 2 Anos · Julho 2026 · Serra, ES</div>
 
 <script>
-  const WORKER = 'https://revolution-upload.contatoramishi.workers.dev'
-  let dados = null
+const WORKER = 'https://revolution-upload.contatoramishi.workers.dev'
+let dados = null
 
-  // Restaura sessão
+// Configuração de níveis (espelho do worker)
+const NIVEIS = [
+  { min:10, nome:'Embaixador',         icon:'👑', cor:'#f59e0b', bg:'rgba(245,158,11,0.12)',  border:'rgba(245,158,11,0.25)',  recompensa:'Combo de Água + Ingresso Grátis + Kit Exclusivo (Copo + Tirante)' },
+  { min:5,  nome:'Divulgador Oficial', icon:'🎯', cor:'#10b981', bg:'rgba(16,185,129,0.1)',   border:'rgba(16,185,129,0.22)',  recompensa:'Combo de Água + Ingresso Grátis' },
+  { min:2,  nome:'Parceiro',           icon:'🤝', cor:'#a855f7', bg:'rgba(168,85,247,0.1)',   border:'rgba(168,85,247,0.22)',  recompensa:'Combo de Água + Cupom de 30% de desconto' },
+  { min:0,  nome:'Candidato',          icon:'📣', cor:'#6b7280', bg:'rgba(107,114,128,0.08)', border:'rgba(107,114,128,0.18)', recompensa:null },
+]
+
+function getNivel(vendas) { return NIVEIS.find(n => vendas >= n.min) }
+function getProximo(vendas) {
+  if (vendas >= 10) return null
+  if (vendas >= 5)  return { faltam: 10-vendas, nivel: NIVEIS[0] }
+  if (vendas >= 2)  return { faltam: 5-vendas,  nivel: NIVEIS[1] }
+  return                   { faltam: 2-vendas,  nivel: NIVEIS[2] }
+}
+
+// Restaura sessão
+try {
+  const s = sessionStorage.getItem('div_sessao_v3')
+  if (s) { dados = JSON.parse(s); renderTela(dados) }
+} catch {}
+
+document.addEventListener('keydown', e => { if (e.key === 'Enter') fazerLogin() })
+
+// Carrega checks do localStorage
+function carregarChecks() {
+  const semana = Math.floor(Date.now() / (7*24*60*60*1000))
+  const chave = `div_checks_${semana}`
+  try { return JSON.parse(localStorage.getItem(chave) || '{}') } catch { return {} }
+}
+function salvarCheck(key, val) {
+  const semana = Math.floor(Date.now() / (7*24*60*60*1000))
+  const chave = `div_checks_${semana}`
+  const atual = carregarChecks()
+  atual[key] = val
+  localStorage.setItem(chave, JSON.stringify(atual))
+}
+
+function toggleCheck(item) {
+  const box = item.querySelector('.check-box')
+  const key = box.dataset.key
+  const novoVal = !box.classList.contains('ok')
+  if (novoVal) box.classList.add('ok'); else box.classList.remove('ok')
+  salvarCheck(key, novoVal)
+}
+
+function renderChecks() {
+  const checks = carregarChecks()
+  document.querySelectorAll('.check-box').forEach(box => {
+    if (checks[box.dataset.key]) box.classList.add('ok')
+    else box.classList.remove('ok')
+  })
+}
+
+async function fazerLogin() {
+  const btn  = document.getElementById('btn-entrar')
+  const user = document.getElementById('inp-user').value.trim().replace('@','').toLowerCase()
+  const pass = document.getElementById('inp-pass').value.trim()
+  ocultarErro()
+  if (!user || !pass) { mostrarErro('Preencha seu Instagram e a senha 👆'); return }
+  btn.disabled = true; btn.textContent = 'Verificando...'
   try {
-    const s = sessionStorage.getItem('div_sessao_v2')
-    if (s) { dados = JSON.parse(s); mostrarStats(dados) }
-  } catch {}
-
-  document.addEventListener('keydown', e => { if (e.key === 'Enter') fazerLogin() })
-
-  async function fazerLogin() {
-    const btn  = document.getElementById('btn-entrar')
-    const user = document.getElementById('inp-user').value.trim().replace('@','').toLowerCase()
-    const pass = document.getElementById('inp-pass').value.trim()
-
-    ocultarErro()
-    if (!user || !pass) { mostrarErro('Preencha seu Instagram e a senha 👆'); return }
-
-    btn.disabled = true
-    btn.textContent = 'Verificando...'
-
-    try {
-      const r = await fetch(WORKER + '/divulgador-login', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ instagram: user, senha: pass }),
-      })
-      const d = await r.json()
-      if (!r.ok) {
-        mostrarErro(d.error === 'Senha incorreta.' ? '🔑 Senha incorreta. Fala com a equipe Revolution.' :
-                   d.error === 'Divulgador não encontrado.' ? '📸 Instagram não encontrado. Confirma que digitou certo.' :
-                   d.error === 'Sua conta ainda não foi aprovada.' ? '⏳ Seu cadastro ainda está sendo analisado. Em breve a equipe te avisa!' :
-                   d.error || 'Erro ao entrar.')
-        return
-      }
-      sessionStorage.setItem('div_sessao_v2', JSON.stringify(d))
-      dados = d
-      mostrarStats(d)
-    } catch {
-      mostrarErro('🌐 Erro de conexão. Verifique sua internet e tente novamente.')
-    } finally {
-      btn.disabled = false
-      btn.textContent = 'Entrar no painel →'
-    }
-  }
-
-  function mostrarStats(d) {
-    document.getElementById('tela-login').style.display = 'none'
-    document.getElementById('tela-stats').style.display = 'block'
-    window.scrollTo(0, 0)
-
-    document.getElementById('s-nome').textContent   = d.nome || 'Divulgador'
-    document.getElementById('s-insta').textContent  = '@' + (d.instagram || '')
-    document.getElementById('s-clicks').textContent = d.clicks || 0
-    document.getElementById('s-vendas').textContent = d.vendas || 0
-
-    const link = WORKER + '/r/' + (d.slug || d.id)
-    document.getElementById('s-link').textContent = link
-
-    if (d.meta > 0) {
-      const vendas = d.vendas || 0
-      const pct    = Math.min(100, Math.round((vendas / d.meta) * 100))
-      const batida = vendas >= d.meta
-
-      document.getElementById('meta-box').style.display    = 'block'
-      document.getElementById('s-vendas2').textContent     = vendas
-      document.getElementById('s-meta').textContent        = d.meta
-      document.getElementById('s-meta2').textContent       = 'meta: ' + d.meta
-      document.getElementById('s-pct-badge').textContent   = pct + '%'
-      document.getElementById('s-bar').style.width         = pct + '%'
-      document.getElementById('s-bar').style.background    = batida
-        ? 'linear-gradient(90deg,#10b981,#34d399)'
-        : 'linear-gradient(90deg,#7c3aed,#a855f7)'
-      document.getElementById('s-badge').style.display     = batida ? 'flex' : 'none'
-    }
-  }
-
-  function copiarLink() {
-    const link = WORKER + '/r/' + (dados?.slug || dados?.id || '')
-    navigator.clipboard.writeText(link).then(() => {
-      const btn = document.getElementById('btn-copiar')
-      btn.textContent = '✅ Copiado!'
-      btn.style.background = 'rgba(16,185,129,0.3)'
-      setTimeout(() => {
-        btn.textContent = '📋 Copiar'
-        btn.style.background = ''
-      }, 2500)
-    }).catch(() => {
-      // fallback para mobile
-      const el = document.getElementById('s-link')
-      const range = document.createRange()
-      range.selectNode(el)
-      window.getSelection().removeAllRanges()
-      window.getSelection().addRange(range)
-      document.execCommand('copy')
+    const r = await fetch(WORKER + '/divulgador-login', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ instagram: user, senha: pass }),
     })
-  }
-
-  function compartilharLink() {
-    const link = WORKER + '/r/' + (dados?.slug || dados?.id || '')
-    const texto = 'Vai acontecer o Revolution 2 Anos! 🎉 Garanta seu passaporte aqui: ' + link
-    if (navigator.share) {
-      navigator.share({ title: 'Revolution 2 Anos', text: texto, url: link })
-    } else {
-      const wa = 'https://wa.me/?text=' + encodeURIComponent(texto)
-      window.open(wa, '_blank')
+    const d = await r.json()
+    if (!r.ok) {
+      mostrarErro(
+        d.error === 'Senha incorreta.' ? '🔑 Senha incorreta. Fala com a equipe Revolution.' :
+        d.error === 'Divulgador não encontrado.' ? '📸 Instagram não encontrado. Confirma que digitou certo.' :
+        d.error === 'Sua conta ainda não foi aprovada.' ? '⏳ Seu cadastro ainda está em análise. A equipe te avisa em breve!' :
+        d.error || 'Erro ao entrar.'
+      ); return
     }
-  }
+    sessionStorage.setItem('div_sessao_v3', JSON.stringify(d))
+    dados = d
+    renderTela(d)
+  } catch { mostrarErro('🌐 Erro de conexão. Verifique sua internet.') }
+  finally { btn.disabled = false; btn.textContent = 'Entrar no painel →' }
+}
 
-  function mostrarErro(msg) {
-    const el = document.getElementById('erro-msg')
-    el.innerHTML = msg
-    el.style.display = 'block'
-  }
-  function ocultarErro() {
-    document.getElementById('erro-msg').style.display = 'none'
-  }
-
-  function sair() {
-    sessionStorage.removeItem('div_sessao_v2')
-    dados = null
-    document.getElementById('tela-login').style.display = 'block'
+function renderTela(d) {
+  document.getElementById('tela-login').style.display = 'none'
+  if (d.desclassificado) {
+    document.getElementById('tela-desc').style.display  = 'block'
     document.getElementById('tela-stats').style.display = 'none'
-    document.getElementById('inp-pass').value = ''
-    window.scrollTo(0, 0)
+    return
   }
+  document.getElementById('tela-desc').style.display  = 'none'
+  document.getElementById('tela-stats').style.display = 'block'
+  window.scrollTo(0,0)
+
+  const vendas = d.vendas || 0
+  const nivel  = getNivel(vendas)
+  const prox   = getProximo(vendas)
+
+  // Saudação
+  document.getElementById('s-nome').textContent  = d.nome || 'Divulgador'
+  document.getElementById('s-insta').textContent = '@' + (d.instagram || '')
+  const av = document.getElementById('s-avatar')
+  av.textContent = nivel.icon
+  av.style.background = `linear-gradient(135deg,${nivel.cor}88,${nivel.cor}44)`
+
+  // Stats
+  document.getElementById('s-clicks').textContent = d.clicks || 0
+  document.getElementById('s-vendas').textContent = vendas
+
+  // Nível
+  const nc = document.getElementById('nivel-card')
+  nc.style.background = nivel.bg
+  nc.style.border = `1px solid ${nivel.border}`
+  document.getElementById('nivel-icon').textContent = nivel.icon
+  document.getElementById('nivel-nome').textContent  = nivel.nome
+  document.getElementById('nivel-nome').style.color  = nivel.cor
+  document.getElementById('nivel-tag').style.color   = nivel.cor
+  document.querySelector('#nivel-card .nivel-tag').style.opacity = '1'
+
+  const rt = document.getElementById('recomp-txt')
+  const rb = document.getElementById('recomp-box')
+  if (nivel.recompensa) {
+    rt.className = 'recomp-txt'
+    rt.textContent = nivel.recompensa
+    rt.style.color = nivel.cor
+    rb.style.borderTop = `1px solid ${nivel.border}`
+  } else {
+    rt.className = 'recomp-sem'
+    rt.textContent = 'Continue indicando para desbloquear recompensas!'
+    rt.style.color = ''
+  }
+
+  // Próximo nível
+  const pc = document.getElementById('prox-card')
+  if (prox) {
+    pc.style.display = 'block'
+    const nivelAnt = NIVEIS.find(n => vendas >= n.min) || NIVEIS[3]
+    const nivelProx = prox.nivel
+    const baseMin = nivelAnt.min
+    const proxMin = nivelProx.min
+    const range = proxMin - baseMin
+    const progresso = range > 0 ? Math.round(((vendas - baseMin) / range) * 100) : 100
+    document.getElementById('prox-badge').textContent = `${nivelProx.icon} ${nivelProx.nome}`
+    document.getElementById('prox-badge').style.color = nivelProx.cor
+    document.getElementById('prox-badge').style.background = nivelProx.bg
+    document.getElementById('prox-badge').style.borderColor = nivelProx.border
+    document.getElementById('prox-bar').style.width = progresso + '%'
+    document.getElementById('prox-bar').style.background = `linear-gradient(90deg,${nivel.cor},${nivelProx.cor})`
+    document.getElementById('prox-frase').innerHTML = `Faltam <strong>${prox.faltam} ${prox.faltam === 1 ? 'ponto' : 'pontos'}</strong> para ${nivelProx.icon} ${nivelProx.nome}!`
+  } else {
+    pc.style.display = 'none'
+  }
+
+  // Seletiva
+  document.getElementById('seletiva-badge').style.display = d.seletivaAprovado ? 'flex' : 'none'
+
+  // Emoji do topo
+  document.getElementById('topo-emoji').textContent = nivel.icon
+
+  // Link
+  const link = WORKER + '/r/' + (d.slug || d.id)
+  document.getElementById('s-link').textContent = link
+
+  // Checks
+  renderChecks()
+}
+
+function copiarLink() {
+  const link = WORKER + '/r/' + (dados?.slug || dados?.id || '')
+  navigator.clipboard.writeText(link).then(() => {
+    const btn = document.getElementById('btn-copiar')
+    btn.textContent = '✅ Copiado!'
+    btn.style.background = 'rgba(16,185,129,0.28)'
+    setTimeout(() => { btn.textContent = '📋 Copiar'; btn.style.background = '' }, 2500)
+  })
+}
+
+function compartilharLink() {
+  const link = WORKER + '/r/' + (dados?.slug || dados?.id || '')
+  const texto = 'Vai acontecer o Revolution 2 Anos! 🎉 Garanta seu passaporte: ' + link
+  if (navigator.share) navigator.share({ title:'Revolution 2 Anos', text:texto, url:link })
+  else window.open('https://wa.me/?text=' + encodeURIComponent(texto), '_blank')
+}
+
+function mostrarErro(msg) { const e = document.getElementById('erro-msg'); e.innerHTML = msg; e.style.display = 'block' }
+function ocultarErro() { document.getElementById('erro-msg').style.display = 'none' }
+
+function sair() {
+  sessionStorage.removeItem('div_sessao_v3')
+  dados = null
+  document.getElementById('tela-login').style.display = 'block'
+  document.getElementById('tela-stats').style.display = 'none'
+  document.getElementById('tela-desc').style.display  = 'none'
+  document.getElementById('inp-pass').value = ''
+  window.scrollTo(0,0)
+}
 </script>
 </body>
 </html>
