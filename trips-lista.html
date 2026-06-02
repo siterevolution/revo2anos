@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trips Cadastradas | Revolution 2 Anos</title>
+  <meta name="description" content="Confira as trips oficiais do Revolution 2 Anos e entre em contato com o organizador da sua região.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #08070f;
+      --purple: #8B5CF6;
+      --green: #10b981;
+      --text: #fff;
+      --muted: rgba(255,255,255,0.45);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+
+    #constellation-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+
+    .container { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; padding: 40px 20px 80px; }
+
+    .back-link { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; font-weight: 600; text-decoration: none; margin-bottom: 32px; transition: color .2s; }
+    .back-link:hover { color: var(--text); }
+
+    /* HEADER */
+    .header { text-align: center; margin-bottom: 40px; }
+    .badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); border-radius: 999px; padding: 8px 18px; margin-bottom: 20px; font-size: 11px; font-weight: 700; letter-spacing: .1em; color: #6ee7b7; text-transform: uppercase; }
+    .header h1 { font-size: clamp(1.8rem,5vw,2.4rem); font-weight: 900; letter-spacing: -.02em; line-height: 1.1; margin-bottom: 12px; }
+    .header h1 span { color: #6ee7b7; }
+    .header p { color: var(--muted); font-size: .9rem; line-height: 1.6; max-width: 420px; margin: 0 auto; }
+
+    /* CTA cadastrar */
+    .cta-cadastrar { display: inline-flex; align-items: center; gap: .6rem; background: linear-gradient(135deg,#0891b2,#06b6d4); color: #fff; padding: .85rem 2rem; border-radius: 999px; font-size: .9rem; font-weight: 800; letter-spacing: .04em; text-decoration: none; margin-top: 20px; transition: all .2s; box-shadow: 0 6px 20px rgba(6,182,212,.3); }
+    .cta-cadastrar:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(6,182,212,.45); }
+
+    /* CARDS GRID */
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 520px) { .grid { grid-template-columns: 1fr; } }
+
+    .trip-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 22px;
+      padding: 0;
+      cursor: pointer;
+      transition: border-color .25s, transform .25s, box-shadow .25s;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .trip-card:hover { border-color: rgba(16,185,129,0.45); transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.35); }
+
+    .card-header {
+      background: linear-gradient(135deg, rgba(139,92,246,0.12), rgba(6,182,212,0.06));
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 18px 20px 14px;
+    }
+    .card-nome { font-size: 17px; font-weight: 900; line-height: 1.2; margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis; }
+    .card-estado {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      color: #a78bfa;
+    }
+
+    .card-body { padding: 14px 20px; flex: 1; overflow: hidden; }
+    .card-cidades {
+      display: flex; flex-wrap: wrap; gap: 5px;
+    }
+    .card-cidade-tag {
+      font-size: 10px; font-weight: 600;
+      padding: 4px 10px; border-radius: 8px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.09);
+      color: rgba(255,255,255,0.55);
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .card-btn {
+      margin: 0 20px 18px;
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      background: rgba(16,185,129,0.1);
+      border: 1px solid rgba(16,185,129,0.28);
+      border-radius: 12px;
+      padding: 10px;
+      font-size: 13px; font-weight: 800;
+      color: #6ee7b7;
+      letter-spacing: .03em;
+      transition: background .2s;
+    }
+    .trip-card:hover .card-btn { background: rgba(16,185,129,0.2); }
+
+    /* EMPTY / LOADING */
+    .state-box { text-align: center; padding: 60px 20px; }
+    .state-box .icon { font-size: 3rem; margin-bottom: 16px; }
+    .state-box h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 8px; }
+    .state-box p { color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .spinner { display: inline-block; width: 28px; height: 28px; border: 2px solid rgba(139,92,246,0.2); border-top-color: var(--purple); border-radius: 50%; animation: spin .8s linear infinite; margin-bottom: 14px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* MODAL */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 100; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
+    .modal-overlay.open { display: flex; }
+    .modal { background: #0f0d1a; border: 1px solid rgba(139,92,246,0.25); border-radius: 24px; padding: 32px 28px; max-width: 480px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; animation: modal-in .2s ease; }
+    @keyframes modal-in { from { opacity:0; transform:scale(.95) translateY(10px); } to { opacity:1; transform:scale(1) translateY(0); } }
+
+    .modal-close { position: absolute; top: 18px; right: 20px; background: rgba(255,255,255,0.06); border: none; border-radius: 50%; width: 32px; height: 32px; color: var(--muted); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; }
+    .modal-close:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+    .modal-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); border-radius: 999px; padding: 5px 14px; font-size: 10px; font-weight: 700; color: #6ee7b7; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 16px; }
+    .modal-nome { font-size: 22px; font-weight: 900; margin-bottom: 20px; line-height: 1.2; }
+
+    .modal-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
+    .modal-label { font-size: 10px; font-weight: 700; color: rgba(139,92,246,0.6); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 2px; }
+    .modal-value { font-size: 14px; color: rgba(255,255,255,0.85); line-height: 1.5; }
+
+    .modal-info-block { display: flex; align-items: flex-start; gap: 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+    .modal-info-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 1px; }
+
+    .modal-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 20px 0; }
+
+    .btn-wpp { display: flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg,rgba(37,211,102,0.2),rgba(37,211,102,0.1)); border: 1px solid rgba(37,211,102,0.4); border-radius: 14px; padding: 14px; color: #4ade80; font-family: 'Inter',sans-serif; font-size: 15px; font-weight: 800; text-decoration: none; transition: all .2s; }
+    .btn-wpp:hover { background: rgba(37,211,102,0.25); color: #fff; transform: translateY(-1px); }
+    .btn-sem-tel { text-align: center; font-size: 13px; color: rgba(255,255,255,0.25); padding: 14px; font-style: italic; }
+
+    .modal-rede { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: rgba(139,92,246,0.7); font-weight: 600; }
+  </style>
+</head>
+<body>
+
+<canvas id="constellation-canvas"></canvas>
+
+<div class="container">
+  <a href="/" class="back-link">← Voltar ao site</a>
+
+  <div class="header">
+    <div class="badge">🚌 Trips Oficiais</div>
+    <h1>Trips <span>Cadastradas</span></h1>
+    <p>Confira as trips aprovadas pela equipe Revolution e entre em contato com o organizador da sua região para garantir sua vaga.</p>
+    <a href="/trips" class="cta-cadastrar">➕ Cadastrar minha Trip</a>
+  </div>
+
+  <div id="loading" class="state-box">
+    <div class="spinner"></div>
+    <p>Carregando trips...</p>
+  </div>
+
+  <div id="empty" class="state-box" style="display:none;">
+    <div class="icon">🚌</div>
+    <h3>Nenhuma trip aprovada ainda</h3>
+    <p>Seja o primeiro a cadastrar uma trip para o Revolution 2 Anos!</p>
+  </div>
+
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="fecharModal(event)">
+  <div class="modal" id="modal-box">
+    <button class="modal-close" onclick="fecharModal()">×</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+const WORKER = 'https://revolution-upload.contatoramishi.workers.dev'
+
+function wppLink(phone, tripNome) {
+  const d = (phone || '').replace(/\D/g, '')
+  if (d.length < 10) return null
+  const num = d.startsWith('55') ? d : `55${d}`
+  const msg = `Olá! Vi que sua trip "${tripNome}" está cadastrada no Revolution 2 Anos. Gostaria de mais informações sobre as vagas! 🎶`
+  return `https://wa.me/${num}?text=${encodeURIComponent(msg)}`
+}
+
+function tipoTransporteIcon(tipo) {
+  if (!tipo) return ''
+  if (tipo.toLowerCase().includes('ônibus') || tipo.toLowerCase().includes('onibus')) return '🚌'
+  if (tipo.toLowerCase().includes('van')) return '🚐'
+  return '🚗'
+}
+
+let tripsData = []
+
+function redeSocialLink(rede) {
+  if (!rede) return null
+  const r = rede.trim()
+  if (r.startsWith('http://') || r.startsWith('https://')) return r
+  const handle = r.replace(/^@/, '')
+  if (r.includes('tiktok')) return `https://tiktok.com/@${handle.replace(/.*@/,'')}`
+  return `https://instagram.com/${handle}`
+}
+
+function titleCase(str) {
+  const minusc = ['da','de','do','das','dos','dos','e','em','no','na','nos','nas']
+  return str.trim().replace(/\S+/g, (w, i) => {
+    const l = w.toLowerCase()
+    return (i === 0 || !minusc.includes(l)) ? l.charAt(0).toUpperCase() + l.slice(1) : l
+  })
+}
+
+// Palavras que indicam descrição de rota, não nome de cidade
+const RUIDO = /\b(trip|trips|rotas?|excurs[aã]o|saída|saida|parada|passando|destino|ponto\s*de|embarque|desembarque|outras?\s*cidades?|que\s+fa[çc]am|parte\s+da|da\s+rota|centro|bairro|terminal|rodoviária|rodoviaria|cidade)\b/gi
+
+function extrairCidades(rota) {
+  if (!rota) return []
+
+  // Passo 1 — separa por delimitadores comuns + "X" de rota + traço entre palavras
+  let partes = rota.split(/[,;\/•·|]|\s+[-–—x]\s+/i).map(s => s.trim()).filter(Boolean)
+
+  // Passo 2 — se veio tudo junto (sem separador), tenta dividir por paradas numeradas
+  if (partes.length <= 1) {
+    const porNumero = rota
+      .split(/\b\d+\s*[.ªº°):\-]?\s*(?:saída|saida|parada|ponto|cidade|local|passagem|destino|stop)?\s*/i)
+      .map(s => s.trim()).filter(Boolean)
+    if (porNumero.length > 1) partes = porNumero
+  }
+
+  // Passo 3 — limpa ruído dentro de cada parte e filtra pelo tamanho
+  const cidades = partes
+    .map(s => s.replace(RUIDO, ' ').replace(/[.!?*#\d]+/g, ' ').replace(/\s+/g, ' ').trim())
+    .filter(s => s.length >= 3 && s.length <= 30) // nome de cidade = até 30 chars
+    .map(s => titleCase(s))
+    .filter((s, i, arr) => arr.indexOf(s) === i) // remove duplicatas
+
+  return cidades.length > 0 ? cidades : []
+}
+
+const TAG_COLORS = [
+  { bg: 'rgba(139,92,246,0.14)', border: 'rgba(139,92,246,0.35)', color: '#c4b5fd' },
+  { bg: 'rgba(6,182,212,0.12)',  border: 'rgba(6,182,212,0.35)',  color: '#67e8f9' },
+  { bg: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.35)', color: '#6ee7b7' },
+  { bg: 'rgba(245,158,11,0.12)', border: 'rgba(245,158,11,0.35)', color: '#fcd34d' },
+  { bg: 'rgba(236,72,153,0.12)', border: 'rgba(236,72,153,0.35)', color: '#f9a8d4' },
+  { bg: 'rgba(59,130,246,0.14)', border: 'rgba(59,130,246,0.35)', color: '#93c5fd' },
+  { bg: 'rgba(239,68,68,0.12)',  border: 'rgba(239,68,68,0.32)',  color: '#fca5a5' },
+  { bg: 'rgba(168,85,247,0.14)', border: 'rgba(168,85,247,0.35)', color: '#d8b4fe' },
+]
+
+function renderRota(rota) {
+  if (!rota) return ''
+  const itens = extrairCidades(rota)
+  if (!itens.length) return ''
+  const tags = itens.map((c, i) => {
+    const col = TAG_COLORS[i % TAG_COLORS.length]
+    return `<span style="display:inline-flex;align-items:center;justify-content:center;background:${col.bg};border:1px solid ${col.border};border-radius:10px;padding:6px 14px;font-size:12px;font-weight:700;color:${col.color};flex:1;min-width:110px;max-width:180px;text-align:center;">${c}</span>`
+  }).join('')
+  return `<div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;justify-content:center;">${tags}</div>`
+}
+
+function abrirModal(trip) {
+  const link = wppLink(trip.whatsapp, trip.nomeDaTrip)
+  document.getElementById('modal-content').innerHTML = `
+    <div class="modal-badge">✅ Trip Aprovada</div>
+    <div class="modal-nome">${trip.nomeDaTrip}</div>
+
+    ${trip.estado ? `
+    <div class="modal-info-block">
+      <div class="modal-info-icon">📍</div>
+      <div>
+        <div class="modal-label">Estado / Região</div>
+        <div class="modal-value">${trip.estado}</div>
+      </div>
+    </div>` : ''}
+
+    ${trip.rota ? `
+    <div class="modal-info-block">
+      <div class="modal-info-icon">🗺️</div>
+      <div>
+        <div class="modal-label">Rota / Cidades Atendidas</div>
+        ${renderRota(trip.rota)}
+      </div>
+    </div>` : ''}
+
+    <div class="modal-divider"></div>
+
+    <div class="modal-info-block">
+      <div class="modal-info-icon">👤</div>
+      <div>
+        <div class="modal-label">Responsável</div>
+        <div class="modal-value">${trip.responsavel}</div>
+      </div>
+    </div>
+
+    ${trip.redeSocial ? `
+    <div class="modal-info-block">
+      <div class="modal-info-icon">📸</div>
+      <div>
+        <div class="modal-label">Rede Social</div>
+        <a href="${redeSocialLink(trip.redeSocial)}" target="_blank" rel="noreferrer" class="modal-rede" style="font-size:14px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:5px;">${trip.redeSocial} ↗</a>
+      </div>
+    </div>` : ''}
+
+    <div class="modal-divider"></div>
+
+    ${link
+      ? `<a href="${link}" target="_blank" rel="noreferrer" class="btn-wpp">📱 Entrar em contato no WhatsApp</a>`
+      : `<div class="btn-sem-tel">WhatsApp não disponível — entre em contato pelo Instagram</div>`
+    }
+  `
+  document.getElementById('modal').classList.add('open')
+  document.body.style.overflow = 'hidden'
+}
+
+function fecharModal(e) {
+  if (e && e.target !== document.getElementById('modal')) return
+  document.getElementById('modal').classList.remove('open')
+  document.body.style.overflow = ''
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { document.getElementById('modal').classList.remove('open'); document.body.style.overflow = '' } })
+
+async function carregar() {
+  try {
+    const res  = await fetch(`${WORKER}/trips/list`)
+    const data = res.ok ? await res.json() : []
+    const aprovadas = (Array.isArray(data) ? data : data.trips || []).filter(t => t.status === 'aprovada')
+
+    document.getElementById('loading').style.display = 'none'
+
+    if (!aprovadas.length) {
+      document.getElementById('empty').style.display = 'block'
+      return
+    }
+
+    const grid = document.getElementById('grid')
+    for (const t of aprovadas) {
+      const card = document.createElement('div')
+      card.className = 'trip-card'
+      card.onclick = () => abrirModal(t)
+      const cidadesTags = t.rota
+        ? extrairCidades(t.rota).map(c => `<span class="card-cidade-tag">${c}</span>`).join('')
+        : ''
+
+      const logoUrl = t.logoKey ? `${WORKER}/trips/logo?key=${encodeURIComponent(t.logoKey)}` : null
+      card.innerHTML = `
+        <div class="card-header" style="display:flex;align-items:center;gap:12px;">
+          ${logoUrl ? `<img src="${logoUrl}" alt="Logo" style="width:52px;height:52px;border-radius:12px;object-fit:cover;border:1px solid rgba(255,255,255,0.12);flex-shrink:0;">` : ''}
+          <div style="flex:1;min-width:0;">
+            <div class="card-nome">${t.nomeDaTrip}</div>
+            ${t.estado ? `<div class="card-estado">📍 ${t.estado}</div>` : ''}
+          </div>
+        </div>
+        ${cidadesTags ? `<div class="card-body"><div class="card-cidades">${cidadesTags}</div></div>` : '<div style="flex:1;min-height:12px"></div>'}
+        <div class="card-btn">Ver detalhes da trip →</div>
+      `
+      grid.appendChild(card)
+    }
+  } catch {
+    document.getElementById('loading').innerHTML = '<p style="color:rgba(255,255,255,0.3)">Erro ao carregar. Tente novamente.</p>'
+  }
+}
+
+carregar()
+</script>
+
+<script>
+(function(){
+  const canvas=document.getElementById('constellation-canvas'),ctx=canvas.getContext('2d')
+  let W,H,mouse={x:-9999,y:-9999},particles=[]
+  const COLORS=['#8B5CF6','#06B6D4','#a855f7','#7c3aed','#0ea5e9'],N=75,CONN=130,MD=160,MF=0.012
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+  function rnd(a,b){return a+Math.random()*(b-a)}
+  function mkP(){const ip=Math.random()<.08;return{x:Math.random()*W,y:Math.random()*H,vx:rnd(-.22,.22),vy:rnd(-.22,.22),r:ip?rnd(3.5,6):rnd(1,2.2),color:COLORS[Math.floor(Math.random()*COLORS.length)],ip,pulse:Math.random()*Math.PI*2,ps:rnd(.01,.03)}}
+  function init(){particles=Array.from({length:N},mkP)}
+  function draw(){
+    ctx.clearRect(0,0,W,H)
+    for(const p of particles){const dx=p.x-mouse.x,dy=p.y-mouse.y,d=Math.sqrt(dx*dx+dy*dy);if(d<MD&&d>0){const f=(1-d/MD)*MF;p.vx+=(dx/d)*f*6;p.vy+=(dy/d)*f*6}p.vx*=.995;p.vy*=.995;p.x+=p.vx;p.y+=p.vy;p.pulse+=p.ps;if(p.x<-10)p.x=W+10;if(p.x>W+10)p.x=-10;if(p.y<-10)p.y=H+10;if(p.y>H+10)p.y=-10}
+    for(let i=0;i<particles.length;i++)for(let j=i+1;j<particles.length;j++){const a=particles[i],b=particles[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);if(d<CONN){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=`rgba(139,92,246,${(1-d/CONN)*.28})`;ctx.lineWidth=.6;ctx.stroke()}}
+    for(const p of particles){const dx=p.x-mouse.x,dy=p.y-mouse.y,d=Math.sqrt(dx*dx+dy*dy);if(d<MD*.85){ctx.beginPath();ctx.moveTo(mouse.x,mouse.y);ctx.lineTo(p.x,p.y);ctx.strokeStyle=`rgba(6,182,212,${(1-d/(MD*.85))*.45})`;ctx.lineWidth=.8;ctx.stroke()}}
+    for(const p of particles){const gr=p.r+Math.sin(p.pulse)*(p.ip?1.5:.6);if(p.ip){const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,gr*4);g.addColorStop(0,p.color+'aa');g.addColorStop(1,p.color+'00');ctx.beginPath();ctx.arc(p.x,p.y,gr*4,0,Math.PI*2);ctx.fillStyle=g;ctx.fill()}ctx.beginPath();ctx.arc(p.x,p.y,gr,0,Math.PI*2);ctx.fillStyle=p.ip?p.color:p.color+'cc';ctx.fill()}
+    if(mouse.x>0){const g=ctx.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,MD*.5);g.addColorStop(0,'rgba(6,182,212,0.04)');g.addColorStop(1,'rgba(6,182,212,0)');ctx.beginPath();ctx.arc(mouse.x,mouse.y,MD*.5,0,Math.PI*2);ctx.fillStyle=g;ctx.fill()}
+    requestAnimationFrame(draw)
+  }
+  window.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY})
+  window.addEventListener('mouseleave',()=>{mouse.x=-9999;mouse.y=-9999})
+  window.addEventListener('resize',()=>{resize();init()})
+  resize();init();draw()
+})()
+</script>
+
+</body>
+</html>

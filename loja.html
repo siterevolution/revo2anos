@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loja | Revolution</title>
+  <meta name="description" content="Loja oficial Revolution — camisetas, moletons, bonés e muito mais.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f5f5f5;
+      --white: #ffffff;
+      --black: #111111;
+      --gray: #888888;
+      --light: #e8e8e8;
+      --purple: #7c3aed;
+      --purple-light: #9333ea;
+      --h: 60px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--black); min-height: 100vh; }
+    button { font-family: 'Inter', sans-serif; cursor: pointer; }
+    input, select, textarea { font-family: 'Inter', sans-serif; }
+
+    /* ── HEADER ─────────────────────────────── */
+    .header {
+      position: sticky; top: 0; z-index: 300;
+      background: var(--white);
+      border-bottom: 1px solid var(--light);
+      height: var(--h);
+      display: flex; align-items: center;
+      padding: 0 32px;
+      gap: 32px;
+    }
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem; letter-spacing: 0.12em;
+      color: var(--black); text-decoration: none;
+      white-space: nowrap;
+    }
+    .logo span { color: var(--purple); }
+    .nav {
+      display: flex; gap: 4px;
+      flex: 1;
+    }
+    .nav-btn {
+      background: none; border: none;
+      padding: 6px 14px;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--gray);
+      border-radius: 6px;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .nav-btn:hover { color: var(--black); background: var(--light); }
+    .nav-btn.active { color: var(--black); border-bottom: 2px solid var(--black); border-radius: 0; }
+    .header-right { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+    .cart-btn {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--black); color: var(--white);
+      border: none; border-radius: 8px;
+      padding: 9px 18px;
+      font-size: 13px; font-weight: 700;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .cart-btn:hover { background: #333; }
+    .cart-badge {
+      background: var(--purple); color: #fff;
+      font-size: 10px; font-weight: 800;
+      min-width: 18px; height: 18px; border-radius: 9px;
+      padding: 0 4px;
+      display: none; align-items: center; justify-content: center;
+    }
+    .cart-badge.show { display: flex; }
+
+    /* ── TABS/FILTRO ─────────────────────────── */
+    .tabs-bar {
+      background: var(--white);
+      border-bottom: 1px solid var(--light);
+      padding: 0 32px;
+      display: flex; gap: 0;
+    }
+    .tab-btn {
+      background: none; border: none;
+      padding: 14px 20px;
+      font-size: 13px; font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--gray);
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .tab-btn:hover { color: var(--black); }
+    .tab-btn.active { color: var(--black); border-bottom-color: var(--black); }
+
+    /* ── GRID DE PRODUTOS ─────────────────────── */
+    .grid-wrap {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 36px 32px 80px;
+    }
+    .grid-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .grid-title {
+      font-size: 22px; font-weight: 900;
+      letter-spacing: -0.01em;
+    }
+    .grid-count { font-size: 13px; color: var(--gray); }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 1100px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 750px) { .grid { grid-template-columns: repeat(2, 1fr); } .tabs-bar { overflow-x: auto; } .nav { display: none; } }
+    @media (max-width: 480px) { .grid { grid-template-columns: 1fr 1fr; gap: 12px; } .grid-wrap { padding: 20px 16px 80px; } }
+
+    /* ── CARD ─────────────────────────────────── */
+    .card {
+      background: var(--white);
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.18s, box-shadow 0.18s;
+    }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(0,0,0,0.10); }
+    .card-img {
+      position: relative;
+      aspect-ratio: 3/4;
+      background: #e0e0e0;
+      overflow: hidden;
+    }
+    .card-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s;
+    }
+    .card:hover .card-img img { transform: scale(1.04); }
+    .card-img-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3.5rem;
+      background: linear-gradient(135deg, #e8e8e8 0%, #d0d0d0 100%);
+    }
+    .badge {
+      position: absolute; top: 10px; left: 10px;
+      background: var(--black); color: #fff;
+      font-size: 10px; font-weight: 800;
+      letter-spacing: 0.05em;
+      padding: 3px 8px; border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .badge.novo { background: var(--black); }
+    .badge.ultimas { background: #dc2626; }
+    .badge.esgotado { background: #9ca3af; }
+    .card-info {
+      padding: 12px 14px 16px;
+    }
+    .card-name {
+      font-size: 14px; font-weight: 700;
+      color: var(--black);
+      margin-bottom: 4px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .card-cat {
+      font-size: 11px; font-weight: 500;
+      color: var(--gray);
+      text-transform: uppercase; letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+    .card-price {
+      font-size: 16px; font-weight: 800;
+      color: var(--black);
+    }
+    .card-installments {
+      font-size: 11px; color: var(--gray); margin-top: 2px;
+    }
+
+    /* ── MODAL PRODUTO ────────────────────────── */
+    .overlay {
+      position: fixed; inset: 0; z-index: 400;
+      background: rgba(0,0,0,0.45);
+      display: none; align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .overlay.open { display: flex; }
+    .modal {
+      background: var(--white);
+      border-radius: 16px;
+      max-width: 860px; width: 100%;
+      max-height: 92vh;
+      overflow-y: auto;
+      display: flex;
+      gap: 0;
+    }
+    .modal-img {
+      flex: 0 0 44%;
+      background: #e8e8e8;
+      border-radius: 16px 0 0 16px;
+      overflow: hidden;
+      min-height: 400px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal-img img { width: 100%; height: 100%; object-fit: cover; }
+    .modal-img-placeholder {
+      font-size: 6rem;
+      display: flex; align-items: center; justify-content: center;
+      width: 100%; height: 100%;
+    }
+    .modal-body {
+      flex: 1;
+      padding: 36px 32px;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px;
+      background: rgba(0,0,0,0.07); border: none;
+      width: 34px; height: 34px; border-radius: 50%;
+      font-size: 16px; color: var(--black);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal-cat {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--purple);
+    }
+    .modal-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem; letter-spacing: 0.04em;
+      line-height: 1.1; color: var(--black);
+    }
+    .modal-desc {
+      font-size: 14px; color: var(--gray); line-height: 1.6;
+    }
+    .modal-price {
+      font-size: 1.8rem; font-weight: 900; color: var(--black);
+    }
+    .modal-installments { font-size: 12px; color: var(--gray); margin-top: 2px; }
+    .size-label {
+      font-size: 12px; font-weight: 700; letter-spacing: 0.05em;
+      text-transform: uppercase; color: var(--black);
+      margin-bottom: 8px;
+    }
+    .size-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .size-opt {
+      border: 1.5px solid var(--light);
+      background: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 13px; font-weight: 600;
+      color: var(--black);
+      transition: all 0.15s;
+    }
+    .size-opt:hover:not(:disabled) { border-color: var(--black); }
+    .size-opt.sel { background: var(--black); color: #fff; border-color: var(--black); }
+    .size-opt:disabled { opacity: 0.3; cursor: not-allowed; text-decoration: line-through; }
+    .add-btn {
+      background: var(--black); color: var(--white);
+      border: none; border-radius: 10px;
+      padding: 15px;
+      font-size: 14px; font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: background 0.15s;
+      margin-top: 4px;
+    }
+    .add-btn:hover { background: #333; }
+    .add-btn:disabled { background: #ccc; cursor: not-allowed; }
+    @media (max-width: 650px) {
+      .modal { flex-direction: column; max-height: 95vh; }
+      .modal-img { flex: 0 0 240px; border-radius: 16px 16px 0 0; min-height: 240px; }
+      .modal-body { padding: 20px; }
+    }
+
+    /* ── CARRINHO ─────────────────────────────── */
+    .cart-overlay {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(0,0,0,0.35);
+      display: none;
+    }
+    .cart-overlay.open { display: block; }
+    .cart-panel {
+      position: fixed; top: 0; right: 0; bottom: 0; z-index: 501;
+      width: 380px; max-width: 100vw;
+      background: var(--white);
+      box-shadow: -4px 0 40px rgba(0,0,0,0.15);
+      display: flex; flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+    }
+    .cart-panel.open { transform: none; }
+    .cart-head {
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid var(--light);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .cart-head h3 { font-size: 16px; font-weight: 800; }
+    .cart-close-btn {
+      background: none; border: none;
+      font-size: 20px; color: var(--gray);
+      line-height: 1;
+    }
+    .cart-items { flex: 1; overflow-y: auto; padding: 16px; }
+    .cart-empty { text-align: center; padding: 48px 20px; color: var(--gray); font-size: 14px; }
+    .cart-item {
+      display: flex; gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--light);
+    }
+    .cart-item-img {
+      width: 64px; height: 80px; flex-shrink: 0;
+      background: #eee; border-radius: 8px; overflow: hidden;
+      display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
+    }
+    .cart-item-img img { width: 100%; height: 100%; object-fit: cover; }
+    .cart-item-info { flex: 1; }
+    .cart-item-name { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+    .cart-item-detail { font-size: 11px; color: var(--gray); }
+    .cart-item-price { font-size: 14px; font-weight: 800; margin-top: 6px; }
+    .cart-item-remove {
+      background: none; border: none;
+      font-size: 16px; color: var(--gray);
+      align-self: flex-start; padding: 2px 4px;
+    }
+    .cart-footer {
+      padding: 16px 20px;
+      border-top: 1px solid var(--light);
+    }
+    .cart-total {
+      display: flex; justify-content: space-between;
+      font-size: 15px; font-weight: 800;
+      margin-bottom: 14px;
+    }
+    .checkout-btn {
+      width: 100%;
+      background: var(--black); color: #fff;
+      border: none; border-radius: 10px;
+      padding: 15px;
+      font-size: 14px; font-weight: 800;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      transition: background 0.15s;
+    }
+    .checkout-btn:hover { background: #333; }
+
+    /* ── CHECKOUT ─────────────────────────────── */
+    .checkout-overlay {
+      position: fixed; inset: 0; z-index: 600;
+      background: rgba(0,0,0,0.5);
+      display: none; align-items: flex-start; justify-content: center;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .checkout-overlay.open { display: flex; }
+    .checkout-box {
+      background: var(--white);
+      border-radius: 16px;
+      max-width: 540px; width: 100%;
+      padding: 36px;
+      margin: auto;
+    }
+    .checkout-box h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem; margin-bottom: 24px;
+      letter-spacing: 0.06em;
+    }
+    .form-row { display: flex; gap: 12px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; flex: 1; margin-bottom: 14px; }
+    .form-group label { font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--gray); }
+    .form-group input, .form-group select {
+      border: 1.5px solid var(--light);
+      border-radius: 8px; padding: 11px 12px;
+      font-size: 14px; color: var(--black);
+      background: var(--white);
+      transition: border-color 0.15s;
+    }
+    .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--black); }
+    .section-title {
+      font-size: 13px; font-weight: 800; letter-spacing: 0.05em;
+      text-transform: uppercase; margin: 18px 0 12px;
+      padding-bottom: 6px; border-bottom: 1px solid var(--light);
+    }
+    .radio-group { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+    .radio-opt {
+      flex: 1; min-width: 130px;
+      border: 1.5px solid var(--light);
+      border-radius: 10px; padding: 12px;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .radio-opt input { display: none; }
+    .radio-opt:has(input:checked) { border-color: var(--black); background: #f9f9f9; }
+    .radio-opt strong { font-size: 13px; display: block; margin-bottom: 2px; }
+    .radio-opt span { font-size: 11px; color: var(--gray); }
+    .checkout-summary {
+      background: var(--bg); border-radius: 10px;
+      padding: 16px; margin: 18px 0;
+    }
+    .checkout-summary-row {
+      display: flex; justify-content: space-between;
+      font-size: 13px; margin-bottom: 6px;
+    }
+    .checkout-summary-row.total {
+      font-weight: 800; font-size: 15px;
+      margin-top: 8px; padding-top: 8px;
+      border-top: 1px solid var(--light);
+    }
+    .pay-btn {
+      width: 100%; background: var(--black); color: #fff;
+      border: none; border-radius: 10px; padding: 16px;
+      font-size: 15px; font-weight: 800; letter-spacing: 0.04em;
+      text-transform: uppercase; transition: background 0.15s;
+      margin-top: 8px;
+    }
+    .pay-btn:hover { background: #333; }
+    .back-btn {
+      background: none; border: 1.5px solid var(--light); color: var(--black);
+      border-radius: 10px; padding: 12px; width: 100%;
+      font-size: 13px; font-weight: 700;
+      margin-top: 8px; transition: all 0.15s;
+    }
+    .back-btn:hover { border-color: var(--black); }
+
+    /* ── DADOS SALVOS BANNER ─────────────────── */
+    .saved-banner {
+      display: flex; align-items: center; justify-content: space-between;
+      background: #f0fdf4; border: 1.5px solid #bbf7d0;
+      border-radius: 10px; padding: 12px 16px;
+      margin-bottom: 18px;
+    }
+    .saved-banner-info { display: flex; align-items: center; gap: 10px; }
+    .saved-banner-info span { font-size: 13px; font-weight: 600; color: #166534; }
+    .saved-banner-info small { font-size: 11px; color: #4ade80; display: block; }
+    .saved-use-btn {
+      background: #16a34a; color: #fff; border: none;
+      border-radius: 8px; padding: 7px 14px;
+      font-size: 12px; font-weight: 700; cursor: pointer;
+      white-space: nowrap;
+    }
+    .saved-use-btn:hover { background: #15803d; }
+    .login-link {
+      background: none; border: none;
+      font-size: 12px; font-weight: 600; color: var(--purple);
+      cursor: pointer; text-decoration: underline;
+      padding: 0;
+    }
+    .login-link:hover { color: var(--purple-light); }
+    .contato-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 0;
+    }
+    .save-check-wrap {
+      display: flex; align-items: center; gap: 8px;
+      margin: 6px 0 14px;
+      cursor: pointer;
+    }
+    .save-check-wrap input[type="checkbox"] {
+      width: 16px; height: 16px;
+      accent-color: var(--black);
+      cursor: pointer;
+    }
+    .save-check-wrap label {
+      font-size: 13px; color: var(--black); cursor: pointer;
+    }
+    .sair-link {
+      background: none; border: none;
+      font-size: 11px; color: var(--gray); cursor: pointer;
+      text-decoration: underline; padding: 0;
+    }
+
+    /* ── CONFIRMAÇÃO ──────────────────────────── */
+    .confirm-box {
+      text-align: center; padding: 48px 36px;
+    }
+    .confirm-icon { font-size: 4rem; margin-bottom: 16px; }
+    .confirm-box h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem; letter-spacing: 0.06em; margin-bottom: 10px;
+    }
+    .confirm-box p { font-size: 14px; color: var(--gray); line-height: 1.6; }
+    .confirm-id {
+      display: inline-block;
+      background: var(--bg); border: 1px solid var(--light);
+      border-radius: 8px; padding: 8px 16px;
+      font-size: 13px; font-weight: 700;
+      letter-spacing: 0.06em; margin: 12px 0;
+    }
+
+    /* ── ESTADO VAZIO ─────────────────────────── */
+    .empty-state {
+      grid-column: 1/-1;
+      text-align: center; padding: 80px 20px;
+      color: var(--gray);
+    }
+    .empty-state p { font-size: 15px; margin-top: 8px; }
+
+    /* ── SKELETON ─────────────────────────────── */
+    .skeleton {
+      background: linear-gradient(90deg, #e8e8e8 25%, #f0f0f0 50%, #e8e8e8 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.2s infinite;
+      border-radius: 8px;
+    }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <a href="/" class="logo">REVOLUTION<span>.</span></a>
+  <nav class="nav" id="navCats"></nav>
+  <div class="header-right">
+    <button class="cart-btn" onclick="abrirCarrinho()">
+      🛒 Carrinho
+      <span class="cart-badge" id="cartBadge">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- TABS FILTRO -->
+<div class="tabs-bar" id="tabsBar">
+  <button class="tab-btn active" data-cat="todos" onclick="filtrarCategoria('todos',this)">Todos</button>
+  <button class="tab-btn" data-cat="novidades" onclick="filtrarCategoria('novidades',this)">Novidades</button>
+</div>
+
+<!-- GRID -->
+<div class="grid-wrap">
+  <div class="grid-header">
+    <h1 class="grid-title" id="gridTitle">Todos os Produtos</h1>
+    <span class="grid-count" id="gridCount"></span>
+  </div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- MODAL PRODUTO -->
+<div class="overlay" id="modalOverlay" onclick="fecharModal(event)">
+  <div class="modal" id="modal" style="position:relative">
+    <button class="modal-close" onclick="fecharModal(null,true)" style="position:absolute;top:12px;right:12px;z-index:10">✕</button>
+    <div class="modal-img" id="modalImg"></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- CARRINHO OVERLAY -->
+<div class="cart-overlay" id="cartOverlay" onclick="fecharCarrinho()"></div>
+<aside class="cart-panel" id="cartPanel">
+  <div class="cart-head">
+    <h3>Carrinho</h3>
+    <button class="cart-close-btn" onclick="fecharCarrinho()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-total">
+      <span>Total</span>
+      <span id="cartTotal">R$ 0,00</span>
+    </div>
+    <button class="checkout-btn" onclick="irCheckout()">Finalizar Pedido →</button>
+  </div>
+</aside>
+
+<!-- CHECKOUT -->
+<div class="checkout-overlay" id="checkoutOverlay">
+  <div class="checkout-box" id="checkoutBox"></div>
+</div>
+
+<script>
+const WORKER  = 'https://revolution-upload.contatoramishi.workers.dev'
+const FRETE   = { correios: 20, motoboy: 15 }
+const PREVIEW_KEY = 'revo_preview_ok'
+const PREVIEW_CODE = 'revolution2025'
+
+// ── ACESSO RESTRITO ───────────────────────────
+;(function() {
+  const params = new URLSearchParams(window.location.search)
+  if (params.get('acesso') === PREVIEW_CODE) {
+    localStorage.setItem(PREVIEW_KEY, '1')
+    // limpa o ?acesso= da URL sem recarregar
+    history.replaceState(null, '', window.location.pathname)
+  }
+  if (localStorage.getItem(PREVIEW_KEY) !== '1') {
+    document.body.innerHTML = `
+      <div style="
+        min-height:100vh; display:flex; flex-direction:column;
+        align-items:center; justify-content:center;
+        background:#f5f5f5; font-family:'Inter',sans-serif; text-align:center; padding:40px
+      ">
+        <div style="font-size:3rem;margin-bottom:20px">🔒</div>
+        <div style="font-family:'Bebas Neue',cursive;font-size:2.8rem;letter-spacing:0.08em;color:#111;margin-bottom:8px">
+          EM BREVE
+        </div>
+        <p style="font-size:15px;color:#888;max-width:320px;line-height:1.6">
+          A Loja Revolution está chegando.<br>Fique de olho nas nossas redes.
+        </p>
+      </div>
+    `
+    throw new Error('acesso restrito')
+  }
+})()
+const CATEGORIAS_LABEL = {
+  camiseta: 'Camisetas', moletom: 'Moletons', bone: 'Bonés',
+  regata: 'Regatas', outro: 'Outros'
+}
+const EMOJI = { camiseta:'👕', moletom:'🧥', bone:'🧢', regata:'👗', outro:'📦' }
+
+let produtos = []
+let carrinho = JSON.parse(localStorage.getItem('revo_cart') || '[]')
+let catAtual = 'todos'
+let produtoModal = null
+let tamanhoSel = null
+
+// ── INIT ──────────────────────────────────────
+async function init() {
+  renderGrid(gerarSkeletons(8))
+  try {
+    const r = await fetch(`${WORKER}/loja/produtos`)
+    const data = await r.json()
+    produtos = Array.isArray(data) ? data : (data.produtos || [])
+    renderNavCats()
+    renderTabsCats()
+    aplicarFiltro()
+  } catch(e) {
+    document.getElementById('grid').innerHTML = `
+      <div class="empty-state">
+        <div style="font-size:3rem">😕</div>
+        <p>Erro ao carregar produtos. Tenta de novo.</p>
+      </div>`
+  }
+  atualizarBadgeCarrinho()
+}
+
+function gerarSkeletons(n) {
+  return Array.from({length:n}, (_,i) => `
+    <div class="card">
+      <div class="card-img skeleton"></div>
+      <div class="card-info">
+        <div class="skeleton" style="height:14px;margin-bottom:8px;border-radius:4px"></div>
+        <div class="skeleton" style="height:12px;width:60%;margin-bottom:10px;border-radius:4px"></div>
+        <div class="skeleton" style="height:16px;width:40%;border-radius:4px"></div>
+      </div>
+    </div>
+  `).join('')
+}
+function renderGrid(html) {
+  document.getElementById('grid').innerHTML = html
+}
+
+// ── CATEGORIAS ────────────────────────────────
+function renderNavCats() {
+  const cats = [...new Set(produtos.map(p => p.categoria).filter(Boolean))]
+  const nav = document.getElementById('navCats')
+  nav.innerHTML = cats.map(c => `
+    <button class="nav-btn" onclick="filtrarCategoria('${c}',null,'nav')">${CATEGORIAS_LABEL[c]||c}</button>
+  `).join('')
+}
+function renderTabsCats() {
+  const cats = [...new Set(produtos.map(p => p.categoria).filter(Boolean))]
+  const bar = document.getElementById('tabsBar')
+  const extras = cats.map(c => `
+    <button class="tab-btn" data-cat="${c}" onclick="filtrarCategoria('${c}',this)">${CATEGORIAS_LABEL[c]||c}</button>
+  `).join('')
+  bar.innerHTML = `
+    <button class="tab-btn active" data-cat="todos" onclick="filtrarCategoria('todos',this)">Todos</button>
+    <button class="tab-btn" data-cat="novidades" onclick="filtrarCategoria('novidades',this)">Novidades</button>
+    ${extras}
+  `
+}
+
+// ── FILTRO ────────────────────────────────────
+function filtrarCategoria(cat, btn, origem) {
+  catAtual = cat
+  // atualizar tabs
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
+  if (btn) btn.classList.add('active')
+  // atualizar nav
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.toLowerCase() === (CATEGORIAS_LABEL[cat]||cat).toLowerCase())
+  })
+  aplicarFiltro()
+}
+
+function aplicarFiltro() {
+  const agora = Date.now()
+  let lista = [...produtos]
+
+  if (catAtual === 'novidades') {
+    lista = lista.filter(p => p.criadoEm && (agora - p.criadoEm) < 30*24*3600*1000)
+  } else if (catAtual !== 'todos') {
+    lista = lista.filter(p => p.categoria === catAtual)
+  }
+
+  const titulo = catAtual === 'todos' ? 'Todos os Produtos'
+    : catAtual === 'novidades' ? 'Novidades'
+    : CATEGORIAS_LABEL[catAtual] || catAtual
+  document.getElementById('gridTitle').textContent = titulo
+  document.getElementById('gridCount').textContent = `${lista.length} produto${lista.length !== 1 ? 's' : ''}`
+
+  if (!lista.length) {
+    renderGrid(`<div class="empty-state"><div style="font-size:3rem">📭</div><p>Nenhum produto nessa categoria ainda.</p></div>`)
+    return
+  }
+  renderGrid(lista.map(cardHTML).join(''))
+}
+
+// ── CARD ──────────────────────────────────────
+function cardHTML(p) {
+  const agora = Date.now()
+  const isNovo = p.criadoEm && (agora - p.criadoEm) < 7*24*3600*1000
+  const totalEstoque = totalStock(p)
+  const esgotado = totalEstoque === 0
+  const poucas = !esgotado && totalEstoque < 5
+
+  const badge = esgotado ? `<div class="badge esgotado">Esgotado</div>`
+    : isNovo ? `<div class="badge novo">Novo</div>`
+    : poucas ? `<div class="badge ultimas">Últimas unidades</div>`
+    : ''
+
+  const fotoUrl = p.foto ? `${WORKER}/loja/foto?key=${encodeURIComponent(p.foto)}` : null
+  const imgContent = fotoUrl
+    ? `<img src="${fotoUrl}" alt="${p.nome}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+    + `<div class="card-img-placeholder" style="display:none">${EMOJI[p.categoria]||'📦'}</div>`
+    : `<div class="card-img-placeholder">${EMOJI[p.categoria]||'📦'}</div>`
+
+  const instl = p.preco >= 50 ? `<div class="card-installments">Em até 3x de ${fmt(p.preco/3)} s/ juros</div>` : ''
+
+  return `
+    <div class="card" onclick="abrirProduto('${p.id}')">
+      <div class="card-img">
+        ${imgContent}
+        ${badge}
+      </div>
+      <div class="card-info">
+        <div class="card-cat">${CATEGORIAS_LABEL[p.categoria]||p.categoria||''}</div>
+        <div class="card-name">${p.nome}</div>
+        <div class="card-price">${fmt(p.preco)}</div>
+        ${instl}
+      </div>
+    </div>
+  `
+}
+
+function totalStock(p) {
+  if (!p.tamanhos) return 0
+  return Object.values(p.tamanhos).reduce((a,b) => a + (Number(b)||0), 0)
+}
+
+function fmt(v) {
+  return 'R$ ' + Number(v||0).toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.')
+}
+
+// ── MODAL PRODUTO ─────────────────────────────
+function abrirProduto(id) {
+  const p = produtos.find(x => x.id === id)
+  if (!p) return
+  produtoModal = p
+  tamanhoSel = null
+
+  const fotoUrl = p.foto ? `${WORKER}/loja/foto?key=${encodeURIComponent(p.foto)}` : null
+  const agora = Date.now()
+  const isNovo = p.criadoEm && (agora - p.criadoEm) < 7*24*3600*1000
+  const totalEstoque = totalStock(p)
+  const esgotado = totalEstoque === 0
+
+  // imagem
+  document.getElementById('modalImg').innerHTML = fotoUrl
+    ? `<img src="${fotoUrl}" alt="${p.nome}" style="width:100%;height:100%;object-fit:cover">`
+    : `<div class="modal-img-placeholder">${EMOJI[p.categoria]||'📦'}</div>`
+
+  // tamanhos
+  const tamanhosHTML = Object.entries(p.tamanhos||{}).map(([tam,qt]) => `
+    <button class="size-opt" data-tam="${tam}" onclick="selecionarTamanho('${tam}')" ${Number(qt)===0?'disabled':''}>
+      ${tam}
+    </button>
+  `).join('')
+
+  const instl = p.preco >= 50 ? `<div class="modal-installments">Em até 3x de ${fmt(p.preco/3)} s/ juros</div>` : ''
+
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-cat">${CATEGORIAS_LABEL[p.categoria]||p.categoria||''}${isNovo?' · ✦ Novo':''}</div>
+    <div class="modal-name">${p.nome}</div>
+    ${p.descricao ? `<div class="modal-desc">${p.descricao}</div>` : ''}
+    <div class="modal-price">${fmt(p.preco)}</div>
+    ${instl}
+    <div>
+      <div class="size-label">Tamanho</div>
+      <div class="size-grid">${tamanhosHTML}</div>
+    </div>
+    <button class="add-btn" id="addBtn" onclick="adicionarAoCarrinho()" ${esgotado?'disabled':''}>
+      ${esgotado ? 'Produto Esgotado' : '+ Adicionar ao Carrinho'}
+    </button>
+    ${esgotado ? '' : '<div style="font-size:11px;color:#aaa;text-align:center;margin-top:4px">Selecione um tamanho para adicionar</div>'}
+  `
+
+  document.getElementById('modalOverlay').classList.add('open')
+  document.body.style.overflow = 'hidden'
+}
+
+function selecionarTamanho(tam) {
+  tamanhoSel = tam
+  document.querySelectorAll('.size-opt').forEach(b => {
+    b.classList.toggle('sel', b.dataset.tam === tam)
+  })
+  const btn = document.getElementById('addBtn')
+  if (btn && !btn.disabled) btn.textContent = `+ Adicionar ao Carrinho`
+}
+
+function fecharModal(e, force) {
+  if (!force && e && e.target !== document.getElementById('modalOverlay')) return
+  document.getElementById('modalOverlay').classList.remove('open')
+  document.body.style.overflow = ''
+  produtoModal = null; tamanhoSel = null
+}
+
+// ── CARRINHO ──────────────────────────────────
+function adicionarAoCarrinho() {
+  if (!produtoModal || !tamanhoSel) {
+    const btn = document.getElementById('addBtn')
+    if (btn) { btn.textContent = '⚠ Selecione um tamanho!'; setTimeout(() => btn.textContent = '+ Adicionar ao Carrinho', 1800) }
+    return
+  }
+  const existing = carrinho.find(c => c.id === produtoModal.id && c.tamanho === tamanhoSel)
+  if (existing) {
+    existing.qty++
+  } else {
+    carrinho.push({
+      id: produtoModal.id, nome: produtoModal.nome,
+      preco: produtoModal.preco, tamanho: tamanhoSel,
+      foto: produtoModal.foto, categoria: produtoModal.categoria,
+      qty: 1
+    })
+  }
+  salvarCarrinho()
+  fecharModal(null, true)
+  abrirCarrinho()
+}
+
+function removerItem(idx) {
+  carrinho.splice(idx, 1)
+  salvarCarrinho()
+  renderCarrinho()
+}
+
+function salvarCarrinho() {
+  localStorage.setItem('revo_cart', JSON.stringify(carrinho))
+  atualizarBadgeCarrinho()
+}
+
+function atualizarBadgeCarrinho() {
+  const total = carrinho.reduce((a,c) => a + c.qty, 0)
+  const badge = document.getElementById('cartBadge')
+  badge.textContent = total
+  badge.classList.toggle('show', total > 0)
+}
+
+function abrirCarrinho() {
+  document.getElementById('cartOverlay').classList.add('open')
+  document.getElementById('cartPanel').classList.add('open')
+  document.body.style.overflow = 'hidden'
+  renderCarrinho()
+}
+function fecharCarrinho() {
+  document.getElementById('cartOverlay').classList.remove('open')
+  document.getElementById('cartPanel').classList.remove('open')
+  document.body.style.overflow = ''
+}
+
+function renderCarrinho() {
+  const el = document.getElementById('cartItems')
+  const footer = document.getElementById('cartFooter')
+  if (!carrinho.length) {
+    el.innerHTML = `<div class="cart-empty">🛒<br>Seu carrinho está vazio.</div>`
+    footer.style.display = 'none'
+    return
+  }
+  el.innerHTML = carrinho.map((c,i) => {
+    const fotoUrl = c.foto ? `${WORKER}/loja/foto?key=${encodeURIComponent(c.foto)}` : null
+    const img = fotoUrl
+      ? `<img src="${fotoUrl}" alt="${c.nome}" onerror="this.style.display='none'">` + `<span style="display:none;font-size:1.6rem">${EMOJI[c.categoria]||'📦'}</span>`
+      : `<span style="font-size:1.6rem">${EMOJI[c.categoria]||'📦'}</span>`
+    return `
+      <div class="cart-item">
+        <div class="cart-item-img">${img}</div>
+        <div class="cart-item-info">
+          <div class="cart-item-name">${c.nome}</div>
+          <div class="cart-item-detail">Tam: ${c.tamanho} · Qtd: ${c.qty}</div>
+          <div class="cart-item-price">${fmt(c.preco * c.qty)}</div>
+        </div>
+        <button class="cart-item-remove" onclick="removerItem(${i})">✕</button>
+      </div>
+    `
+  }).join('')
+  const subtotal = carrinho.reduce((a,c) => a + c.preco * c.qty, 0)
+  document.getElementById('cartTotal').textContent = fmt(subtotal)
+  footer.style.display = 'block'
+}
+
+// ── CHECKOUT ──────────────────────────────────
+function irCheckout() {
+  fecharCarrinho()
+  renderCheckout()
+  document.getElementById('checkoutOverlay').classList.add('open')
+  document.body.style.overflow = 'hidden'
+}
+function fecharCheckout() {
+  document.getElementById('checkoutOverlay').classList.remove('open')
+  document.body.style.overflow = ''
+}
+
+function dadosSalvos() {
+  try { return JSON.parse(localStorage.getItem('revo_cliente') || 'null') } catch(e) { return null }
+}
+
+function renderCheckout() {
+  const subtotal = carrinho.reduce((a,c) => a + c.preco * c.qty, 0)
+  const itensHTML = carrinho.map(c =>
+    `<div class="checkout-summary-row"><span>${c.nome} (${c.tamanho}) x${c.qty}</span><span>${fmt(c.preco*c.qty)}</span></div>`
+  ).join('')
+  const saved = dadosSalvos()
+
+  const bannerHTML = saved ? `
+    <div class="saved-banner">
+      <div class="saved-banner-info">
+        <span>👋 Olá, ${saved.nome?.split(' ')[0] || 'você'}!
+          <small>Dados salvos · <button class="sair-link" onclick="sairDados()">Usar outro</button></small>
+        </span>
+      </div>
+      <button class="saved-use-btn" onclick="preencherDadosSalvos()">Usar meus dados</button>
+    </div>
+  ` : ''
+
+  document.getElementById('checkoutBox').innerHTML = `
+    <button onclick="fecharCheckout()" style="background:none;border:none;font-size:13px;color:var(--gray);margin-bottom:12px;cursor:pointer">← Voltar ao carrinho</button>
+    <h2>Finalizar Pedido</h2>
+
+    ${bannerHTML}
+
+    <div class="contato-header">
+      <div class="section-title" style="margin:0;border:none;padding:0">Contato</div>
+      ${!saved ? `<button class="login-link" onclick="tentarLogin()">Fazer login</button>` : ''}
+    </div>
+    <div style="height:10px"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Nome completo</label><input id="fNome" placeholder="João Silva"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>WhatsApp</label><input id="fWpp" placeholder="(99) 99999-9999" type="tel"></div>
+      <div class="form-group"><label>E-mail</label><input id="fEmail" placeholder="joao@email.com" type="email"></div>
+    </div>
+
+    <div class="section-title">Entrega</div>
+    <div class="form-row">
+      <div class="form-group"><label>CEP</label><input id="fCep" placeholder="00000-000" style="max-width:140px" oninput="buscarCep(this.value)"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group" style="flex:2"><label>Endereço</label><input id="fEnd" placeholder="Rua, número"></div>
+      <div class="form-group"><label>Complemento</label><input id="fComp" placeholder="Apto 1"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Cidade</label><input id="fCid" placeholder="Arraial do Cabo"></div>
+      <div class="form-group" style="max-width:80px"><label>Estado</label><input id="fEst" placeholder="RJ"></div>
+    </div>
+
+    <label class="save-check-wrap">
+      <input type="checkbox" id="fSalvar" ${saved ? 'checked' : ''}>
+      <label for="fSalvar">Salvar minhas informações para a próxima vez</label>
+    </label>
+
+    <div class="section-title">Frete</div>
+    <div class="radio-group" id="freteGroup">
+      <label class="radio-opt"><input type="radio" name="frete" value="correios" onchange="calcTotal()">
+        <strong>📦 Correios</strong><span>${fmt(FRETE.correios)} · 3-7 dias úteis</span></label>
+      <label class="radio-opt"><input type="radio" name="frete" value="motoboy" onchange="calcTotal()">
+        <strong>🛵 Motoboy</strong><span>${fmt(FRETE.motoboy)} · Mesmo dia (Arraial)</span></label>
+    </div>
+
+    <div class="section-title">Pagamento</div>
+    <div class="radio-group">
+      <label class="radio-opt"><input type="radio" name="pagamento" value="pix" checked>
+        <strong>⚡ PIX</strong><span>Aprovação imediata</span></label>
+      <label class="radio-opt"><input type="radio" name="pagamento" value="cartao">
+        <strong>💳 Cartão</strong><span>Em breve</span></label>
+    </div>
+
+    <div class="checkout-summary">
+      ${itensHTML}
+      <div class="checkout-summary-row"><span>Frete</span><span id="sumFrete">—</span></div>
+      <div class="checkout-summary-row total"><span>Total</span><span id="sumTotal">${fmt(subtotal)}</span></div>
+    </div>
+
+    <button class="pay-btn" onclick="enviarPedido()">Confirmar Pedido</button>
+    <button class="back-btn" onclick="fecharCheckout();abrirCarrinho()">← Voltar ao Carrinho</button>
+  `
+
+  // auto-preencher se tem dados salvos
+  if (saved) preencherDadosSalvos()
+}
+
+function preencherDadosSalvos() {
+  const s = dadosSalvos()
+  if (!s) return
+  const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val }
+  set('fNome', s.nome); set('fWpp', s.wpp); set('fEmail', s.email)
+  set('fCep', s.cep); set('fEnd', s.logradouro); set('fComp', s.complemento)
+  set('fCid', s.cidade); set('fEst', s.estado)
+}
+
+function tentarLogin() {
+  const s = dadosSalvos()
+  if (s) {
+    preencherDadosSalvos()
+    alert(`Dados de ${s.nome?.split(' ')[0] || 'você'} carregados! ✅`)
+  } else {
+    alert('Você ainda não tem dados salvos.\nFinalize seu primeiro pedido com "Salvar minhas informações" marcado.')
+  }
+}
+
+function sairDados() {
+  if (confirm('Limpar dados salvos e preencher manualmente?')) {
+    localStorage.removeItem('revo_cliente')
+    renderCheckout()
+  }
+}
+
+function calcTotal() {
+  const frete = document.querySelector('input[name="frete"]:checked')?.value
+  const sub = carrinho.reduce((a,c) => a + c.preco * c.qty, 0)
+  const fVal = frete ? FRETE[frete] : 0
+  const el1 = document.getElementById('sumFrete')
+  const el2 = document.getElementById('sumTotal')
+  if (el1) el1.textContent = frete ? fmt(fVal) : '—'
+  if (el2) el2.textContent = fmt(sub + fVal)
+}
+
+async function buscarCep(cep) {
+  const digits = cep.replace(/\D/g,'')
+  if (digits.length < 8) return
+  try {
+    const r = await fetch(`https://viacep.com.br/ws/${digits}/json/`)
+    const d = await r.json()
+    if (!d.erro) {
+      const fEnd = document.getElementById('fEnd')
+      const fCid = document.getElementById('fCid')
+      const fEst = document.getElementById('fEst')
+      if (fEnd) fEnd.value = `${d.logradouro}${d.complemento?' - '+d.complemento:''}`
+      if (fCid) fCid.value = d.localidade
+      if (fEst) fEst.value = d.uf
+    }
+  } catch(e) {}
+}
+
+async function enviarPedido() {
+  const nome = document.getElementById('fNome')?.value?.trim()
+  const wpp  = document.getElementById('fWpp')?.value?.trim()
+  const email = document.getElementById('fEmail')?.value?.trim()
+  const end   = document.getElementById('fEnd')?.value?.trim()
+  const cep   = document.getElementById('fCep')?.value?.trim()
+  const cid   = document.getElementById('fCid')?.value?.trim()
+  const comp  = document.getElementById('fComp')?.value?.trim()
+  const est   = document.getElementById('fEst')?.value?.trim()
+  const frete = document.querySelector('input[name="frete"]:checked')?.value
+  const pag   = document.querySelector('input[name="pagamento"]:checked')?.value || 'pix'
+
+  if (!nome || !wpp || !end || !cep || !frete) {
+    alert('Preencha: nome, WhatsApp, endereço, CEP e escolha o frete.')
+    return
+  }
+
+  const subtotal = carrinho.reduce((a,c) => a + c.preco * c.qty, 0)
+  const fVal = FRETE[frete] || 0
+
+  const pedido = {
+    cliente: { nome, wpp, email },
+    endereco: { cep, logradouro: end, complemento: comp, cidade: cid, estado: est },
+    frete, pagamento: pag,
+    itens: carrinho.map(c => ({ id: c.id, nome: c.nome, tamanho: c.tamanho, qty: c.qty, preco: c.preco })),
+    subtotal, freteValor: fVal, total: subtotal + fVal,
+    status: 'pendente', criadoEm: Date.now()
+  }
+
+  const salvar = document.getElementById('fSalvar')?.checked
+  const btn = document.querySelector('.pay-btn')
+  btn.disabled = true; btn.textContent = 'Enviando...'
+
+  try {
+    const r = await fetch(`${WORKER}/loja/pedidos/add`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(pedido)
+    })
+    if (!r.ok) throw new Error()
+    const res = await r.json()
+
+    if (salvar) {
+      localStorage.setItem('revo_cliente', JSON.stringify({
+        nome, wpp, email,
+        cep, logradouro: end, complemento: comp, cidade: cid, estado: est
+      }))
+    }
+
+    carrinho = []
+    salvarCarrinho()
+
+    document.getElementById('checkoutBox').innerHTML = `
+      <div class="confirm-box">
+        <div class="confirm-icon">🎉</div>
+        <h2>Pedido Confirmado!</h2>
+        <div class="confirm-id">${res.id || 'REV-'+Date.now()}</div>
+        <p>Seu pedido foi recebido!<br>
+        ${pag === 'pix' ? 'Você receberá os dados do PIX pelo WhatsApp em instantes.' : 'Em breve entraremos em contato pelo WhatsApp.'}<br><br>
+        Qualquer dúvida, fale com a gente no WhatsApp.</p>
+        <button onclick="fecharCheckout()" style="margin-top:24px;padding:12px 28px;background:var(--black);color:#fff;border:none;border-radius:10px;font-weight:800;cursor:pointer;font-size:13px">
+          Continuar Comprando
+        </button>
+      </div>
+    `
+  } catch(e) {
+    btn.disabled = false; btn.textContent = 'Confirmar Pedido'
+    alert('Erro ao enviar pedido. Tenta novamente.')
+  }
+}
+
+// ── START ─────────────────────────────────────
+init()
+</script>
+</body>
+</html>

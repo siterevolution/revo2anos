@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feira Mix Revolution | Inscreva seu Espaço</title>
+  <meta name="description" content="Exponha seu trabalho, arte ou produto na Feira Mix do Revolution 2 Anos. Espaço para microempreendedores e artistas criativos. Serra/ES, Julho 2026.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #08070f;
+      --surface: rgba(255,255,255,0.03);
+      --border: rgba(245,158,11,0.2);
+      --gold: #f59e0b;
+      --gold2: #fbbf24;
+      --purple: #8B5CF6;
+      --text: #fff;
+      --muted: rgba(255,255,255,0.45);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    canvas#bg { position:fixed;inset:0;z-index:0;pointer-events:none; }
+
+    .container {
+      position: relative; z-index: 1;
+      max-width: 620px; margin: 0 auto;
+      padding: 40px 20px 100px;
+    }
+
+    /* HEADER */
+    .header { text-align: center; margin-bottom: 40px; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 999px; padding: 6px 16px;
+      font-size: 12px; font-weight: 700; color: var(--gold);
+      letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 20px;
+    }
+    .header h1 {
+      font-size: clamp(2rem, 6vw, 2.8rem); font-weight: 900; line-height: 1.1;
+      margin-bottom: 14px;
+    }
+    .header h1 span {
+      background: linear-gradient(135deg, #f59e0b, #fbbf24, #f97316);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .header p { color: var(--muted); line-height: 1.7; font-size: 14px; max-width: 480px; margin: 0 auto 24px; }
+
+    /* INFO BOXES */
+    .info-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+      margin-bottom: 32px;
+    }
+    .info-box {
+      background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.18);
+      border-radius: 14px; padding: 14px 12px; text-align: center;
+    }
+    .info-box .icon { font-size: 22px; margin-bottom: 6px; }
+    .info-box .val { font-size: 13px; font-weight: 800; color: var(--gold); margin-bottom: 2px; }
+    .info-box .lbl { font-size: 10px; color: var(--muted); letter-spacing: 0.04em; }
+
+    /* REGRAS */
+    .regras {
+      background: rgba(245,158,11,0.05); border: 1px solid rgba(245,158,11,0.2);
+      border-left: 3px solid var(--gold); border-radius: 12px;
+      padding: 18px 20px; margin-bottom: 28px;
+    }
+    .regras h3 { font-size: 12px; font-weight: 800; color: var(--gold); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
+    .regras ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .regras li { font-size: 13px; color: rgba(255,255,255,0.7); display: flex; gap: 10px; align-items: flex-start; }
+    .regras li span.dot { color: var(--gold); font-weight: 900; flex-shrink: 0; margin-top: 1px; }
+
+    /* FORM */
+    .card {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(245,158,11,0.15);
+      border-radius: 20px; padding: 28px 24px; margin-bottom: 20px;
+    }
+    .card h2 {
+      font-size: 14px; font-weight: 800; color: var(--gold);
+      letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 20px;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .field { margin-bottom: 18px; }
+    .field label {
+      display: block; font-size: 11px; font-weight: 700;
+      color: rgba(255,255,255,0.45); letter-spacing: 0.07em;
+      text-transform: uppercase; margin-bottom: 7px;
+    }
+    .field label .req { color: var(--gold); margin-left: 2px; }
+    .field input, .field textarea, .field select {
+      width: 100%; padding: 13px 16px;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px; color: #fff; font-family: 'Inter', sans-serif;
+      font-size: 14px; outline: none; transition: border-color 0.2s;
+      -webkit-appearance: none;
+    }
+    .field input:focus, .field textarea:focus, .field select:focus {
+      border-color: rgba(245,158,11,0.5);
+    }
+    .field textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+    .field select option { background: #1a1a2e; color: #fff; }
+    .field .hint { font-size: 11px; color: rgba(255,255,255,0.28); margin-top: 6px; }
+
+    /* CATEGORIAS */
+    .cats { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+    .cat-btn {
+      padding: 7px 14px; border-radius: 999px; font-size: 12px; font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.5); cursor: pointer; transition: all 0.18s; user-select: none;
+    }
+    .cat-btn.sel {
+      border-color: rgba(245,158,11,0.6); background: rgba(245,158,11,0.12);
+      color: var(--gold2);
+    }
+
+    /* CHECKBOXES */
+    .check-item {
+      display: flex; align-items: flex-start; gap: 12px; cursor: pointer;
+      padding: 14px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02); margin-bottom: 10px; transition: all 0.2s;
+    }
+    .check-item.checked {
+      border-color: rgba(245,158,11,0.4); background: rgba(245,158,11,0.06);
+    }
+    .check-item input[type="checkbox"] { display: none; }
+    .check-box {
+      width: 22px; height: 22px; border-radius: 7px; flex-shrink: 0; margin-top: 1px;
+      border: 2px solid rgba(255,255,255,0.2); background: transparent;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; transition: all 0.2s;
+    }
+    .check-item.checked .check-box { background: var(--gold); border-color: var(--gold); }
+    .check-text { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.5; }
+    .check-text strong { color: #fff; }
+
+    /* RADIO */
+    .radio-group { display: flex; gap: 10px; flex-wrap: wrap; }
+    .radio-btn {
+      flex: 1; min-width: 120px; padding: 12px 16px; border-radius: 12px; cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);
+      text-align: center; transition: all 0.18s; user-select: none;
+      font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.45);
+    }
+    .radio-btn.sel {
+      border-color: rgba(245,158,11,0.5); background: rgba(245,158,11,0.1); color: var(--gold2);
+    }
+
+    /* MSG */
+    #msg {
+      padding: 14px 18px; border-radius: 12px; font-size: 13px; font-weight: 600;
+      margin-bottom: 16px; display: none;
+    }
+    #msg.err { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; }
+    #msg.ok  { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: #6ee7b7; }
+
+    /* BOTÃO */
+    .btn-enviar {
+      width: 100%; padding: 18px; border: none; border-radius: 16px; cursor: pointer;
+      font-size: 16px; font-weight: 900; letter-spacing: 0.04em;
+      background: linear-gradient(135deg, #d97706, #f59e0b, #fbbf24);
+      color: #000; box-shadow: 0 8px 32px rgba(245,158,11,0.35);
+      transition: all 0.2s; position: relative; overflow: hidden;
+    }
+    .btn-enviar:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(245,158,11,0.5); }
+    .btn-enviar:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* SUCESSO */
+    #tela-sucesso {
+      display: none; text-align: center; padding: 60px 20px;
+      animation: fadeUp 0.5s ease forwards;
+    }
+    #tela-sucesso .icon-big { font-size: 72px; margin-bottom: 20px; }
+    #tela-sucesso h2 { font-size: 26px; font-weight: 900; margin-bottom: 12px; }
+    #tela-sucesso p { color: var(--muted); line-height: 1.7; margin-bottom: 28px; font-size: 14px; }
+    .btn-voltar {
+      display: inline-block; padding: 14px 32px; border-radius: 999px;
+      background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.4);
+      color: var(--gold); font-weight: 800; font-size: 14px; text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-voltar:hover { background: rgba(245,158,11,0.2); }
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+    @media (max-width: 480px) {
+      .info-grid { grid-template-columns: repeat(3,1fr); }
+      .card { padding: 20px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <a href="/" style="display:inline-block;margin-bottom:20px;text-decoration:none;">
+      <div style="display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:999px;padding:8px 18px;">
+        <span style="font-size:16px;">⚡</span>
+        <span style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.6);">Revolution 2 Anos</span>
+      </div>
+    </a>
+
+    <div class="badge">🛍️ Feira Mix · Inscrições Abertas</div>
+
+    <h1>Exponha seu trabalho<br>na <span>Feira Mix</span></h1>
+
+    <p>
+      Uma oportunidade real para artistas, artesãos e microempreendedores
+      criativos exporem e venderem durante o Revolution 2 Anos.
+      Você fica com <strong style="color:#fff;">100% das suas vendas.</strong>
+    </p>
+  </div>
+
+  <!-- INFO BOXES -->
+  <div class="info-grid">
+    <div class="info-box">
+      <div class="icon">💡</div>
+      <div class="val">R$100</div>
+      <div class="lbl">Taxa de luz por barraca</div>
+    </div>
+    <div class="info-box">
+      <div class="icon">🎟️</div>
+      <div class="val">Ingresso</div>
+      <div class="lbl">Comprado separado</div>
+    </div>
+    <div class="info-box">
+      <div class="icon">💰</div>
+      <div class="val">0%</div>
+      <div class="lbl">Comissão para a Revo</div>
+    </div>
+  </div>
+
+  <!-- REGRAS -->
+  <div class="regras">
+    <h3>⚠️ Como funciona</h3>
+    <ul>
+      <li><span class="dot">→</span>Você compra seu ingresso normalmente como qualquer participante</li>
+      <li><span class="dot">→</span>Paga R$100 de taxa de luz/espaço por barraca (confirmado após aprovação)</li>
+      <li><span class="dot">→</span>A Revolution fornece o espaço físico — você traz tudo mais</li>
+      <li><span class="dot">→</span>Toda a sua receita de vendas é 100% sua — não cobramos nenhuma porcentagem</li>
+      <li><span class="dot">→</span>Obrigatório manter o estande ativo durante todo o evento</li>
+    </ul>
+  </div>
+
+  <!-- FORMULÁRIO -->
+  <div id="tela-form">
+    <div id="msg"></div>
+
+    <!-- DADOS PESSOAIS -->
+    <div class="card">
+      <h2>👤 Seus dados</h2>
+
+      <div class="field">
+        <label>Nome completo <span class="req">*</span></label>
+        <input type="text" id="nome" placeholder="Seu nome completo" autocomplete="name">
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="field" style="margin-bottom:0">
+          <label>WhatsApp <span class="req">*</span></label>
+          <input type="tel" id="whatsapp" placeholder="(27) 99999-9999" autocomplete="tel">
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label>CPF / CNPJ <span class="req">*</span></label>
+          <input type="text" id="cpf" placeholder="000.000.000-00">
+        </div>
+      </div>
+      <div style="margin-top:18px;" class="field">
+        <label>E-mail <span class="req">*</span></label>
+        <input type="email" id="email" placeholder="seu@email.com" autocomplete="email">
+      </div>
+
+      <div class="field">
+        <label>Instagram</label>
+        <input type="text" id="instagram" placeholder="@seuperfil">
+        <div class="hint">Opcional, mas ajuda muito na curadoria — coloque seu @ ou link</div>
+      </div>
+    </div>
+
+    <!-- SOBRE O TRABALHO -->
+    <div class="card">
+      <h2>🎨 Sobre seu trabalho</h2>
+
+      <div class="field">
+        <label>Categoria <span class="req">*</span></label>
+        <div class="cats" id="cats">
+          <div class="cat-btn" data-val="Artesanato">🧵 Artesanato</div>
+          <div class="cat-btn" data-val="Moda & Roupas">👗 Moda & Roupas</div>
+          <div class="cat-btn" data-val="Arte Visual">🖼️ Arte Visual</div>
+          <div class="cat-btn" data-val="Acessórios">💍 Acessórios</div>
+          <div class="cat-btn" data-val="Gastronomia">🍱 Gastronomia</div>
+          <div class="cat-btn" data-val="Beleza & Cosméticos">💄 Beleza</div>
+          <div class="cat-btn" data-val="Fotografia">📷 Fotografia</div>
+          <div class="cat-btn" data-val="Outro">✨ Outro</div>
+        </div>
+        <input type="hidden" id="categoria">
+      </div>
+
+      <div class="field">
+        <label>Descreva seu trabalho / arte <span class="req">*</span></label>
+        <textarea id="descricao" placeholder="Conta um pouco do que você faz, seus produtos, estilo..."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Já participou de feiras ou eventos similares?</label>
+        <textarea id="experiencia" placeholder="Se sim, quais? Se não, tudo bem!" style="min-height:70px;"></textarea>
+      </div>
+    </div>
+
+    <!-- ESTANDE -->
+    <div class="card">
+      <h2>📦 Sobre seu estande</h2>
+
+      <div class="field">
+        <label>Vai ao estande sozinho(a) ou com ajudante? <span class="req">*</span></label>
+        <div class="radio-group" id="acompanhantes">
+          <div class="radio-btn sel" data-val="Sozinho(a)">🙋 Sozinho(a)</div>
+          <div class="radio-btn" data-val="Com 1 ajudante">👥 Com 1 ajudante</div>
+          <div class="radio-btn" data-val="Com 2 ajudantes">👨‍👩‍👧 Com 2 ajudantes</div>
+        </div>
+        <input type="hidden" id="acompanhantesVal" value="Sozinho(a)">
+      </div>
+    </div>
+
+    <!-- CONFIRMAÇÕES -->
+    <div class="card">
+      <h2>✅ Confirmações obrigatórias</h2>
+
+      <label class="check-item" id="chk-ingresso-label" onclick="toggleCheck('chk-ingresso')">
+        <input type="checkbox" id="chk-ingresso">
+        <div class="check-box" id="chk-ingresso-box"></div>
+        <div class="check-text">
+          <strong>Já comprei ou vou comprar meu ingresso</strong><br>
+          O ingresso não está incluso na inscrição da feira — cada participante compra o seu normalmente.
+        </div>
+      </label>
+
+      <label class="check-item" id="chk-taxa-label" onclick="toggleCheck('chk-taxa')">
+        <input type="checkbox" id="chk-taxa">
+        <div class="check-box" id="chk-taxa-box"></div>
+        <div class="check-text">
+          <strong>Concordo com a taxa de luz de R$100 por barraca</strong><br>
+          O pagamento é feito após aprovação da inscrição. A Revolution não cobra % das vendas.
+        </div>
+      </label>
+
+      <label class="check-item" id="chk-presenca-label" onclick="toggleCheck('chk-presenca')">
+        <input type="checkbox" id="chk-presenca">
+        <div class="check-box" id="chk-presenca-box"></div>
+        <div class="check-text">
+          <strong>Estarei presente e ativo durante todo o evento</strong><br>
+          Manter o estande funcionando é obrigatório para garantir uma boa experiência para todos.
+        </div>
+      </label>
+    </div>
+
+    <button class="btn-enviar" id="btn-enviar" onclick="enviar()">
+      Enviar minha inscrição 🛍️
+    </button>
+
+    <p style="text-align:center;font-size:11px;color:rgba(255,255,255,0.2);margin-top:16px;letter-spacing:.05em;text-transform:uppercase;">
+      Inscrição gratuita · Aprovação sujeita a análise da organização
+    </p>
+  </div>
+
+  <!-- TELA DE SUCESSO -->
+  <div id="tela-sucesso">
+    <div class="icon-big">🎉</div>
+    <h2>Inscrição enviada!</h2>
+    <p>
+      Recebemos sua inscrição para a <strong>Feira Mix Revolution 2 Anos</strong>.<br>
+      Nossa equipe vai analisar e entrar em contato pelo WhatsApp em breve com a resposta.<br><br>
+      Obrigado por fazer parte disso! 🙌
+    </p>
+    <a href="/" class="btn-voltar">← Voltar para o site</a>
+  </div>
+
+</div>
+
+<script>
+const WORKER = 'https://revolution-upload.contatoramishi.workers.dev'
+
+// ── Background canvas ──────────────────────────────────────────────────────
+;(function(){
+  const c = document.getElementById('bg')
+  const ctx = c.getContext('2d')
+  let W, H, pts = []
+  function resize(){ W=c.width=innerWidth; H=c.height=innerHeight; }
+  function init(){
+    pts = Array.from({length:60},()=>({
+      x:Math.random()*W, y:Math.random()*H,
+      vx:(Math.random()-.5)*.25, vy:(Math.random()-.5)*.25,
+      r:Math.random()*1.5+.5
+    }))
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H)
+    pts.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy
+      if(p.x<0||p.x>W) p.vx*=-1
+      if(p.y<0||p.y>H) p.vy*=-1
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2)
+      ctx.fillStyle='rgba(245,158,11,0.35)'; ctx.fill()
+    })
+    pts.forEach((a,i)=>pts.slice(i+1).forEach(b=>{
+      const d=Math.hypot(a.x-b.x,a.y-b.y)
+      if(d<120){ ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y)
+        ctx.strokeStyle=`rgba(245,158,11,${0.06*(1-d/120)})`; ctx.stroke() }
+    }))
+    requestAnimationFrame(draw)
+  }
+  window.addEventListener('resize',()=>{ resize(); init() })
+  resize(); init(); draw()
+})()
+
+// ── Categorias ─────────────────────────────────────────────────────────────
+let categoriasSel = []
+document.querySelectorAll('.cat-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const val = btn.dataset.val
+    if (btn.classList.contains('sel')) {
+      btn.classList.remove('sel')
+      categoriasSel = categoriasSel.filter(v => v !== val)
+    } else {
+      btn.classList.add('sel')
+      categoriasSel.push(val)
+    }
+    document.getElementById('categoria').value = categoriasSel.join(', ')
+  })
+})
+
+// ── Acompanhantes ──────────────────────────────────────────────────────────
+document.querySelectorAll('#acompanhantes .radio-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#acompanhantes .radio-btn').forEach(b => b.classList.remove('sel'))
+    btn.classList.add('sel')
+    document.getElementById('acompanhantesVal').value = btn.dataset.val
+  })
+})
+
+// ── Checkboxes ─────────────────────────────────────────────────────────────
+function toggleCheck(id) {
+  const cb  = document.getElementById(id)
+  const box = document.getElementById(id + '-box')
+  const lbl = document.getElementById(id + '-label')
+  cb.checked = !cb.checked
+  box.textContent = cb.checked ? '✓' : ''
+  lbl.classList.toggle('checked', cb.checked)
+}
+
+// ── Enviar ─────────────────────────────────────────────────────────────────
+function showMsg(txt, tipo) {
+  const el = document.getElementById('msg')
+  el.textContent = txt; el.className = tipo; el.style.display = 'block'
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+}
+
+async function enviar() {
+  const nome      = document.getElementById('nome').value.trim()
+  const whatsapp  = document.getElementById('whatsapp').value.trim()
+  const cpf       = document.getElementById('cpf').value.trim()
+  const email     = document.getElementById('email').value.trim()
+  const instagram = document.getElementById('instagram').value.trim()
+  const categoria = document.getElementById('categoria').value.trim()
+  const descricao = document.getElementById('descricao').value.trim()
+  const experiencia = document.getElementById('experiencia').value.trim()
+  const acompanhantes = document.getElementById('acompanhantesVal').value
+  const chkIngresso = document.getElementById('chk-ingresso').checked
+  const chkTaxa     = document.getElementById('chk-taxa').checked
+  const chkPresenca = document.getElementById('chk-presenca').checked
+
+  if (!nome)      return showMsg('⚠️ Informe seu nome completo.', 'err')
+  if (!whatsapp)  return showMsg('⚠️ Informe seu WhatsApp.', 'err')
+  if (!cpf)       return showMsg('⚠️ Informe seu CPF ou CNPJ.', 'err')
+  if (!email || !email.includes('@')) return showMsg('⚠️ Informe um e-mail válido.', 'err')
+  if (!categoria) return showMsg('⚠️ Selecione pelo menos uma categoria do seu trabalho.', 'err')
+  if (!descricao) return showMsg('⚠️ Descreva seu trabalho/arte.', 'err')
+  if (!chkIngresso) return showMsg('⚠️ Confirme que vai comprar seu ingresso separado.', 'err')
+  if (!chkTaxa)     return showMsg('⚠️ Confirme que concorda com a taxa de luz de R$100.', 'err')
+  if (!chkPresenca) return showMsg('⚠️ Confirme que ficará presente durante todo o evento.', 'err')
+
+  const btn = document.getElementById('btn-enviar')
+  btn.disabled = true; btn.textContent = 'Enviando...'
+
+  try {
+    const r = await fetch(`${WORKER}/feira/add`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome, whatsapp, cpf, email, instagram, categoria, descricao, experiencia, acompanhantes })
+    })
+    const d = await r.json()
+    if (!r.ok || d.error) throw new Error(d.error || 'Erro ao enviar')
+
+    document.getElementById('tela-form').style.display = 'none'
+    const ts = document.getElementById('tela-sucesso')
+    ts.style.display = 'block'
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  } catch (e) {
+    showMsg('❌ ' + (e.message || 'Erro ao enviar. Tente novamente.'), 'err')
+    btn.disabled = false; btn.textContent = 'Enviar minha inscrição 🛍️'
+  }
+}
+</script>
+</body>
+</html>

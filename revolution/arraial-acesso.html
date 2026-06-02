@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arraial Revolution — Acesso ao Grupo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #08070f;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow-x: hidden;
+    }
+    #constellation-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+
+    .box {
+      position: relative; z-index: 1;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 28px;
+      padding: 44px 36px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 999px; padding: 7px 18px;
+      font-size: 11px; font-weight: 700; letter-spacing: .1em;
+      color: #fcd34d; text-transform: uppercase; margin-bottom: 20px;
+    }
+
+    .logo-wrap {
+      width: 100%; height: 150px; overflow: hidden;
+      margin: 0 auto 14px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-wrap img { width: 520px; max-width: none; }
+
+    .title {
+      font-size: clamp(1.3rem, 5vw, 1.7rem);
+      font-weight: 900; letter-spacing: -.02em;
+      line-height: 1.2; margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 13px; color: rgba(255,255,255,0.45);
+      line-height: 1.7; margin-bottom: 24px;
+    }
+
+    /* FORM */
+    .field { text-align: left; margin-bottom: 14px; }
+    .field label { display: block; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 6px; }
+    .field input {
+      width: 100%; background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+      padding: 13px 16px; color: #fff; font-family: 'Inter', sans-serif;
+      font-size: 15px; outline: none; transition: border-color .2s;
+    }
+    .field input:focus { border-color: rgba(245,158,11,0.5); }
+    .field input::placeholder { color: rgba(255,255,255,0.2); }
+    .field input.erro { border-color: rgba(239,68,68,0.5); }
+
+    .tel-row { display: flex; gap: 8px; }
+    .tel-prefix {
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px; padding: 13px 14px; font-size: 15px; font-weight: 700;
+      color: rgba(255,255,255,0.5); white-space: nowrap; flex-shrink: 0;
+    }
+    .tel-row input { flex: 1; }
+
+    .hint-field { font-size: 11px; color: rgba(255,255,255,0.25); margin-top: 5px; line-height: 1.5; }
+
+    .btn-main {
+      width: 100%; padding: 15px; border: none; border-radius: 14px;
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      color: #000; font-family: 'Inter', sans-serif;
+      font-size: 16px; font-weight: 900; cursor: pointer;
+      letter-spacing: .02em; transition: all .2s;
+      box-shadow: 0 6px 20px rgba(245,158,11,0.3);
+      margin-top: 8px;
+    }
+    .btn-main:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(245,158,11,0.45); }
+    .btn-main:disabled { opacity: 0.6; cursor: default; transform: none; }
+
+    .msg-erro {
+      margin-top: 14px; padding: 12px 16px; border-radius: 12px;
+      background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25);
+      color: #fca5a5; font-size: 13px; font-weight: 600; line-height: 1.5;
+      text-align: left;
+    }
+    .msg-aviso {
+      margin-top: 14px; padding: 12px 16px; border-radius: 12px;
+      background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25);
+      color: #fcd34d; font-size: 13px; font-weight: 600; line-height: 1.5;
+      text-align: left;
+    }
+
+    /* SUCCESS */
+    .btn-wpp {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      background: linear-gradient(135deg, #16a34a, #22c55e);
+      color: #fff; padding: 16px 24px; border-radius: 16px;
+      font-size: 15px; font-weight: 800; text-decoration: none;
+      box-shadow: 0 8px 24px rgba(22,163,74,0.35); transition: all .2s;
+      margin-bottom: 12px;
+    }
+    .btn-wpp:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(22,163,74,0.5); }
+    .hint { font-size: 11px; color: rgba(255,255,255,0.22); line-height: 1.6; }
+
+    .icon-circle {
+      width: 80px; height: 80px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px; margin: 0 auto 22px;
+    }
+
+    /* spinner */
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid rgba(245,158,11,0.2);
+      border-top-color: #f59e0b;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<canvas id="constellation-canvas"></canvas>
+
+<div class="box" id="box">
+
+  <!-- FORMULÁRIO -->
+  <div id="state-form">
+    <div class="badge">🎪 Arraial Revolution</div>
+    <div class="logo-wrap">
+      <img src="/arraial-logo.png" alt="Arraial Revolution" />
+    </div>
+    <div class="title">Verifique seu acesso</div>
+    <div class="subtitle">Preencha os três campos com os dados cadastrados na pré-venda.</div>
+
+    <div style="background:rgba(245,158,11,0.09);border:1.5px solid rgba(245,158,11,0.4);border-radius:14px;padding:16px 18px;margin-bottom:22px;text-align:left;">
+      <p style="font-size:11px;font-weight:800;color:#f59e0b;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;">⚠️ Atenção — Dados da pré-venda</p>
+      <p style="font-size:14px;color:rgba(255,255,255,0.82);line-height:1.7;text-align:justify;">Para garantir seu acesso, utilize <strong style="color:#fcd34d;">exatamente os mesmos dados</strong> informados na compra da pré-venda Revolution 2 Anos: nome completo, WhatsApp e e-mail. Os três campos são obrigatórios. Em caso de dificuldades, fale com a organização.</p>
+    </div>
+
+    <div class="field">
+      <label>Nome completo *</label>
+      <input id="inp-nome" type="text" placeholder="Ex: João da Silva" autocomplete="name" />
+      <div class="hint-field">Digite como está no ingresso — pelo menos nome e sobrenome.</div>
+    </div>
+
+    <div class="field">
+      <label>WhatsApp *</label>
+      <div class="tel-row">
+        <div class="tel-prefix">🇧🇷 +55</div>
+        <input id="inp-tel" type="tel" placeholder="(27) 99999-9999" autocomplete="tel" inputmode="numeric" />
+      </div>
+      <div class="hint-field">Pode digitar só os 4 últimos números se não lembrar o completo.</div>
+    </div>
+
+    <div class="field">
+      <label>E-mail da pré-venda *</label>
+      <input id="inp-email" type="email" placeholder="seuemail@exemplo.com" autocomplete="email" inputmode="email" />
+    </div>
+
+    <button class="btn-main" id="btn-verificar" onclick="verificar()">
+      Verificar meu acesso →
+    </button>
+
+    <div id="msg-form" style="display:none;"></div>
+  </div>
+
+  <!-- LOADING -->
+  <div id="state-loading" style="display:none;">
+    <div class="spinner"></div>
+    <p style="color:rgba(255,255,255,0.4);font-size:14px;">Verificando seus dados...</p>
+  </div>
+
+  <!-- SUCESSO -->
+  <div id="state-success" style="display:none;">
+    <div class="badge">✅ Acesso confirmado</div>
+    <div class="icon-circle" style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);">🎉</div>
+    <div class="title" id="nome-titulo">Seja bem-vindo!</div>
+    <div class="subtitle" style="margin-bottom:20px;">Você faz parte do grupo oficial do <strong style="color:#fff;">Arraial Revolution</strong>.<br>Toque no botão abaixo para entrar!</div>
+    <button id="btn-grupo" onclick="abrirGrupo('principal')" class="btn-wpp" style="border:none;width:100%;cursor:pointer;" oncontextmenu="return false">
+      📱 Entrar no Grupo do WhatsApp
+    </button>
+    <p class="hint" style="margin-top:14px;user-select:none;">⚠️ Salve o link do grupo assim que entrar.<br>Este acesso é pessoal e intransferível.</p>
+  </div>
+
+  <!-- JÁ USOU -->
+  <div id="state-usado" style="display:none;">
+    <div class="badge">🎪 Arraial Revolution</div>
+    <div class="icon-circle" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);">🎊</div>
+    <div class="title" id="usado-titulo">Você já está no grupo!</div>
+    <div class="subtitle" style="margin-bottom:20px;">Seu acesso já foi verificado anteriormente.<br>Use o botão abaixo para entrar no grupo.</div>
+    <button id="btn-grupo-usado" onclick="abrirGrupo('usado')" class="btn-wpp" style="border:none;width:100%;cursor:pointer;" oncontextmenu="return false">
+      📱 Entrar no Grupo do WhatsApp
+    </button>
+    <p class="hint" style="margin-top:14px;user-select:none;">Se tiver algum problema, entre em contato com a organização.</p>
+  </div>
+
+</div>
+
+<script>
+const WORKER = 'https://revolution-upload.contatoramishi.workers.dev'
+let _grupoLink = null  // link guardado só em memória, nunca no DOM
+
+function abrirGrupo(origem) {
+  if (!_grupoLink) return
+  window.open(_grupoLink, '_blank', 'noopener,noreferrer')
+}
+
+function show(id) {
+  ['state-form','state-loading','state-success','state-usado'].forEach(s => {
+    document.getElementById(s).style.display = s === id ? '' : 'none'
+  })
+}
+
+function voltarForm() {
+  document.getElementById('msg-form').style.display = 'none'
+  document.getElementById('msg-form').innerHTML = ''
+  show('state-form')
+}
+
+function showMsg(texto, tipo) {
+  const el = document.getElementById('msg-form')
+  el.className = tipo === 'aviso' ? 'msg-aviso' : 'msg-erro'
+  el.innerHTML = texto
+  el.style.display = ''
+}
+
+async function verificar() {
+  const nome  = document.getElementById('inp-nome').value.trim()
+  const tel   = document.getElementById('inp-tel').value.trim()
+  const email = document.getElementById('inp-email').value.trim()
+
+  // Validação local
+  if (!nome || nome.split(' ').filter(w => w).length < 2) {
+    showMsg('⚠ Informe seu nome completo (pelo menos nome e sobrenome).', 'erro')
+    document.getElementById('inp-nome').focus()
+    return
+  }
+  const telDigits = tel.replace(/\D/g,'')
+  const telOk   = telDigits.length >= 4
+  const emailOk = email && email.includes('@')
+  if (!telOk) {
+    showMsg('⚠ Informe seu WhatsApp cadastrado na pré-venda (ou os 4 últimos dígitos).', 'erro')
+    document.getElementById('inp-tel').focus()
+    return
+  }
+  if (!emailOk) {
+    showMsg('⚠ Informe seu e-mail cadastrado na pré-venda.', 'erro')
+    document.getElementById('inp-email').focus()
+    return
+  }
+
+  document.getElementById('msg-form').style.display = 'none'
+  document.getElementById('btn-verificar').disabled = true
+  show('state-loading')
+
+  try {
+    const res  = await fetch(`${WORKER}/arraial/verificar`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome, telefone: tel, email }),
+    })
+    const data = await res.json()
+
+    if (res.ok && data.ok) {
+      const primeiro = (data.nome || nome).split(' ')[0]
+      document.getElementById('nome-titulo').textContent = `Olá, ${primeiro}! 🎉`
+      _grupoLink = data.grupoLink  // guarda em memória, nunca aparece no DOM
+      show('state-success')
+
+    } else if (res.status === 410 && data.jaUsou) {
+      const primeiro = (data.nome || nome).split(' ')[0]
+      document.getElementById('usado-titulo').textContent = `${primeiro}, você já está no grupo! 🎊`
+      if (data.grupoLink) {
+        _grupoLink = data.grupoLink
+      } else {
+        document.getElementById('btn-grupo-usado').style.display = 'none'
+      }
+      show('state-usado')
+
+    } else {
+      show('state-form')
+      showMsg('❌ ' + (data.error || 'Dados não encontrados. Verifique as informações e tente novamente.'), 'erro')
+    }
+
+  } catch {
+    show('state-form')
+    showMsg('❌ Erro de conexão. Verifique sua internet e tente novamente.', 'erro')
+  } finally {
+    document.getElementById('btn-verificar').disabled = false
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  ['inp-nome','inp-tel','inp-email'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', e => {
+      if (e.key === 'Enter') verificar()
+    })
+  })
+})
+</script>
+
+<script>
+(function(){
+  const canvas=document.getElementById('constellation-canvas'),ctx=canvas.getContext('2d')
+  let W,H,mouse={x:-9999,y:-9999},particles=[]
+  const COLORS=['#8B5CF6','#f59e0b','#a855f7','#d97706','#0ea5e9'],N=55,CONN=130,MD=160,MF=0.012
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+  function rnd(a,b){return a+Math.random()*(b-a)}
+  function mkP(){const ip=Math.random()<.08;return{x:Math.random()*W,y:Math.random()*H,vx:rnd(-.22,.22),vy:rnd(-.22,.22),r:ip?rnd(3.5,6):rnd(1,2.2),color:COLORS[Math.floor(Math.random()*COLORS.length)],ip,pulse:Math.random()*Math.PI*2,ps:rnd(.01,.03)}}
+  function init(){particles=Array.from({length:N},mkP)}
+  function draw(){
+    ctx.clearRect(0,0,W,H)
+    for(const p of particles){const dx=p.x-mouse.x,dy=p.y-mouse.y,d=Math.sqrt(dx*dx+dy*dy);if(d<MD&&d>0){const f=(1-d/MD)*MF;p.vx+=(dx/d)*f*6;p.vy+=(dy/d)*f*6}p.vx*=.995;p.vy*=.995;p.x+=p.vx;p.y+=p.vy;p.pulse+=p.ps;if(p.x<-10)p.x=W+10;if(p.x>W+10)p.x=-10;if(p.y<-10)p.y=H+10;if(p.y>H+10)p.y=-10}
+    for(let i=0;i<particles.length;i++)for(let j=i+1;j<particles.length;j++){const a=particles[i],b=particles[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);if(d<CONN){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=`rgba(245,158,11,${(1-d/CONN)*.2})`;ctx.lineWidth=.6;ctx.stroke()}}
+    for(const p of particles){const gr=p.r+Math.sin(p.pulse)*(p.ip?1.5:.6);if(p.ip){const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,gr*4);g.addColorStop(0,p.color+'aa');g.addColorStop(1,p.color+'00');ctx.beginPath();ctx.arc(p.x,p.y,gr*4,0,Math.PI*2);ctx.fillStyle=g;ctx.fill()}ctx.beginPath();ctx.arc(p.x,p.y,gr,0,Math.PI*2);ctx.fillStyle=p.ip?p.color:p.color+'cc';ctx.fill()}
+    requestAnimationFrame(draw)
+  }
+  window.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY})
+  window.addEventListener('resize',()=>{resize();init()})
+  resize();init();draw()
+})()
+</script>
+
+</body>
+</html>

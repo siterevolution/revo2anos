@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kit de Divulgação | Revolution 2 Anos</title>
+  <meta name="description" content="Materiais de divulgação exclusivos para organizadores de trips do Revolution 2 Anos.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #08070f;
+      --purple: #8B5CF6;
+      --cyan: #06B6D4;
+      --text: #fff;
+      --muted: rgba(255,255,255,0.45);
+      --border: rgba(139,92,246,0.2);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+
+    #constellation-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+
+    .container { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; padding: 40px 20px 80px; }
+
+    .back-link { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; font-weight: 600; text-decoration: none; margin-bottom: 32px; transition: color 0.2s; }
+    .back-link:hover { color: var(--text); }
+
+    /* HEADER */
+    .header { text-align: center; margin-bottom: 40px; }
+    .badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.3); border-radius: 999px; padding: 8px 18px; margin-bottom: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: #a78bfa; text-transform: uppercase; }
+    .header h1 { font-size: clamp(1.8rem, 5vw, 2.4rem); font-weight: 900; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 12px; }
+    .header h1 span { color: var(--purple); }
+    .header p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; max-width: 440px; margin: 0 auto; }
+
+    /* INFO CARD */
+    .info-card { background: rgba(6,182,212,0.06); border: 1px solid rgba(6,182,212,0.2); border-radius: 14px; padding: 16px 20px; margin-bottom: 32px; display: flex; gap: 12px; align-items: flex-start; }
+    .info-card .icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+    .info-card p { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.6; }
+    .info-card strong { color: #67e8f9; }
+
+    /* GRID */
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 500px) { .grid { grid-template-columns: 1fr; } }
+
+    /* FILE CARD */
+    .file-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 22px 20px; display: flex; flex-direction: column; gap: 12px; transition: border-color 0.2s, transform 0.2s; }
+    .file-card:hover { border-color: rgba(139,92,246,0.35); transform: translateY(-2px); }
+
+    .file-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.2); flex-shrink: 0; }
+    .file-name { font-size: 14px; font-weight: 800; line-height: 1.3; }
+    .file-desc { font-size: 12px; color: var(--muted); line-height: 1.5; flex: 1; }
+    .file-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .file-tag { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; padding: 3px 8px; border-radius: 6px; text-transform: uppercase; }
+    .tag-img  { background: rgba(139,92,246,0.15); color: #c4b5fd; }
+    .tag-zip  { background: rgba(245,158,11,0.15); color: #fcd34d; }
+    .tag-pdf  { background: rgba(239,68,68,0.15);  color: #fca5a5; }
+    .tag-file { background: rgba(100,116,139,0.2); color: #94a3b8; }
+    .file-size { font-size: 11px; color: rgba(255,255,255,0.25); margin-left: auto; }
+
+    .btn-download { display: flex; align-items: center; justify-content: center; gap: 7px; background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(139,92,246,0.1)); border: 1px solid rgba(139,92,246,0.35); border-radius: 10px; padding: 10px 16px; color: #c4b5fd; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; text-decoration: none; transition: all 0.2s; cursor: pointer; }
+    .btn-download:hover { background: rgba(139,92,246,0.3); border-color: rgba(139,92,246,0.6); color: #fff; }
+
+    /* ESTADO VAZIO */
+    #empty { display: none; text-align: center; padding: 60px 20px; }
+    #empty .emoji { font-size: 3rem; margin-bottom: 16px; }
+    #empty h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 8px; }
+    #empty p { color: var(--muted); font-size: 13px; }
+
+    /* LOADING */
+    #loading { text-align: center; padding: 60px 20px; color: var(--muted); font-size: 14px; }
+    .spinner { display: inline-block; width: 28px; height: 28px; border: 2px solid rgba(139,92,246,0.2); border-top-color: var(--purple); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 14px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<canvas id="constellation-canvas"></canvas>
+
+<div class="container">
+  <a href="/" class="back-link">← Voltar ao site</a>
+
+  <div class="header">
+    <div class="badge">🎨 Materiais Exclusivos</div>
+    <h1>Kit de <span>Divulgação</span><br>para Trips</h1>
+    <p>Artes e materiais exclusivos para os organizadores de trips aprovados divulgarem o Revolution 2 Anos.</p>
+  </div>
+
+  <div class="info-card">
+    <div class="icon">💡</div>
+    <p>Esses materiais são <strong>exclusivos para trips aprovadas</strong>. Use para divulgar nos seus grupos, stories e redes sociais. Qualquer dúvida, fale com a equipe Revolution no WhatsApp.</p>
+  </div>
+
+  <div id="loading">
+    <div class="spinner"></div><br>
+    Carregando materiais...
+  </div>
+
+  <div id="empty">
+    <div class="emoji">📂</div>
+    <h3>Em breve!</h3>
+    <p>Os materiais de divulgação serão disponibilizados aqui em breve.<br>Acompanhe pelo WhatsApp.</p>
+  </div>
+
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+const WORKER = 'https://revolution-upload.contatoramishi.workers.dev'
+
+function formatBytes(b) {
+  if (!b) return ''
+  if (b < 1024) return b + ' B'
+  if (b < 1024 * 1024) return (b / 1024).toFixed(0) + ' KB'
+  return (b / (1024 * 1024)).toFixed(1) + ' MB'
+}
+
+function getIconAndTag(tipo, nome) {
+  const t = (tipo || '').toLowerCase()
+  const n = (nome || '').toLowerCase()
+  if (t.includes('image') || /\.(jpg|jpeg|png|gif|webp|svg)$/.test(n)) return { icon: '🖼️', tagClass: 'tag-img', tagText: 'Imagem' }
+  if (t.includes('zip') || t.includes('compressed') || /\.(zip|rar|7z)$/.test(n)) return { icon: '📦', tagClass: 'tag-zip', tagText: 'Pacote' }
+  if (t.includes('pdf') || /\.pdf$/.test(n)) return { icon: '📄', tagClass: 'tag-pdf', tagText: 'PDF' }
+  if (/\.(mp4|mov|avi)$/.test(n)) return { icon: '🎬', tagClass: 'tag-zip', tagText: 'Vídeo' }
+  return { icon: '📁', tagClass: 'tag-file', tagText: 'Arquivo' }
+}
+
+async function carregar() {
+  try {
+    const res  = await fetch(`${WORKER}/materiais/list`)
+    const list = res.ok ? await res.json() : []
+
+    document.getElementById('loading').style.display = 'none'
+
+    if (!list.length) {
+      document.getElementById('empty').style.display = 'block'
+      return
+    }
+
+    const grid = document.getElementById('grid')
+    for (const m of list) {
+      const { icon, tagClass, tagText } = getIconAndTag(m.tipo, m.nome)
+      const card = document.createElement('div')
+      card.className = 'file-card'
+      card.innerHTML = `
+        <div class="file-icon">${icon}</div>
+        <div class="file-name">${m.nome}</div>
+        ${m.descricao ? `<div class="file-desc">${m.descricao}</div>` : ''}
+        <div class="file-meta">
+          <span class="file-tag ${tagClass}">${tagText}</span>
+          <span class="file-size">${formatBytes(m.tamanho)}</span>
+        </div>
+        <a class="btn-download" href="${WORKER}/materiais/file?key=${encodeURIComponent(m.key)}" download>
+          ⬇️ Baixar arquivo
+        </a>
+      `
+      grid.appendChild(card)
+    }
+  } catch {
+    document.getElementById('loading').innerHTML = '<p style="color:rgba(255,255,255,0.3)">Erro ao carregar materiais. Tente novamente.</p>'
+  }
+}
+
+carregar()
+</script>
+
+<script>
+(function() {
+  const canvas = document.getElementById('constellation-canvas')
+  const ctx = canvas.getContext('2d')
+  let W, H, mouse = { x: -9999, y: -9999 }, particles = []
+  const COLORS = ['#8B5CF6','#06B6D4','#a855f7','#7c3aed','#0ea5e9']
+  const N = 80, CONN = 130, MDIST = 160, MFORCE = 0.012
+
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight }
+  function rnd(a,b) { return a + Math.random()*(b-a) }
+  function mkP() {
+    const ip = Math.random() < 0.08
+    return { x: Math.random()*W, y: Math.random()*H, vx: rnd(-0.22,0.22), vy: rnd(-0.22,0.22), r: ip?rnd(3.5,6):rnd(1,2.2), color: COLORS[Math.floor(Math.random()*COLORS.length)], ip, pulse: Math.random()*Math.PI*2, ps: rnd(0.01,0.03) }
+  }
+  function init() { particles = Array.from({length:N},mkP) }
+  function draw() {
+    ctx.clearRect(0,0,W,H)
+    for (const p of particles) {
+      const dx=p.x-mouse.x, dy=p.y-mouse.y, d=Math.sqrt(dx*dx+dy*dy)
+      if (d<MDIST&&d>0) { const f=(1-d/MDIST)*MFORCE; p.vx+=(dx/d)*f*6; p.vy+=(dy/d)*f*6 }
+      p.vx*=0.995; p.vy*=0.995; p.x+=p.vx; p.y+=p.vy; p.pulse+=p.ps
+      if (p.x<-10) p.x=W+10; if (p.x>W+10) p.x=-10; if (p.y<-10) p.y=H+10; if (p.y>H+10) p.y=-10
+    }
+    for (let i=0;i<particles.length;i++) for (let j=i+1;j<particles.length;j++) {
+      const a=particles[i],b=particles[j], dx=a.x-b.x, dy=a.y-b.y, d=Math.sqrt(dx*dx+dy*dy)
+      if (d<CONN) { ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.strokeStyle=`rgba(139,92,246,${(1-d/CONN)*.3})`; ctx.lineWidth=0.6; ctx.stroke() }
+    }
+    for (const p of particles) {
+      const dx=p.x-mouse.x, dy=p.y-mouse.y, d=Math.sqrt(dx*dx+dy*dy)
+      if (d<MDIST*.85) { ctx.beginPath(); ctx.moveTo(mouse.x,mouse.y); ctx.lineTo(p.x,p.y); ctx.strokeStyle=`rgba(6,182,212,${(1-d/(MDIST*.85))*.5})`; ctx.lineWidth=0.8; ctx.stroke() }
+    }
+    for (const p of particles) {
+      const gr=p.r+Math.sin(p.pulse)*(p.ip?1.5:0.6)
+      if (p.ip) { const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,gr*4); g.addColorStop(0,p.color+'aa'); g.addColorStop(1,p.color+'00'); ctx.beginPath(); ctx.arc(p.x,p.y,gr*4,0,Math.PI*2); ctx.fillStyle=g; ctx.fill() }
+      ctx.beginPath(); ctx.arc(p.x,p.y,gr,0,Math.PI*2); ctx.fillStyle=p.ip?p.color:p.color+'cc'; ctx.fill()
+    }
+    if (mouse.x>0) { const g=ctx.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,MDIST*.5); g.addColorStop(0,'rgba(6,182,212,0.04)'); g.addColorStop(1,'rgba(6,182,212,0)'); ctx.beginPath(); ctx.arc(mouse.x,mouse.y,MDIST*.5,0,Math.PI*2); ctx.fillStyle=g; ctx.fill() }
+    requestAnimationFrame(draw)
+  }
+  window.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY})
+  window.addEventListener('mouseleave',()=>{mouse.x=-9999;mouse.y=-9999})
+  window.addEventListener('resize',()=>{resize();init()})
+  resize(); init(); draw()
+})()
+</script>
+
+</body>
+</html>

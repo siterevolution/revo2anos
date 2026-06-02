@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Trip | Revolution 2 Anos</title>
+  <meta name="description" content="Cadastre sua excursão para o Revolution 2 Anos. Festa de música eletrônica — Julho 2026, Serra/ES.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #08070f;
+      --surface: rgba(255,255,255,0.03);
+      --border: rgba(139,92,246,0.2);
+      --purple: #8B5CF6;
+      --cyan: #06B6D4;
+      --text: #fff;
+      --muted: rgba(255,255,255,0.45);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── BG GLOW ── */
+    #constellation-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(139,92,246,0.1);
+      border: 1px solid rgba(139,92,246,0.3);
+      border-radius: 999px;
+      padding: 8px 18px;
+      margin-bottom: 24px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: #a78bfa;
+      text-transform: uppercase;
+    }
+    .header h1 {
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+    .header h1 span { color: var(--purple); }
+    .header p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    /* ── FORM CARD ── */
+    .form-card {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px 28px;
+    }
+
+    .form-section {
+      margin-bottom: 28px;
+    }
+    .form-section-title {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      color: rgba(139,92,246,0.7);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(139,92,246,0.1);
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+    .field label .req { color: var(--purple); margin-left: 2px; }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 13px 16px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    .field select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238B5CF6' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 40px;
+      cursor: pointer;
+    }
+    .field select option {
+      background: #1a1a2e;
+      color: var(--text);
+    }
+    .field textarea { resize: vertical; min-height: 90px; }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: rgba(139,92,246,0.5);
+      box-shadow: 0 0 0 3px rgba(139,92,246,0.1);
+    }
+    .field input::placeholder,
+    .field textarea::placeholder { color: rgba(255,255,255,0.2); }
+
+    /* ── RADIO GROUP ── */
+    .radio-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .radio-opt {
+      flex: 1;
+      min-width: 100px;
+    }
+    .radio-opt input[type=radio] { display: none; }
+    .radio-opt label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 11px 10px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      transition: all 0.2s;
+      text-align: center;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .radio-opt input[type=radio]:checked + label {
+      background: rgba(139,92,246,0.12);
+      border-color: rgba(139,92,246,0.45);
+      color: #c4b5fd;
+    }
+    .radio-opt label:hover {
+      border-color: rgba(139,92,246,0.3);
+      color: var(--text);
+    }
+
+    /* ── SUBMIT ── */
+    .btn-submit {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #7c3aed, #8B5CF6);
+      border: none;
+      border-radius: 14px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 8px 24px rgba(139,92,246,0.3);
+      margin-top: 8px;
+    }
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(139,92,246,0.45);
+    }
+    .btn-submit:active:not(:disabled) { transform: translateY(0); }
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* ── FEEDBACK ── */
+    #feedback {
+      display: none;
+      margin-top: 16px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+    }
+    #feedback.success {
+      display: block;
+      background: rgba(16,185,129,0.1);
+      border: 1px solid rgba(16,185,129,0.3);
+      color: #6ee7b7;
+    }
+    #feedback.error {
+      display: block;
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.3);
+      color: #fca5a5;
+    }
+
+    /* ── SUCCESS SCREEN ── */
+    #success-screen {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+    #success-screen .check {
+      font-size: 3.5rem;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 0 20px rgba(16,185,129,0.5));
+    }
+    #success-screen h2 {
+      font-size: 1.5rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+      color: #6ee7b7;
+    }
+    #success-screen p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    /* ── FIELD ERROR ── */
+    .field-error {
+      font-size: 11px;
+      font-weight: 600;
+      color: #f87171;
+      margin-top: 5px;
+      display: none;
+    }
+    .field.has-error input,
+    .field.has-error textarea,
+    .field.has-error select {
+      border-color: rgba(239,68,68,0.6);
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.1);
+    }
+    .field.has-error .radio-group {
+      border: 1px solid rgba(239,68,68,0.5);
+      border-radius: 12px;
+      padding: 8px;
+      background: rgba(239,68,68,0.04);
+    }
+    .field.has-error .field-error { display: block; }
+
+    /* ── BACK LINK ── */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      margin-bottom: 28px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--text); }
+
+    @media (max-width: 480px) {
+      .form-card { padding: 24px 18px; }
+      .radio-group { flex-direction: column; }
+      .radio-opt { min-width: unset; }
+    }
+
+    /* ── TRIPS APROVADAS ── */
+    .trips-section {
+      margin-top: 48px;
+    }
+    .trips-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .trips-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(6,182,212,0.1));
+      border: 1px solid rgba(16,185,129,0.35);
+      border-radius: 999px;
+      padding: 8px 20px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #6ee7b7;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      animation: pulse-glow 2.5s ease-in-out infinite;
+    }
+    .trips-badge:hover {
+      background: linear-gradient(135deg, rgba(16,185,129,0.28), rgba(6,182,212,0.18));
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(16,185,129,0.25);
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+      50%       { box-shadow: 0 0 0 6px rgba(16,185,129,0.12); }
+    }
+    .trips-divider {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(16,185,129,0.25), transparent);
+    }
+    .trip-card {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 10px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .trip-card:hover {
+      border-color: rgba(16,185,129,0.3);
+      transform: translateY(-1px);
+    }
+    .trip-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .trip-nome {
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+    }
+    .trip-status {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(16,185,129,0.12);
+      border: 1px solid rgba(16,185,129,0.3);
+      color: #6ee7b7;
+      white-space: nowrap;
+    }
+    .trip-rota {
+      font-size: 12px;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+    .trip-rota span {
+      color: rgba(255,255,255,0.25);
+      margin-right: 4px;
+    }
+    .trip-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .trip-responsavel {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+    }
+    .trip-responsavel strong { color: rgba(255,255,255,0.7); }
+    .trip-wpp {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(37,211,102,0.1);
+      border: 1px solid rgba(37,211,102,0.28);
+      border-radius: 8px;
+      padding: 6px 14px;
+      color: #4ade80;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .trip-wpp:hover {
+      background: rgba(37,211,102,0.2);
+      color: #fff;
+    }
+    #trips-loading {
+      text-align: center;
+      padding: 32px;
+      color: rgba(255,255,255,0.25);
+      font-size: 13px;
+    }
+    #trips-empty {
+      display: none;
+      text-align: center;
+      padding: 32px;
+      color: rgba(255,255,255,0.2);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="constellation-canvas"></canvas>
+
+<div class="container">
+  <a href="/" class="back-link">← Voltar ao site</a>
+
+  <div class="header">
+    <div class="logo-badge">🚌 Cadastro de Trip</div>
+    <h1>Leve sua galera para a<br><span>Revolution 2 Anos</span></h1>
+    <p>Preencha os dados abaixo e nossa equipe vai entrar em contato para fechar os detalhes da sua excursão.</p>
+  </div>
+
+  <div class="form-card">
+    <form id="trip-form">
+
+      <!-- DADOS DA TRIP -->
+      <div class="form-section">
+        <div class="form-section-title">Dados da Trip</div>
+
+        <div class="field" id="f-nomeDaTrip">
+          <label>Nome da Trip <span class="req">*</span></label>
+          <input type="text" name="nomeDaTrip" placeholder="Ex: Trip Vitória, Excursão ES...">
+          <div class="field-error">Informe o nome da trip (mínimo 3 caracteres).</div>
+        </div>
+
+        <div class="field" id="f-redeSocial">
+          <label>Rede Social da Trip <span class="req">*</span></label>
+          <input type="text" name="redeSocial" placeholder="@suatrip">
+          <div class="field-error">Informe a rede social da trip.</div>
+        </div>
+      </div>
+
+      <!-- RESPONSÁVEL -->
+      <div class="form-section">
+        <div class="form-section-title">Responsável</div>
+
+        <div class="field" id="f-responsavel">
+          <label>Nome do Responsável <span class="req">*</span></label>
+          <input type="text" name="responsavel" placeholder="Seu nome completo">
+          <div class="field-error">Informe o nome completo do responsável (mínimo 3 caracteres).</div>
+        </div>
+
+        <div class="field" id="f-whatsapp">
+          <label>WhatsApp <span class="req">*</span></label>
+          <input type="tel" name="whatsapp" placeholder="(27) 99999-0000">
+          <div class="field-error">Informe um número de WhatsApp válido com DDD (ex: 27 99999-0000).</div>
+        </div>
+      </div>
+
+      <!-- ORIGEM -->
+      <div class="form-section">
+        <div class="form-section-title">Origem da Excursão</div>
+
+        <div class="field" id="f-estado">
+          <label>Estado / Região <span class="req">*</span></label>
+          <select name="estado">
+            <option value="">Selecione...</option>
+            <option>Espírito Santo</option>
+            <option>Rio de Janeiro</option>
+            <option>Minas Gerais</option>
+            <option>Bahia</option>
+            <option>São Paulo</option>
+            <option>Outro</option>
+          </select>
+          <div class="field-error">Selecione o estado de origem.</div>
+        </div>
+
+        <div class="field" id="f-rota">
+          <label>Rota / Cidades / Bairros Atendidos <span class="req">*</span></label>
+          <textarea name="rota" placeholder="Ex: Vitória, Vila Velha, Cariacica, Serra..."></textarea>
+          <div class="field-error">Informe a rota ou cidades atendidas.</div>
+        </div>
+      </div>
+
+      <!-- GRUPO -->
+      <div class="form-section">
+        <div class="form-section-title">Sobre o Grupo</div>
+
+        <div class="field" id="f-qtdPessoas">
+          <label>Previsão de Pessoas <span class="req">*</span></label>
+          <input type="number" name="qtdPessoas" placeholder="Ex: 45" min="1">
+          <div class="field-error">Informe a quantidade estimada de pessoas.</div>
+        </div>
+
+        <div class="field" id="f-tipoTransporte">
+          <label>Tipo de Transporte <span class="req">*</span></label>
+          <select name="tipoTransporte">
+            <option value="">Selecione...</option>
+            <option>Ônibus fretado</option>
+            <option>Van</option>
+          </select>
+          <div class="field-error">Selecione o tipo de transporte.</div>
+        </div>
+
+        <div class="field" id="f-temTransporte">
+          <label>Já tem transporte contratado? <span class="req">*</span></label>
+          <div class="radio-group">
+            <div class="radio-opt">
+              <input type="radio" name="temTransporte" id="t1" value="Sim">
+              <label for="t1">✅ Sim</label>
+            </div>
+            <div class="radio-opt">
+              <input type="radio" name="temTransporte" id="t2" value="Ainda não">
+              <label for="t2">🔎 Ainda não</label>
+            </div>
+          </div>
+          <div class="field-error">Selecione uma opção.</div>
+        </div>
+      </div>
+
+      <!-- EXTRAS -->
+      <div class="form-section">
+        <div class="form-section-title">Informações Extras</div>
+
+        <div class="field" id="f-interesseIngresso">
+          <label>Interesse em ingresso incluso no pacote? <span class="req">*</span></label>
+          <div class="radio-group">
+            <div class="radio-opt">
+              <input type="radio" name="interesseIngresso" id="i1" value="Sim, tenho interesse">
+              <label for="i1">🎟️ Sim</label>
+            </div>
+            <div class="radio-opt">
+              <input type="radio" name="interesseIngresso" id="i2" value="Não, vou vender separado">
+              <label for="i2">❌ Não</label>
+            </div>
+          </div>
+          <div class="field-error">Selecione uma opção.</div>
+        </div>
+
+        <div class="field" id="f-experiencia">
+          <label>Experiência com excursões <span class="req">*</span></label>
+          <div class="radio-group">
+            <div class="radio-opt">
+              <input type="radio" name="experiencia" id="e1" value="Foco em rave">
+              <label for="e1">🎧 Foco em rave</label>
+            </div>
+            <div class="radio-opt">
+              <input type="radio" name="experiencia" id="e2" value="Vários estilos">
+              <label for="e2">🎵 Vários estilos</label>
+            </div>
+            <div class="radio-opt">
+              <input type="radio" name="experiencia" id="e3" value="Primeira excursão">
+              <label for="e3">🚀 Primeira vez</label>
+            </div>
+          </div>
+          <div class="field-error">Selecione uma opção.</div>
+        </div>
+
+        <div class="field" id="f-observacoes">
+          <label>Observações / Dúvidas <span class="req">*</span></label>
+          <textarea name="observacoes" placeholder="Alguma informação adicional, dúvida ou recado para a equipe?"></textarea>
+          <div class="field-error">Escreva pelo menos uma observação ou dúvida.</div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit" id="btn-submit">
+        Enviar Cadastro
+      </button>
+
+      <div id="feedback"></div>
+
+    </form>
+
+    <div id="success-screen">
+      <div class="check">✅</div>
+      <h2>Cadastro enviado!</h2>
+      <p>Recebemos os dados da sua trip.<br>Nossa equipe vai entrar em contato pelo WhatsApp em breve.</p>
+    </div>
+  </div>
+
+
+</div>
+
+<script>
+  const WORKER = 'https://revolution-upload.contatoramishi.workers.dev'
+
+  // ── TRIPS APROVADAS ──
+  async function carregarTrips() {
+    try {
+      const res  = await fetch(`${WORKER}/trips/list`)
+      const data = res.ok ? await res.json() : []
+      const aprovadas = (Array.isArray(data) ? data : data.trips || [])
+        .filter(t => t.status === 'aprovada')
+
+      document.getElementById('trips-loading').style.display = 'none'
+
+      if (!aprovadas.length) {
+        document.getElementById('trips-empty').style.display = 'block'
+        return
+      }
+
+      const lista = document.getElementById('trips-lista')
+      for (const t of aprovadas) {
+        const digits = (t.whatsapp || '').replace(/\D/g, '')
+        const wppNum = digits.length >= 10 ? (digits.startsWith('55') ? digits : `55${digits}`) : null
+        const wppMsg = `Olá! Vi que sua trip "${t.nomeDaTrip}" está cadastrada no Revolution 2 Anos. Gostaria de mais informações sobre as vagas! 🎶`
+        const wppHref = wppNum ? `https://wa.me/${wppNum}?text=${encodeURIComponent(wppMsg)}` : null
+
+        const card = document.createElement('div')
+        card.className = 'trip-card'
+        card.innerHTML = `
+          <div class="trip-card-top">
+            <div class="trip-nome">${t.nomeDaTrip || '—'}</div>
+            <div class="trip-status">✅ Aprovada</div>
+          </div>
+          ${t.rota ? `<div class="trip-rota"><span>📍</span>${t.rota}</div>` : ''}
+          <div class="trip-footer">
+            <div class="trip-responsavel">Responsável: <strong>${t.responsavel || '—'}</strong></div>
+            ${wppHref
+              ? `<a href="${wppHref}" target="_blank" rel="noreferrer" class="trip-wpp">📱 Entrar em contato</a>`
+              : `<span style="font-size:12px;color:rgba(255,255,255,0.2);font-style:italic;">Sem WhatsApp</span>`
+            }
+          </div>
+        `
+        lista.appendChild(card)
+      }
+    } catch {
+      document.getElementById('trips-loading').style.display = 'none'
+    }
+  }
+
+  carregarTrips()
+
+  function setError(id, show) {
+    const el = document.getElementById(id)
+    if (!el) return
+    el.classList.toggle('has-error', show)
+  }
+
+  function validarWpp(v) {
+    const digits = v.replace(/\D/g, '')
+    return digits.length >= 10 && digits.length <= 11
+  }
+
+  function validarFormulario(fd) {
+    let ok = true
+
+    // Texto mínimo
+    const textos = [
+      { id: 'f-nomeDaTrip',   name: 'nomeDaTrip',   min: 3 },
+      { id: 'f-redeSocial',   name: 'redeSocial',   min: 2 },
+      { id: 'f-responsavel',  name: 'responsavel',  min: 3 },
+      { id: 'f-rota',         name: 'rota',          min: 5 },
+      { id: 'f-observacoes',  name: 'observacoes',   min: 5 },
+    ]
+    for (const t of textos) {
+      const v = (fd.get(t.name) || '').trim()
+      const err = v.length < t.min
+      setError(t.id, err)
+      if (err) ok = false
+    }
+
+    // WhatsApp
+    const wpp = (fd.get('whatsapp') || '').trim()
+    const wppErr = !validarWpp(wpp)
+    setError('f-whatsapp', wppErr)
+    if (wppErr) ok = false
+
+    // Selects obrigatórios
+    const selects = [
+      { id: 'f-estado',         name: 'estado' },
+      { id: 'f-tipoTransporte', name: 'tipoTransporte' },
+    ]
+    for (const s of selects) {
+      const v = (fd.get(s.name) || '').trim()
+      const err = !v
+      setError(s.id, err)
+      if (err) ok = false
+    }
+
+    // Número de pessoas
+    const qtd = parseInt(fd.get('qtdPessoas') || '0', 10)
+    const qtdErr = !qtd || qtd < 1
+    setError('f-qtdPessoas', qtdErr)
+    if (qtdErr) ok = false
+
+    // Radios obrigatórios
+    const radios = ['temTransporte', 'interesseIngresso', 'experiencia']
+    for (const name of radios) {
+      const checked = document.querySelector(`input[name="${name}"]:checked`)
+      setError(`f-${name}`, !checked)
+      if (!checked) ok = false
+    }
+
+    return ok
+  }
+
+  // Limpa erro no campo ao interagir
+  document.getElementById('trip-form').addEventListener('input', (e) => {
+    const field = e.target.closest('.field')
+    if (field && field.classList.contains('has-error')) {
+      field.classList.remove('has-error')
+    }
+  })
+  document.getElementById('trip-form').addEventListener('change', (e) => {
+    const field = e.target.closest('.field')
+    if (field && field.classList.contains('has-error')) {
+      field.classList.remove('has-error')
+    }
+  })
+
+  document.getElementById('trip-form').addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const btn = document.getElementById('btn-submit')
+    const fb  = document.getElementById('feedback')
+    const fd  = new FormData(e.target)
+
+    fb.className = ''
+    fb.style.display = 'none'
+
+    if (!validarFormulario(fd)) {
+      // Rola até o primeiro erro
+      const first = document.querySelector('.has-error')
+      if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      fb.textContent = '⚠️ Preencha todos os campos obrigatórios corretamente.'
+      fb.className = 'error'
+      return
+    }
+
+    btn.disabled = true
+    btn.textContent = 'Enviando...'
+
+    const data = {}
+    fd.forEach((v, k) => { if (v.toString().trim()) data[k] = v.toString().trim() })
+
+    try {
+      const res = await fetch(`${WORKER}/trips/add`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      const json = await res.json()
+      if (!res.ok) throw new Error(json.error || 'Erro desconhecido')
+
+      document.getElementById('trip-form').style.display  = 'none'
+      document.getElementById('success-screen').style.display = 'block'
+
+    } catch (err) {
+      fb.textContent = `❌ ${err.message}`
+      fb.className   = 'error'
+      btn.disabled   = false
+      btn.textContent = 'Enviar Cadastro'
+    }
+  })
+</script>
+
+<script>
+(function() {
+  const canvas = document.getElementById('constellation-canvas')
+  const ctx    = canvas.getContext('2d')
+
+  let W, H, mouse = { x: -9999, y: -9999 }
+  let particles = []
+  let animId
+
+  const COLORS   = ['#8B5CF6', '#06B6D4', '#a855f7', '#7c3aed', '#0ea5e9']
+  const N_DOTS   = 90
+  const CONN_DIST= 140
+  const MOUSE_DIST= 180
+  const MOUSE_FORCE= 0.012
+
+  function resize() {
+    W = canvas.width  = window.innerWidth
+    H = canvas.height = window.innerHeight
+  }
+
+  function randBetween(a, b) { return a + Math.random() * (b - a) }
+
+  function mkParticle() {
+    const isPlanet = Math.random() < 0.08
+    return {
+      x:  Math.random() * W,
+      y:  Math.random() * H,
+      vx: randBetween(-0.25, 0.25),
+      vy: randBetween(-0.25, 0.25),
+      r:  isPlanet ? randBetween(3.5, 6) : randBetween(1, 2.2),
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      isPlanet,
+      pulse: Math.random() * Math.PI * 2,
+      pulseSpeed: randBetween(0.01, 0.03),
+    }
+  }
+
+  function init() {
+    particles = Array.from({ length: N_DOTS }, mkParticle)
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H)
+
+    // Atualiza posições
+    for (const p of particles) {
+      // Repulsão suave do mouse
+      const dx = p.x - mouse.x
+      const dy = p.y - mouse.y
+      const dist = Math.sqrt(dx * dx + dy * dy)
+      if (dist < MOUSE_DIST && dist > 0) {
+        const force = (1 - dist / MOUSE_DIST) * MOUSE_FORCE
+        p.vx += (dx / dist) * force * 6
+        p.vy += (dy / dist) * force * 6
+      }
+
+      // Atrito suave
+      p.vx *= 0.995
+      p.vy *= 0.995
+
+      p.x += p.vx
+      p.y += p.vy
+      p.pulse += p.pulseSpeed
+
+      // Wrap nas bordas
+      if (p.x < -10) p.x = W + 10
+      if (p.x > W + 10) p.x = -10
+      if (p.y < -10) p.y = H + 10
+      if (p.y > H + 10) p.y = -10
+    }
+
+    // Linhas de conexão
+    for (let i = 0; i < particles.length; i++) {
+      const a = particles[i]
+      for (let j = i + 1; j < particles.length; j++) {
+        const b = particles[j]
+        const dx = a.x - b.x
+        const dy = a.y - b.y
+        const d  = Math.sqrt(dx * dx + dy * dy)
+        if (d < CONN_DIST) {
+          const alpha = (1 - d / CONN_DIST) * 0.35
+          ctx.beginPath()
+          ctx.moveTo(a.x, a.y)
+          ctx.lineTo(b.x, b.y)
+          ctx.strokeStyle = `rgba(139,92,246,${alpha})`
+          ctx.lineWidth   = 0.7
+          ctx.stroke()
+        }
+      }
+    }
+
+    // Linha do mouse para partículas próximas
+    for (const p of particles) {
+      const dx = p.x - mouse.x
+      const dy = p.y - mouse.y
+      const d  = Math.sqrt(dx * dx + dy * dy)
+      if (d < MOUSE_DIST * 0.85) {
+        const alpha = (1 - d / (MOUSE_DIST * 0.85)) * 0.55
+        ctx.beginPath()
+        ctx.moveTo(mouse.x, mouse.y)
+        ctx.lineTo(p.x, p.y)
+        ctx.strokeStyle = `rgba(6,182,212,${alpha})`
+        ctx.lineWidth   = 0.9
+        ctx.stroke()
+      }
+    }
+
+    // Pontos
+    for (const p of particles) {
+      const glowR = p.r + Math.sin(p.pulse) * (p.isPlanet ? 1.5 : 0.6)
+
+      if (p.isPlanet) {
+        // Glow externo
+        const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, glowR * 4)
+        g.addColorStop(0, p.color + 'aa')
+        g.addColorStop(1, p.color + '00')
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, glowR * 4, 0, Math.PI * 2)
+        ctx.fillStyle = g
+        ctx.fill()
+      }
+
+      // Ponto principal
+      ctx.beginPath()
+      ctx.arc(p.x, p.y, glowR, 0, Math.PI * 2)
+      ctx.fillStyle = p.isPlanet ? p.color : p.color + 'cc'
+      ctx.fill()
+    }
+
+    // Cursor highlight
+    if (mouse.x > 0) {
+      const g = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, MOUSE_DIST * 0.5)
+      g.addColorStop(0, 'rgba(6,182,212,0.04)')
+      g.addColorStop(1, 'rgba(6,182,212,0)')
+      ctx.beginPath()
+      ctx.arc(mouse.x, mouse.y, MOUSE_DIST * 0.5, 0, Math.PI * 2)
+      ctx.fillStyle = g
+      ctx.fill()
+    }
+
+    animId = requestAnimationFrame(draw)
+  }
+
+  window.addEventListener('mousemove', (e) => {
+    mouse.x = e.clientX
+    mouse.y = e.clientY
+  })
+  window.addEventListener('mouseleave', () => {
+    mouse.x = -9999
+    mouse.y = -9999
+  })
+  window.addEventListener('resize', () => {
+    resize()
+    init()
+  })
+
+  resize()
+  init()
+  draw()
+})()
+</script>
+
+</body>
+</html>
