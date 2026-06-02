@@ -4,491 +4,488 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Área do Divulgador — Revolution 2 Anos</title>
-  <meta name="description" content="Área exclusiva para divulgadores do Revolution 2 Anos. Acompanhe seus cliques, vendas e progresso da meta.">
-  <meta property="og:title" content="Área do Divulgador — Revolution 2 Anos">
-  <meta property="og:image" content="https://revo2anos.com/og-image.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      background: #07060f;
-      color: #fff;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      position: relative;
-      overflow-x: hidden;
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:'Inter',sans-serif;
+      background:#07060f;
+      color:#fff;
+      min-height:100vh;
+      padding:0 0 40px;
+      overflow-x:hidden;
     }
-
-    /* fundo gradiente */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
+    body::before{
+      content:'';
+      position:fixed;inset:0;
       background:
-        radial-gradient(ellipse 60% 40% at 20% 20%, rgba(124,58,237,0.18) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 35% at 80% 80%, rgba(168,85,247,0.12) 0%, transparent 70%);
-      pointer-events: none;
+        radial-gradient(ellipse 80% 50% at 50% -10%,rgba(124,58,237,0.25) 0%,transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%,rgba(168,85,247,0.12) 0%,transparent 60%);
+      pointer-events:none;z-index:0;
     }
 
-    .wrap {
-      width: 100%;
-      max-width: 400px;
-      position: relative;
-      z-index: 1;
+    /* ── HEADER TOPO ── */
+    .topo{
+      text-align:center;
+      padding:32px 24px 24px;
+      position:relative;z-index:1;
+    }
+    .topo-logo{
+      font-size:11px;font-weight:800;
+      color:rgba(255,255,255,0.2);
+      letter-spacing:.25em;text-transform:uppercase;
+      margin-bottom:20px;
+    }
+    .topo-emoji{ font-size:52px; margin-bottom:12px; display:block; }
+    .topo-titulo{
+      font-size:28px;font-weight:900;line-height:1.15;
+      margin-bottom:8px;
+    }
+    .topo-titulo span{
+      background:linear-gradient(135deg,#a855f7,#7c3aed);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    }
+    .topo-sub{
+      font-size:15px;color:rgba(255,255,255,0.4);
+      line-height:1.55;max-width:300px;margin:0 auto;
     }
 
-    /* ── HEADER ── */
-    .header {
-      text-align: center;
-      margin-bottom: 32px;
-    }
-    .header-logo {
-      font-size: 11px;
-      font-weight: 800;
-      color: rgba(255,255,255,0.25);
-      letter-spacing: .2em;
-      text-transform: uppercase;
-      margin-bottom: 20px;
-    }
-    .header-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 16px;
-      border-radius: 999px;
-      background: rgba(168,85,247,0.12);
-      border: 1px solid rgba(168,85,247,0.3);
-      font-size: 12px;
-      font-weight: 700;
-      color: #c4b5fd;
-      margin-bottom: 16px;
-    }
-    .header-titulo {
-      font-size: 26px;
-      font-weight: 900;
-      line-height: 1.15;
-      margin-bottom: 8px;
-    }
-    .header-sub {
-      font-size: 14px;
-      color: rgba(255,255,255,0.4);
-      line-height: 1.5;
+    /* ── WRAPPER ── */
+    .wrap{
+      max-width:440px;
+      margin:0 auto;
+      padding:0 20px;
+      position:relative;z-index:1;
     }
 
     /* ── CARD ── */
-    .card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(139,92,246,0.2);
-      border-radius: 20px;
-      padding: 28px 24px;
-      backdrop-filter: blur(10px);
+    .card{
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(139,92,246,0.2);
+      border-radius:20px;
+      padding:24px 20px;
+      margin-bottom:14px;
     }
 
-    /* ── FORM ── */
-    .form-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: rgba(255,255,255,0.35);
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-      display: block;
+    /* ── LOGIN ── */
+    .login-titulo{
+      font-size:18px;font-weight:800;
+      margin-bottom:6px;text-align:center;
     }
-    .input-wrap {
-      position: relative;
-      margin-bottom: 14px;
+    .login-sub{
+      font-size:13px;color:rgba(255,255,255,0.4);
+      text-align:center;margin-bottom:22px;line-height:1.5;
     }
-    .input-prefix {
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 15px;
-      color: rgba(255,255,255,0.25);
-      font-weight: 700;
-      pointer-events: none;
+    .campo-label{
+      font-size:13px;font-weight:700;
+      color:rgba(255,255,255,0.5);
+      margin-bottom:7px;display:flex;align-items:center;gap:6px;
     }
-    input {
-      width: 100%;
-      padding: 13px 14px 13px 28px;
-      border-radius: 12px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: #fff;
-      font-size: 15px;
-      outline: none;
-      font-family: inherit;
-      transition: border-color .2s;
+    .campo-dica{
+      font-size:11px;font-weight:400;
+      color:rgba(255,255,255,0.25);margin-left:auto;
     }
-    input.no-prefix { padding-left: 14px; }
-    input:focus { border-color: rgba(139,92,246,0.6); background: rgba(139,92,246,0.06); }
-    input::placeholder { color: rgba(255,255,255,0.2); }
+    .input-wrap{ position:relative;margin-bottom:14px; }
+    .input-icon{
+      position:absolute;left:14px;top:50%;transform:translateY(-50%);
+      font-size:16px;pointer-events:none;
+    }
+    input{
+      width:100%;
+      padding:14px 14px 14px 44px;
+      border-radius:12px;
+      background:rgba(255,255,255,0.05);
+      border:1.5px solid rgba(255,255,255,0.1);
+      color:#fff;font-size:16px;
+      outline:none;font-family:inherit;
+      transition:border-color .2s,background .2s;
+    }
+    input:focus{
+      border-color:rgba(139,92,246,0.7);
+      background:rgba(139,92,246,0.08);
+    }
+    input::placeholder{color:rgba(255,255,255,0.18);}
+    .btn-entrar{
+      width:100%;padding:16px;
+      border-radius:14px;
+      background:linear-gradient(135deg,#7c3aed,#6d28d9);
+      border:none;color:#fff;
+      font-size:16px;font-weight:800;
+      cursor:pointer;margin-top:4px;
+      transition:transform .15s,box-shadow .2s;
+      box-shadow:0 6px 24px rgba(124,58,237,0.35);
+      letter-spacing:.02em;
+    }
+    .btn-entrar:active{transform:scale(.97);}
+    .btn-entrar:disabled{opacity:.5;cursor:default;}
+    .erro{
+      background:rgba(239,68,68,0.1);
+      border:1px solid rgba(239,68,68,0.3);
+      border-radius:10px;padding:12px 14px;
+      font-size:13px;color:#fca5a5;
+      margin-bottom:14px;display:none;
+      text-align:center;line-height:1.5;
+    }
 
-    .btn {
-      width: 100%;
-      padding: 15px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #7c3aed, #6d28d9);
-      border: none;
-      color: #fff;
-      font-size: 15px;
-      font-weight: 800;
-      cursor: pointer;
-      margin-top: 6px;
-      transition: opacity .2s, transform .15s;
-      letter-spacing: .02em;
+    /* ── SAUDAÇÃO ── */
+    .saudacao{
+      display:flex;align-items:center;gap:14px;
+      margin-bottom:20px;
     }
-    .btn:active { opacity: .85; transform: scale(.98); }
-    .btn:disabled { opacity: .5; cursor: default; }
-
-    .erro {
-      background: rgba(239,68,68,0.1);
-      border: 1px solid rgba(239,68,68,0.25);
-      border-radius: 10px;
-      padding: 11px 14px;
-      font-size: 13px;
-      color: #fca5a5;
-      margin-bottom: 14px;
-      display: none;
+    .saud-avatar{
+      width:54px;height:54px;border-radius:50%;
+      background:linear-gradient(135deg,#7c3aed,#a855f7);
+      display:flex;align-items:center;justify-content:center;
+      font-size:24px;flex-shrink:0;
+      border:2.5px solid rgba(168,85,247,0.5);
     }
+    .saud-nome{font-size:19px;font-weight:900;line-height:1.2;}
+    .saud-insta{font-size:13px;color:rgba(255,255,255,0.35);margin-top:3px;}
+    .btn-sair{
+      margin-left:auto;background:none;border:none;
+      color:rgba(255,255,255,0.2);font-size:12px;
+      cursor:pointer;padding:7px 10px;border-radius:8px;
+      font-family:inherit;transition:color .15s;
+    }
+    .btn-sair:hover{color:rgba(255,255,255,0.5);}
 
     /* ── STATS ── */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 18px;
+    .stats-titulo{
+      font-size:11px;font-weight:800;
+      color:rgba(255,255,255,0.25);
+      text-transform:uppercase;letter-spacing:.12em;
+      margin-bottom:12px;text-align:center;
     }
-    .stat-box {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 14px;
-      padding: 18px 12px;
-      text-align: center;
+    .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+    .stat{
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.07);
+      border-radius:16px;padding:18px 12px;text-align:center;
     }
-    .stat-val {
-      font-size: 36px;
-      font-weight: 900;
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-    .stat-lbl {
-      font-size: 10px;
-      font-weight: 700;
-      color: rgba(255,255,255,0.3);
-      text-transform: uppercase;
-      letter-spacing: .08em;
-    }
+    .stat-icone{font-size:24px;margin-bottom:8px;}
+    .stat-num{font-size:38px;font-weight:900;line-height:1;margin-bottom:5px;}
+    .stat-nome{font-size:13px;font-weight:700;color:rgba(255,255,255,0.55);margin-bottom:3px;}
+    .stat-desc{font-size:11px;color:rgba(255,255,255,0.25);line-height:1.4;}
 
     /* ── META ── */
-    .meta-box {
-      background: rgba(139,92,246,0.07);
-      border: 1px solid rgba(139,92,246,0.18);
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 20px;
+    .meta-card{
+      background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(109,40,217,0.06));
+      border:1px solid rgba(139,92,246,0.25);
+      border-radius:16px;padding:18px;
     }
-    .meta-topo {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
+    .meta-top{
+      display:flex;justify-content:space-between;
+      align-items:center;margin-bottom:14px;
     }
-    .meta-titulo {
-      font-size: 11px;
-      font-weight: 800;
-      color: rgba(168,85,247,0.9);
-      text-transform: uppercase;
-      letter-spacing: .08em;
+    .meta-left{}
+    .meta-label{font-size:12px;font-weight:800;color:#c4b5fd;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;}
+    .meta-frase{font-size:13px;color:rgba(255,255,255,0.5);}
+    .meta-frase strong{color:#fff;}
+    .meta-pct-badge{
+      font-size:22px;font-weight:900;color:#a855f7;
+      background:rgba(168,85,247,0.12);
+      border:1px solid rgba(168,85,247,0.25);
+      border-radius:12px;padding:8px 14px;
+      flex-shrink:0;
     }
-    .meta-num {
-      font-size: 13px;
-      font-weight: 700;
-      color: rgba(255,255,255,0.5);
+    .bar-bg{height:10px;border-radius:999px;background:rgba(255,255,255,0.08);overflow:hidden;}
+    .bar-fill{height:100%;border-radius:999px;transition:width .8s cubic-bezier(.4,0,.2,1);}
+    .meta-info{
+      display:flex;justify-content:space-between;
+      margin-top:8px;font-size:11px;color:rgba(255,255,255,0.3);
     }
-    .meta-num strong { color: #fff; }
-    .bar-bg {
-      height: 8px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.08);
-      overflow: hidden;
-    }
-    .bar-fill {
-      height: 100%;
-      border-radius: 999px;
-      transition: width .6s cubic-bezier(.4,0,.2,1);
-    }
-    .badge-meta {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 3px 12px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 800;
-      background: rgba(16,185,129,0.15);
-      border: 1px solid rgba(16,185,129,0.35);
-      color: #10b981;
+    .badge-batida{
+      display:inline-flex;align-items:center;gap:6px;
+      margin-top:12px;padding:8px 16px;border-radius:999px;
+      font-size:13px;font-weight:800;
+      background:rgba(16,185,129,0.15);
+      border:1px solid rgba(16,185,129,0.4);
+      color:#10b981;
     }
 
-    /* ── LINK ── */
-    .link-section { margin-bottom: 0; }
-    .link-titulo {
-      font-size: 11px;
-      font-weight: 700;
-      color: rgba(255,255,255,0.3);
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      margin-bottom: 8px;
+    /* ── LINK CARD ── */
+    .link-card{
+      background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(5,150,105,0.04));
+      border:1px solid rgba(16,185,129,0.2);
+      border-radius:20px;padding:22px 20px;
     }
-    .link-box {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(0,0,0,0.3);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 12px;
-      padding: 12px 14px;
-      margin-bottom: 8px;
-    }
-    .link-texto {
-      flex: 1;
-      font-family: monospace;
-      font-size: 12px;
-      color: rgba(255,255,255,0.5);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .btn-copy {
-      flex-shrink: 0;
-      padding: 7px 14px;
-      border-radius: 8px;
-      background: rgba(139,92,246,0.15);
-      border: 1px solid rgba(139,92,246,0.3);
-      color: #c4b5fd;
-      font-size: 12px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: all .15s;
-    }
-    .btn-copy:hover { background: rgba(139,92,246,0.25); }
-    .btn-wa {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      padding: 14px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #16a34a, #22c55e);
-      color: #fff;
-      font-weight: 800;
-      font-size: 14px;
-      text-decoration: none;
-      text-align: center;
-      transition: opacity .2s;
-    }
-    .btn-wa:hover { opacity: .9; }
+    .link-header{text-align:center;margin-bottom:18px;}
+    .link-icone{font-size:32px;margin-bottom:8px;}
+    .link-titulo{font-size:17px;font-weight:900;margin-bottom:5px;}
+    .link-desc{font-size:13px;color:rgba(255,255,255,0.4);line-height:1.5;}
 
-    /* ── DIVIDER ── */
-    .divider { height: 1px; background: rgba(255,255,255,0.06); margin: 20px 0; }
+    .link-box{
+      background:rgba(0,0,0,0.35);
+      border:1.5px solid rgba(16,185,129,0.2);
+      border-radius:12px;padding:13px 14px;
+      display:flex;align-items:center;gap:10px;
+      margin-bottom:12px;
+    }
+    .link-url{
+      flex:1;font-family:monospace;font-size:12px;
+      color:rgba(255,255,255,0.45);
+      overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    }
+    .btn-copiar{
+      flex-shrink:0;
+      padding:9px 18px;border-radius:10px;
+      background:rgba(16,185,129,0.15);
+      border:1.5px solid rgba(16,185,129,0.4);
+      color:#6ee7b7;font-size:13px;font-weight:800;
+      cursor:pointer;transition:all .15s;font-family:inherit;
+      white-space:nowrap;
+    }
+    .btn-copiar:hover{background:rgba(16,185,129,0.25);}
 
-    /* ── USER HEADER ── */
-    .user-header {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 22px;
+    .btn-compartilhar{
+      display:flex;align-items:center;justify-content:center;gap:10px;
+      width:100%;padding:17px;border-radius:14px;
+      background:linear-gradient(135deg,#16a34a,#22c55e);
+      color:#fff;font-size:16px;font-weight:800;
+      text-decoration:none;text-align:center;
+      box-shadow:0 8px 24px rgba(22,163,74,0.35);
+      transition:transform .15s,box-shadow .2s;
+      border:none;cursor:pointer;font-family:inherit;
     }
-    .user-avatar {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #7c3aed, #a855f7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      flex-shrink: 0;
-      border: 2px solid rgba(168,85,247,0.4);
-    }
-    .user-nome {
-      font-size: 18px;
-      font-weight: 900;
-      line-height: 1.2;
-    }
-    .user-insta {
-      font-size: 13px;
-      color: rgba(255,255,255,0.35);
-      margin-top: 2px;
-    }
-    .user-sair {
-      margin-left: auto;
-      background: none;
-      border: none;
-      color: rgba(255,255,255,0.2);
-      font-size: 12px;
-      cursor: pointer;
-      padding: 6px 10px;
-      border-radius: 8px;
-      transition: color .15s;
-    }
-    .user-sair:hover { color: rgba(255,255,255,0.5); }
+    .btn-compartilhar:active{transform:scale(.97);}
 
-    .rodape {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 11px;
-      color: rgba(255,255,255,0.15);
+    .como-funciona{
+      background:rgba(255,255,255,0.02);
+      border:1px solid rgba(255,255,255,0.06);
+      border-radius:14px;padding:16px;margin-top:12px;
+    }
+    .cf-titulo{font-size:11px;font-weight:800;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;}
+    .cf-passo{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;}
+    .cf-passo:last-child{margin-bottom:0;}
+    .cf-num{
+      width:24px;height:24px;border-radius:50%;
+      background:rgba(168,85,247,0.2);border:1px solid rgba(168,85,247,0.35);
+      display:flex;align-items:center;justify-content:center;
+      font-size:11px;font-weight:900;color:#c4b5fd;flex-shrink:0;margin-top:1px;
+    }
+    .cf-txt{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.5;}
+    .cf-txt strong{color:rgba(255,255,255,0.8);}
+
+    .rodape{
+      text-align:center;padding:24px 20px 0;
+      font-size:11px;color:rgba(255,255,255,0.12);
+      position:relative;z-index:1;
     }
 
-    #tela-login { display: block; }
-    #tela-stats { display: none; }
+    #tela-login{display:block;}
+    #tela-stats{display:none;}
   </style>
 </head>
 <body>
-<div class="wrap">
 
-  <div class="header">
-    <div class="header-logo">Revolution 2 Anos</div>
-    <div class="header-badge">📣 Área do Divulgador</div>
-    <div class="header-titulo">Seu painel<br>de resultados</div>
-    <div class="header-sub">Acompanhe cliques, vendas e progresso da sua meta</div>
-  </div>
+<!-- ══ HEADER ══ -->
+<div class="topo">
+  <div class="topo-logo">Revolution 2 Anos</div>
+  <span class="topo-emoji">📣</span>
+  <div class="topo-titulo">Área do <span>Divulgador</span></div>
+  <div class="topo-sub">Veja seus resultados e compartilhe seu link exclusivo</div>
+</div>
+
+<div class="wrap">
 
   <!-- ══ TELA DE LOGIN ══ -->
   <div id="tela-login">
     <div class="card">
+      <div class="login-titulo">Entre na sua área</div>
+      <div class="login-sub">Use o mesmo @ do Instagram que você se cadastrou</div>
+
       <div class="erro" id="erro-msg"></div>
 
-      <label class="form-label">@ do Instagram</label>
+      <div class="campo-label">
+        Seu Instagram
+        <span class="campo-dica">sem o @</span>
+      </div>
       <div class="input-wrap">
-        <span class="input-prefix">@</span>
-        <input type="text" id="inp-user" placeholder="seuinstagram" autocomplete="username" />
+        <span class="input-icon">📸</span>
+        <input type="text" id="inp-user"
+          placeholder="exemplo: joaosilva"
+          autocomplete="username"
+          autocapitalize="none"
+          autocorrect="off" />
       </div>
 
-      <label class="form-label">Senha</label>
+      <div class="campo-label">Senha</div>
       <div class="input-wrap">
-        <input type="password" id="inp-pass" class="no-prefix" placeholder="••••••••" autocomplete="current-password" />
+        <span class="input-icon">🔑</span>
+        <input type="password" id="inp-pass"
+          placeholder="Senha recebida da equipe"
+          autocomplete="current-password" />
       </div>
 
-      <button class="btn" id="btn-entrar" onclick="fazerLogin()">Entrar →</button>
+      <button class="btn-entrar" id="btn-entrar" onclick="fazerLogin()">
+        Entrar no painel →
+      </button>
+    </div>
+
+    <!-- Como funciona -->
+    <div class="como-funciona">
+      <div class="cf-titulo">📌 Como funciona</div>
+      <div class="cf-passo">
+        <div class="cf-num">1</div>
+        <div class="cf-txt">Entre com seu @ do Instagram e a senha que a equipe te passou</div>
+      </div>
+      <div class="cf-passo">
+        <div class="cf-num">2</div>
+        <div class="cf-txt">Copie seu <strong>link exclusivo</strong> e compartilhe nos seus stories e posts</div>
+      </div>
+      <div class="cf-passo">
+        <div class="cf-num">3</div>
+        <div class="cf-txt">Cada pessoa que comprar pelo seu link conta como <strong>1 venda</strong> pra você</div>
+      </div>
     </div>
   </div>
 
   <!-- ══ TELA DE STATS ══ -->
   <div id="tela-stats">
+
+    <!-- Saudação -->
     <div class="card">
-
-      <div class="user-header">
-        <div class="user-avatar">📣</div>
+      <div class="saudacao">
+        <div class="saud-avatar">📣</div>
         <div>
-          <div class="user-nome" id="s-nome">—</div>
-          <div class="user-insta" id="s-insta">—</div>
+          <div class="saud-nome" id="s-nome">—</div>
+          <div class="saud-insta" id="s-insta">—</div>
         </div>
-        <button class="user-sair" onclick="sair()">Sair</button>
+        <button class="btn-sair" onclick="sair()">Sair</button>
       </div>
 
+      <!-- Stats -->
+      <div class="stats-titulo">Seus resultados</div>
       <div class="stats-grid">
-        <div class="stat-box">
-          <div class="stat-val" style="color:#a855f7" id="s-clicks">0</div>
-          <div class="stat-lbl">🔗 Cliques no link</div>
+        <div class="stat">
+          <div class="stat-icone">🔗</div>
+          <div class="stat-num" id="s-clicks" style="color:#a855f7">0</div>
+          <div class="stat-nome">Cliques</div>
+          <div class="stat-desc">pessoas que abriram seu link</div>
         </div>
-        <div class="stat-box">
-          <div class="stat-val" style="color:#10b981" id="s-vendas">0</div>
-          <div class="stat-lbl">✅ Vendas confirmadas</div>
+        <div class="stat">
+          <div class="stat-icone">✅</div>
+          <div class="stat-num" id="s-vendas" style="color:#10b981">0</div>
+          <div class="stat-nome">Vendas</div>
+          <div class="stat-desc">passaportes vendidos por você</div>
         </div>
       </div>
-
-      <div class="meta-box" id="meta-box" style="display:none">
-        <div class="meta-topo">
-          <div class="meta-titulo">🎯 Meta de indicações</div>
-          <div class="meta-num"><strong id="s-vendas2">0</strong> / <strong id="s-meta">0</strong></div>
-        </div>
-        <div class="bar-bg">
-          <div class="bar-fill" id="s-bar" style="width:0%"></div>
-        </div>
-        <div id="s-pct" style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:7px"></div>
-        <div class="badge-meta" id="s-badge" style="display:none">🏆 Meta batida! Parabéns!</div>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="link-section">
-        <div class="link-titulo">🔗 Seu link de indicação</div>
-        <div class="link-box">
-          <div class="link-texto" id="s-link">—</div>
-          <button class="btn-copy" id="btn-copy" onclick="copiarLink()">📋 Copiar</button>
-        </div>
-        <a class="btn-wa" id="s-wa" href="#" target="_blank" rel="noopener">
-          💬 Abrir no WhatsApp
-        </a>
-      </div>
-
     </div>
-  </div>
 
-  <div class="rodape">Revolution 2 Anos · Julho 2026 · Serra/ES</div>
-</div>
+    <!-- Meta -->
+    <div class="meta-card" id="meta-box" style="display:none;margin-bottom:14px;">
+      <div class="meta-top">
+        <div class="meta-left">
+          <div class="meta-label">🎯 Sua meta</div>
+          <div class="meta-frase">Você fez <strong id="s-vendas2">0</strong> de <strong id="s-meta">0</strong> vendas</div>
+        </div>
+        <div class="meta-pct-badge" id="s-pct-badge">0%</div>
+      </div>
+      <div class="bar-bg">
+        <div class="bar-fill" id="s-bar" style="width:0%"></div>
+      </div>
+      <div class="meta-info">
+        <span>0 vendas</span>
+        <span id="s-meta2">meta: 0</span>
+      </div>
+      <div class="badge-batida" id="s-badge" style="display:none">
+        🏆 Parabéns! Você bateu a meta!
+      </div>
+    </div>
+
+    <!-- Link de indicação -->
+    <div class="link-card">
+      <div class="link-header">
+        <div class="link-icone">🚀</div>
+        <div class="link-titulo">Seu link exclusivo</div>
+        <div class="link-desc">Compartilhe esse link nos seus stories e posts.<br>Cada clique é um possível passaporte vendido!</div>
+      </div>
+
+      <div class="link-box">
+        <div class="link-url" id="s-link">—</div>
+        <button class="btn-copiar" id="btn-copiar" onclick="copiarLink()">📋 Copiar</button>
+      </div>
+
+      <button class="btn-compartilhar" onclick="compartilharLink()">
+        💬 Compartilhar via WhatsApp
+      </button>
+
+      <div class="como-funciona" style="margin-top:14px;">
+        <div class="cf-titulo">💡 Dica de como usar</div>
+        <div class="cf-passo">
+          <div class="cf-num">1</div>
+          <div class="cf-txt">Copie o link acima clicando em <strong>"📋 Copiar"</strong></div>
+        </div>
+        <div class="cf-passo">
+          <div class="cf-num">2</div>
+          <div class="cf-txt">Cole no seu <strong>story do Instagram</strong> como link ou mande no grupo</div>
+        </div>
+        <div class="cf-passo">
+          <div class="cf-num">3</div>
+          <div class="cf-txt">Quem clicar vai cair direto no WhatsApp já com a mensagem preenchida</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tela-stats -->
+
+</div><!-- /wrap -->
+
+<div class="rodape">Revolution 2 Anos · Julho 2026 · Serra, ES</div>
 
 <script>
   const WORKER = 'https://revolution-upload.contatoramishi.workers.dev'
-  let dadosUsuario = null
+  let dados = null
 
-  // Verifica sessão salva
+  // Restaura sessão
   try {
-    const salvo = sessionStorage.getItem('div_sessao')
-    if (salvo) {
-      dadosUsuario = JSON.parse(salvo)
-      mostrarStats(dadosUsuario)
-    }
+    const s = sessionStorage.getItem('div_sessao_v2')
+    if (s) { dados = JSON.parse(s); mostrarStats(dados) }
   } catch {}
 
-  // Enter nos inputs
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Enter') fazerLogin()
-  })
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') fazerLogin() })
 
   async function fazerLogin() {
     const btn  = document.getElementById('btn-entrar')
-    const user = document.getElementById('inp-user').value.trim().replace('@','')
+    const user = document.getElementById('inp-user').value.trim().replace('@','').toLowerCase()
     const pass = document.getElementById('inp-pass').value.trim()
-    const erro = document.getElementById('erro-msg')
 
-    erro.style.display = 'none'
-    if (!user || !pass) { mostrarErro('Preencha seu @ do Instagram e a senha.'); return }
+    ocultarErro()
+    if (!user || !pass) { mostrarErro('Preencha seu Instagram e a senha 👆'); return }
 
     btn.disabled = true
     btn.textContent = 'Verificando...'
 
     try {
       const r = await fetch(WORKER + '/divulgador-login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ instagram: user, senha: pass }),
       })
       const d = await r.json()
-      if (!r.ok) { mostrarErro(d.error || 'Erro ao entrar.'); return }
-
-      sessionStorage.setItem('div_sessao', JSON.stringify(d))
-      dadosUsuario = d
+      if (!r.ok) {
+        mostrarErro(d.error === 'Senha incorreta.' ? '🔑 Senha incorreta. Fala com a equipe Revolution.' :
+                   d.error === 'Divulgador não encontrado.' ? '📸 Instagram não encontrado. Confirma que digitou certo.' :
+                   d.error === 'Sua conta ainda não foi aprovada.' ? '⏳ Seu cadastro ainda está sendo analisado. Em breve a equipe te avisa!' :
+                   d.error || 'Erro ao entrar.')
+        return
+      }
+      sessionStorage.setItem('div_sessao_v2', JSON.stringify(d))
+      dados = d
       mostrarStats(d)
     } catch {
-      mostrarErro('Erro de conexão. Tente novamente.')
+      mostrarErro('🌐 Erro de conexão. Verifique sua internet e tente novamente.')
     } finally {
       btn.disabled = false
-      btn.textContent = 'Entrar →'
+      btn.textContent = 'Entrar no painel →'
     }
   }
 
   function mostrarStats(d) {
     document.getElementById('tela-login').style.display = 'none'
     document.getElementById('tela-stats').style.display = 'block'
+    window.scrollTo(0, 0)
 
     document.getElementById('s-nome').textContent   = d.nome || 'Divulgador'
     document.getElementById('s-insta').textContent  = '@' + (d.instagram || '')
@@ -497,45 +494,73 @@
 
     const link = WORKER + '/r/' + (d.slug || d.id)
     document.getElementById('s-link').textContent = link
-    document.getElementById('s-wa').href = link
 
     if (d.meta > 0) {
-      const pct    = Math.min(100, Math.round(((d.vendas || 0) / d.meta) * 100))
-      const batida = (d.vendas || 0) >= d.meta
+      const vendas = d.vendas || 0
+      const pct    = Math.min(100, Math.round((vendas / d.meta) * 100))
+      const batida = vendas >= d.meta
 
       document.getElementById('meta-box').style.display    = 'block'
-      document.getElementById('s-vendas2').textContent     = d.vendas || 0
+      document.getElementById('s-vendas2').textContent     = vendas
       document.getElementById('s-meta').textContent        = d.meta
+      document.getElementById('s-meta2').textContent       = 'meta: ' + d.meta
+      document.getElementById('s-pct-badge').textContent   = pct + '%'
       document.getElementById('s-bar').style.width         = pct + '%'
       document.getElementById('s-bar').style.background    = batida
         ? 'linear-gradient(90deg,#10b981,#34d399)'
         : 'linear-gradient(90deg,#7c3aed,#a855f7)'
-      document.getElementById('s-pct').textContent         = pct + '% concluído'
-      document.getElementById('s-badge').style.display     = batida ? 'inline-block' : 'none'
+      document.getElementById('s-badge').style.display     = batida ? 'flex' : 'none'
     }
   }
 
   function copiarLink() {
-    const link = WORKER + '/r/' + (dadosUsuario?.slug || dadosUsuario?.id || '')
+    const link = WORKER + '/r/' + (dados?.slug || dados?.id || '')
     navigator.clipboard.writeText(link).then(() => {
-      const btn = document.getElementById('btn-copy')
+      const btn = document.getElementById('btn-copiar')
       btn.textContent = '✅ Copiado!'
-      setTimeout(() => { btn.textContent = '📋 Copiar' }, 2500)
+      btn.style.background = 'rgba(16,185,129,0.3)'
+      setTimeout(() => {
+        btn.textContent = '📋 Copiar'
+        btn.style.background = ''
+      }, 2500)
+    }).catch(() => {
+      // fallback para mobile
+      const el = document.getElementById('s-link')
+      const range = document.createRange()
+      range.selectNode(el)
+      window.getSelection().removeAllRanges()
+      window.getSelection().addRange(range)
+      document.execCommand('copy')
     })
+  }
+
+  function compartilharLink() {
+    const link = WORKER + '/r/' + (dados?.slug || dados?.id || '')
+    const texto = 'Vai acontecer o Revolution 2 Anos! 🎉 Garanta seu passaporte aqui: ' + link
+    if (navigator.share) {
+      navigator.share({ title: 'Revolution 2 Anos', text: texto, url: link })
+    } else {
+      const wa = 'https://wa.me/?text=' + encodeURIComponent(texto)
+      window.open(wa, '_blank')
+    }
   }
 
   function mostrarErro(msg) {
     const el = document.getElementById('erro-msg')
-    el.textContent = msg
+    el.innerHTML = msg
     el.style.display = 'block'
+  }
+  function ocultarErro() {
+    document.getElementById('erro-msg').style.display = 'none'
   }
 
   function sair() {
-    sessionStorage.removeItem('div_sessao')
-    dadosUsuario = null
+    sessionStorage.removeItem('div_sessao_v2')
+    dados = null
     document.getElementById('tela-login').style.display = 'block'
     document.getElementById('tela-stats').style.display = 'none'
     document.getElementById('inp-pass').value = ''
+    window.scrollTo(0, 0)
   }
 </script>
 </body>
