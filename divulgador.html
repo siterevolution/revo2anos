@@ -109,17 +109,6 @@
     .seletiva-txt{font-size:13px;font-weight:700;color:#fcd34d;line-height:1.4}
     .seletiva-sub{font-size:11px;color:rgba(245,158,11,0.6);margin-top:2px}
 
-    /* CHECKLIST */
-    .check-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:16px;margin-bottom:12px}
-    .check-titulo{font-size:11px;font-weight:800;color:rgba(255,255,255,0.28);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
-    .check-item{display:flex;align-items:center;gap:10px;margin-bottom:10px;cursor:pointer}
-    .check-item:last-child{margin-bottom:0}
-    .check-box{width:20px;height:20px;border-radius:6px;border:1.5px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;font-size:11px}
-    .check-box.ok{background:rgba(16,185,129,0.2);border-color:rgba(16,185,129,0.5);color:#10b981}
-    .check-info{flex:1}
-    .check-nome{font-size:13px;font-weight:700;color:rgba(255,255,255,0.7)}
-    .check-desc{font-size:11px;color:rgba(255,255,255,0.3);margin-top:1px}
-    .check-aviso{font-size:10px;color:rgba(255,255,255,0.2);text-align:center;margin-top:8px;font-style:italic}
 
     /* LINK */
     .link-card{background:linear-gradient(135deg,rgba(16,185,129,0.07),rgba(5,150,105,0.03));border:1px solid rgba(16,185,129,0.18);border-radius:18px;padding:20px}
@@ -266,40 +255,6 @@
       </div>
     </div>
 
-    <!-- Checklist semanal -->
-    <div class="check-card">
-      <div class="check-titulo">📋 Checklist semanal</div>
-      <div class="check-item" onclick="toggleCheck(this)">
-        <div class="check-box" data-key="bio">✓</div>
-        <div class="check-info">
-          <div class="check-nome">Link na Bio do Instagram</div>
-          <div class="check-desc">Seu link de indicação deve estar visível na bio</div>
-        </div>
-      </div>
-      <div class="check-item" onclick="toggleCheck(this)">
-        <div class="check-box" data-key="post1">✓</div>
-        <div class="check-info">
-          <div class="check-nome">Post de conteúdo — semana 1</div>
-          <div class="check-desc">1ª postagem sobre o Revolution 2 Anos</div>
-        </div>
-      </div>
-      <div class="check-item" onclick="toggleCheck(this)">
-        <div class="check-box" data-key="post2">✓</div>
-        <div class="check-info">
-          <div class="check-nome">Post de conteúdo — semana 2</div>
-          <div class="check-desc">2ª postagem sobre o Revolution 2 Anos</div>
-        </div>
-      </div>
-      <div class="check-item" onclick="toggleCheck(this)">
-        <div class="check-box" data-key="grupo">✓</div>
-        <div class="check-info">
-          <div class="check-nome">Respondeu no grupo esta semana</div>
-          <div class="check-desc">Responder chamados em até 24h</div>
-        </div>
-      </div>
-      <div class="check-aviso">* Apenas lembrete visual — validação final é feita pela equipe</div>
-    </div>
-
     <!-- Link -->
     <div class="link-card">
       <div class="link-header">
@@ -354,35 +309,6 @@ try {
 
 document.addEventListener('keydown', e => { if (e.key === 'Enter') fazerLogin() })
 
-// Carrega checks do localStorage
-function carregarChecks() {
-  const semana = Math.floor(Date.now() / (7*24*60*60*1000))
-  const chave = `div_checks_${semana}`
-  try { return JSON.parse(localStorage.getItem(chave) || '{}') } catch { return {} }
-}
-function salvarCheck(key, val) {
-  const semana = Math.floor(Date.now() / (7*24*60*60*1000))
-  const chave = `div_checks_${semana}`
-  const atual = carregarChecks()
-  atual[key] = val
-  localStorage.setItem(chave, JSON.stringify(atual))
-}
-
-function toggleCheck(item) {
-  const box = item.querySelector('.check-box')
-  const key = box.dataset.key
-  const novoVal = !box.classList.contains('ok')
-  if (novoVal) box.classList.add('ok'); else box.classList.remove('ok')
-  salvarCheck(key, novoVal)
-}
-
-function renderChecks() {
-  const checks = carregarChecks()
-  document.querySelectorAll('.check-box').forEach(box => {
-    if (checks[box.dataset.key]) box.classList.add('ok')
-    else box.classList.remove('ok')
-  })
-}
 
 async function fazerLogin() {
   const btn  = document.getElementById('btn-entrar')
@@ -496,7 +422,6 @@ function renderTela(d) {
   document.getElementById('s-link').textContent = link
 
   // Checks
-  renderChecks()
 }
 
 function copiarLink() {
