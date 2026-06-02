@@ -67,15 +67,26 @@
     .recomp-txt{font-size:14px;font-weight:700;line-height:1.4}
     .recomp-sem{font-size:13px;color:rgba(255,255,255,0.35);font-style:italic}
 
-    /* PROGRESSO PRÓX NÍVEL */
-    .prox-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:14px 16px;margin-bottom:12px}
-    .prox-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-    .prox-label{font-size:12px;font-weight:700;color:rgba(255,255,255,0.4)}
-    .prox-badge{font-size:11px;font-weight:800;padding:3px 10px;border-radius:999px;background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.3);color:#c4b5fd}
-    .bar-bg{height:8px;border-radius:999px;background:rgba(255,255,255,0.07);overflow:hidden}
-    .bar-fill{height:100%;border-radius:999px;transition:width .8s cubic-bezier(.4,0,.2,1)}
-    .prox-frase{font-size:12px;color:rgba(255,255,255,0.35);margin-top:7px;text-align:center}
-    .prox-frase strong{color:#c4b5fd}
+    /* JORNADA */
+    .jornada-card{background:rgba(255,255,255,0.03);border:1px solid rgba(139,92,246,0.15);border-radius:18px;padding:20px 18px;margin-bottom:12px}
+    .jornada-titulo{font-size:11px;font-weight:800;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:.12em;text-align:center;margin-bottom:20px}
+    .jornada-trilha{position:relative;padding:0 12px;margin-bottom:24px}
+    .trilha-bar-bg{height:6px;background:rgba(255,255,255,0.07);border-radius:999px;position:relative;margin:22px 0 32px}
+    .trilha-bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#7c3aed,#a855f7);transition:width .9s cubic-bezier(.4,0,.2,1);position:relative}
+    .trilha-bar-fill::after{content:'';position:absolute;right:-6px;top:50%;transform:translateY(-50%);width:14px;height:14px;border-radius:50%;background:#a855f7;box-shadow:0 0 0 3px rgba(168,85,247,0.25),0 0 12px rgba(168,85,247,0.6);border:2px solid #fff}
+    .marco{position:absolute;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:0}
+    .marco-dot{width:12px;height:12px;border-radius:50%;border:2px solid rgba(255,255,255,0.15);background:#07060f;transition:all .4s;flex-shrink:0}
+    .marco-dot.ativo{background:#a855f7;border-color:#a855f7;box-shadow:0 0 8px rgba(168,85,247,0.7)}
+    .marco-icone{position:absolute;top:-28px;font-size:18px;white-space:nowrap}
+    .marco-pts{position:absolute;bottom:-20px;font-size:9px;font-weight:800;color:rgba(255,255,255,0.3);white-space:nowrap}
+    .marco-pts.ativo{color:#a855f7}
+
+    /* RECOMPENSA */
+    .recomp-card{border-radius:14px;padding:14px 16px;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+    .recomp-icone{font-size:28px;flex-shrink:0}
+    .recomp-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px;opacity:.7}
+    .recomp-txt{font-size:14px;font-weight:700;line-height:1.4}
+    .recomp-falta{font-size:12px;color:rgba(255,255,255,0.3);text-align:center;padding:10px 0}
 
     /* STATS */
     .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
@@ -218,26 +229,36 @@
       </div>
     </div>
 
-    <!-- Nível atual -->
-    <div class="nivel-card" id="nivel-card">
-      <span class="nivel-icon" id="nivel-icon">📣</span>
-      <div class="nivel-tag">Nível atual</div>
-      <div class="nivel-nome" id="nivel-nome">Candidato</div>
-      <div class="recomp-box" id="recomp-box">
-        <div class="recomp-titulo">🎁 Recompensa desbloqueada</div>
-        <div id="recomp-txt" class="recomp-sem">Continue indicando para desbloquear recompensas!</div>
+    <!-- Jornada de recompensas -->
+    <div class="jornada-card">
+      <div class="jornada-titulo">🎯 Sua jornada de recompensas</div>
+      <div class="jornada-trilha">
+        <div class="trilha-bar-bg">
+          <div class="trilha-bar-fill" id="trilha-fill" style="width:0%"></div>
+          <!-- Marcos: 2pts, 5pts, 10pts -->
+          <div class="marco" id="marco-2"  style="left:20%">
+            <div class="marco-icone">🤝</div>
+            <div class="marco-dot" id="dot-2"></div>
+            <div class="marco-pts" id="pts-2">2 pts</div>
+          </div>
+          <div class="marco" id="marco-5"  style="left:50%">
+            <div class="marco-icone">🎯</div>
+            <div class="marco-dot" id="dot-5"></div>
+            <div class="marco-pts" id="pts-5">5 pts</div>
+          </div>
+          <div class="marco" id="marco-10" style="left:100%">
+            <div class="marco-icone">👑</div>
+            <div class="marco-dot" id="dot-10"></div>
+            <div class="marco-pts" id="pts-10">10 pts</div>
+          </div>
+        </div>
       </div>
+      <!-- O que cada marco desbloqueia -->
+      <div id="marcos-desc" style="display:flex;flex-direction:column;gap:8px"></div>
     </div>
 
-    <!-- Próximo nível -->
-    <div class="prox-card" id="prox-card">
-      <div class="prox-top">
-        <div class="prox-label">🚀 Próximo nível</div>
-        <div class="prox-badge" id="prox-badge">—</div>
-      </div>
-      <div class="bar-bg"><div class="bar-fill" id="prox-bar" style="width:0%"></div></div>
-      <div class="prox-frase" id="prox-frase">—</div>
-    </div>
+    <!-- Recompensa atual -->
+    <div class="recomp-card" id="recomp-card" style="display:none"></div>
 
     <!-- Badge seletiva -->
     <div class="seletiva-badge" id="seletiva-badge" style="display:none">
@@ -407,7 +428,6 @@ function renderTela(d) {
 
   const vendas = d.vendas || 0
   const nivel  = getNivel(vendas)
-  const prox   = getProximo(vendas)
 
   // Saudação
   document.getElementById('s-nome').textContent  = d.nome || 'Divulgador'
@@ -420,55 +440,69 @@ function renderTela(d) {
   document.getElementById('s-clicks').textContent = d.clicks || 0
   document.getElementById('s-vendas').textContent = vendas
 
-  // Nível
-  const nc = document.getElementById('nivel-card')
-  nc.style.background = nivel.bg
-  nc.style.border = `1px solid ${nivel.border}`
-  document.getElementById('nivel-icon').textContent = nivel.icon
-  document.getElementById('nivel-nome').textContent  = nivel.nome
-  document.getElementById('nivel-nome').style.color  = nivel.cor
-  document.getElementById('nivel-tag').style.color   = nivel.cor
-  document.querySelector('#nivel-card .nivel-tag').style.opacity = '1'
-
-  const rt = document.getElementById('recomp-txt')
-  const rb = document.getElementById('recomp-box')
-  if (nivel.recompensa) {
-    rt.className = 'recomp-txt'
-    rt.textContent = nivel.recompensa
-    rt.style.color = nivel.cor
-    rb.style.borderTop = `1px solid ${nivel.border}`
-  } else {
-    rt.className = 'recomp-sem'
-    rt.textContent = 'Continue indicando para desbloquear recompensas!'
-    rt.style.color = ''
+  // ── JORNADA ──────────────────────────────────────────────────────────
+  // Barra: 0 = 0%, 2 = 20%, 5 = 50%, 10 = 100% (além de 10 = 100%)
+  function vendas2pct(v) {
+    if (v <= 0)  return 0
+    if (v >= 10) return 100
+    if (v < 2)   return (v / 2) * 20
+    if (v < 5)   return 20 + ((v - 2) / 3) * 30
+    return              50 + ((v - 5) / 5) * 50
   }
+  const pctBarra = vendas2pct(vendas)
+  document.getElementById('trilha-fill').style.width = pctBarra + '%'
 
-  // Próximo nível
-  const pc = document.getElementById('prox-card')
-  if (prox) {
-    pc.style.display = 'block'
-    const nivelAnt = NIVEIS.find(n => vendas >= n.min) || NIVEIS[3]
-    const nivelProx = prox.nivel
-    const baseMin = nivelAnt.min
-    const proxMin = nivelProx.min
-    const range = proxMin - baseMin
-    const progresso = range > 0 ? Math.round(((vendas - baseMin) / range) * 100) : 100
-    document.getElementById('prox-badge').textContent = `${nivelProx.icon} ${nivelProx.nome}`
-    document.getElementById('prox-badge').style.color = nivelProx.cor
-    document.getElementById('prox-badge').style.background = nivelProx.bg
-    document.getElementById('prox-badge').style.borderColor = nivelProx.border
-    document.getElementById('prox-bar').style.width = progresso + '%'
-    document.getElementById('prox-bar').style.background = `linear-gradient(90deg,${nivel.cor},${nivelProx.cor})`
-    document.getElementById('prox-frase').innerHTML = `Faltam <strong>${prox.faltam} ${prox.faltam === 1 ? 'ponto' : 'pontos'}</strong> para ${nivelProx.icon} ${nivelProx.nome}!`
+  // Marcos ativos
+  ;[{id:'dot-2',pts:2},{id:'dot-5',pts:5},{id:'dot-10',pts:10}].forEach(m => {
+    const el = document.getElementById(m.id)
+    const ptEl = document.getElementById(m.id.replace('dot','pts'))
+    if (vendas >= m.pts) { el.classList.add('ativo'); if(ptEl) ptEl.classList.add('ativo') }
+    else { el.classList.remove('ativo'); if(ptEl) ptEl.classList.remove('ativo') }
+  })
+
+  // Descrição dos marcos (o que cada um dá)
+  const marcos = [
+    { pts:2,  icon:'🤝', recomp:'Combo de Água + Cupom de 30%', cor:'#a855f7' },
+    { pts:5,  icon:'🎯', recomp:'Combo de Água + Ingresso Grátis', cor:'#10b981' },
+    { pts:10, icon:'👑', recomp:'Ingresso Grátis + Kit Exclusivo (Copo + Tirante)', cor:'#f59e0b' },
+  ]
+  const descEl = document.getElementById('marcos-desc')
+  descEl.innerHTML = marcos.map(m => {
+    const conquistado = vendas >= m.pts
+    const faltam = m.pts - vendas
+    return `<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;background:${conquistado ? `rgba(${m.cor === '#a855f7' ? '168,85,247' : m.cor === '#10b981' ? '16,185,129' : '245,158,11'},0.1)` : 'rgba(255,255,255,0.03)'};border:1px solid ${conquistado ? m.cor + '44' : 'rgba(255,255,255,0.06)'}">
+      <div style="font-size:20px;flex-shrink:0">${conquistado ? m.icon : '🔒'}</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:700;color:${conquistado ? '#fff' : 'rgba(255,255,255,0.35)'}">
+          ${m.recomp}
+        </div>
+        <div style="font-size:10px;margin-top:2px;color:${conquistado ? m.cor : 'rgba(255,255,255,0.2)'}">
+          ${conquistado ? '✅ Desbloqueado!' : `Faltam ${faltam} ${faltam === 1 ? 'ponto' : 'pontos'}`}
+        </div>
+      </div>
+      <div style="font-size:11px;font-weight:800;color:${conquistado ? m.cor : 'rgba(255,255,255,0.2)'};flex-shrink:0">${m.pts} pts</div>
+    </div>`
+  }).join('')
+
+  // Recompensa atual (card destacado se tiver algo desbloqueado)
+  const rc = document.getElementById('recomp-card')
+  if (nivel.recompensa) {
+    rc.style.display = 'flex'
+    rc.style.background = `linear-gradient(135deg,${nivel.cor}18,${nivel.cor}08)`
+    rc.style.border = `1px solid ${nivel.cor}33`
+    rc.innerHTML = `
+      <div class="recomp-icone">🎁</div>
+      <div>
+        <div class="recomp-label" style="color:${nivel.cor}">Recompensa desbloqueada</div>
+        <div class="recomp-txt" style="color:#fff">${nivel.recompensa}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:4px">A equipe entrará em contato para entregar 🎉</div>
+      </div>`
   } else {
-    pc.style.display = 'none'
+    rc.style.display = 'none'
   }
 
   // Seletiva
   document.getElementById('seletiva-badge').style.display = d.seletivaAprovado ? 'flex' : 'none'
-
-  // Emoji do topo
-  document.getElementById('topo-emoji').textContent = nivel.icon
 
   // Link
   const link = SITE + '/r/' + (d.slug || d.id)
