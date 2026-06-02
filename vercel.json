@@ -5,5 +5,31 @@
       "destination": "/",
       "permanent": false
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/trips",
+      "destination": "/trips.html"
+    },
+    {
+      "source": "/materiais",
+      "destination": "/materiais.html"
+    },
+    {
+      "source": "/trips-lista",
+      "destination": "/trips-lista.html"
+    },
+    {
+      "source": "/arraial-acesso",
+      "destination": "/arraial-acesso.html"
+    },
+    {
+      "source": "/loja",
+      "destination": "/loja.html"
+    },
+    {
+      "source": "/divulgador",
+      "destination": "/divulgador.html"
+    }
   ]
 }
