@@ -309,6 +309,7 @@
 
 <script>
 const WORKER = 'https://revolution-upload.contatoramishi.workers.dev'
+const SITE   = 'https://revo2anos.com'
 let dados = null
 
 // Configuração de níveis (espelho do worker)
@@ -470,7 +471,7 @@ function renderTela(d) {
   document.getElementById('topo-emoji').textContent = nivel.icon
 
   // Link
-  const link = WORKER + '/r/' + (d.slug || d.id)
+  const link = SITE + '/r/' + (d.slug || d.id)
   document.getElementById('s-link').textContent = link
 
   // Checks
@@ -478,7 +479,7 @@ function renderTela(d) {
 }
 
 function copiarLink() {
-  const link = WORKER + '/r/' + (dados?.slug || dados?.id || '')
+  const link = SITE + '/r/' + (dados?.slug || dados?.id || '')
   navigator.clipboard.writeText(link).then(() => {
     const btn = document.getElementById('btn-copiar')
     btn.textContent = '✅ Copiado!'
@@ -488,7 +489,7 @@ function copiarLink() {
 }
 
 function compartilharLink() {
-  const link = WORKER + '/r/' + (dados?.slug || dados?.id || '')
+  const link = SITE + '/r/' + (dados?.slug || dados?.id || '')
   const texto = 'Vai acontecer o Revolution 2 Anos! 🎉 Garanta seu passaporte: ' + link
   if (navigator.share) navigator.share({ title:'Revolution 2 Anos', text:texto, url:link })
   else window.open('https://wa.me/?text=' + encodeURIComponent(texto), '_blank')

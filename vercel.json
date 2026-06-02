@@ -4,6 +4,11 @@
       "source": "/game.html",
       "destination": "/",
       "permanent": false
+    },
+    {
+      "source": "/r/:slug",
+      "destination": "https://revolution-upload.contatoramishi.workers.dev/r/:slug",
+      "permanent": false
     }
   ],
   "rewrites": [
