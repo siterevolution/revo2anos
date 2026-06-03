@@ -122,6 +122,24 @@
     .btn-compartilhar{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:15px;border-radius:13px;background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;font-size:15px;font-weight:800;text-decoration:none;box-shadow:0 7px 22px rgba(22,163,74,0.3);transition:transform .15s;border:none;cursor:pointer;font-family:inherit}
     .btn-compartilhar:active{transform:scale(.97)}
 
+    /* PERSONALIZAR LINK */
+    .personal-card{background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:14px;padding:16px;margin-top:12px}
+    .personal-titulo{font-size:12px;font-weight:800;color:#fcd34d;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+    .personal-aviso{font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5;margin-bottom:12px}
+    .personal-aviso strong{color:#fbbf24}
+    .personal-input-wrap{display:flex;align-items:center;background:rgba(0,0,0,0.3);border:1.5px solid rgba(245,158,11,0.25);border-radius:10px;overflow:hidden;margin-bottom:8px;transition:border-color .2s}
+    .personal-input-wrap:focus-within{border-color:rgba(245,158,11,0.6)}
+    .personal-prefix{padding:10px 8px 10px 13px;font-size:11px;color:rgba(255,255,255,0.28);white-space:nowrap;font-family:monospace;flex-shrink:0}
+    .personal-input{flex:1;background:none;border:none;color:#fff;font-size:14px;font-weight:700;outline:none;padding:10px 4px;font-family:monospace}
+    .personal-input::placeholder{color:rgba(255,255,255,0.2);font-weight:400}
+    .personal-preview{font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:10px;font-family:monospace;min-height:16px}
+    .personal-preview span{color:#fbbf24}
+    .personal-erro{font-size:12px;color:#fca5a5;margin-bottom:8px;display:none;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);border-radius:8px;padding:8px 12px}
+    .btn-personal{width:100%;padding:11px;border-radius:10px;background:linear-gradient(135deg,#d97706,#f59e0b);border:none;color:#000;font-size:13px;font-weight:800;cursor:pointer;transition:opacity .15s;font-family:inherit}
+    .btn-personal:disabled{opacity:.5;cursor:default}
+    .personal-feito{display:flex;align-items:center;gap:8px;padding:10px 12px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:10px;margin-top:12px}
+    .personal-feito-txt{font-size:12px;color:#6ee7b7;font-weight:700}
+
     /* DESCLASSIFICADO */
     .tela-desc{text-align:center;padding:20px 0}
     .desc-icon{font-size:56px;margin-bottom:16px}
@@ -267,6 +285,31 @@
         <button class="btn-copiar" id="btn-copiar" onclick="copiarLink()">📋 Copiar</button>
       </div>
       <button class="btn-compartilhar" onclick="compartilharLink()">💬 Compartilhar via WhatsApp</button>
+
+      <!-- Personalizar link (só aparece se não trocou ainda) -->
+      <div class="personal-card" id="personal-card" style="display:none">
+        <div class="personal-titulo">✏️ Personalizar meu link</div>
+        <div class="personal-aviso">
+          Você pode trocar o final do seu link <strong>uma única vez</strong>. Após confirmar, não será possível alterar novamente. Escolha com cuidado!
+        </div>
+        <div class="personal-input-wrap">
+          <div class="personal-prefix">revo2anos.com/r/</div>
+          <input class="personal-input" id="personal-inp" type="text" placeholder="seunome" maxlength="30"
+            oninput="previewSlug(this.value)" autocapitalize="none" autocorrect="off" autocomplete="off"/>
+        </div>
+        <div class="personal-preview" id="personal-preview"></div>
+        <div class="personal-erro" id="personal-erro"></div>
+        <button class="btn-personal" id="btn-personal" onclick="confirmarSlug()" disabled>
+          ✅ Confirmar link personalizado
+        </button>
+      </div>
+
+      <!-- Após troca: badge confirmado -->
+      <div class="personal-feito" id="personal-feito" style="display:none">
+        <span style="font-size:18px">✅</span>
+        <div class="personal-feito-txt">Link personalizado! Não é mais possível alterar.</div>
+      </div>
+
       <div class="cf-box" style="margin-top:12px;margin-bottom:0">
         <div class="cf-titulo">💡 Dica de uso</div>
         <div class="cf-passo"><div class="cf-num">1</div><div class="cf-txt">Copie o link e cole no <strong>story do Instagram</strong></div></div>
@@ -442,7 +485,77 @@ function renderTela(d) {
   const link = SITE + '/r/' + (d.slug || d.id)
   document.getElementById('s-link').textContent = link
 
+  // Personalizar link
+  if (d.slugTrocado) {
+    document.getElementById('personal-card').style.display = 'none'
+    document.getElementById('personal-feito').style.display = 'flex'
+  } else {
+    document.getElementById('personal-card').style.display = 'block'
+    document.getElementById('personal-feito').style.display = 'none'
+  }
+
   // Checks
+}
+
+function previewSlug(val) {
+  const limpo = val.toLowerCase().replace(/[^a-z0-9._-]/g,'').slice(0,30)
+  const prev = document.getElementById('personal-preview')
+  const btn  = document.getElementById('btn-personal')
+  if (limpo.length >= 3) {
+    prev.innerHTML = `Seu link ficará: <span>revo2anos.com/r/${limpo}</span>`
+    btn.disabled = false
+  } else {
+    prev.innerHTML = limpo.length > 0 ? '<span style="color:#fca5a5">Mínimo 3 caracteres</span>' : ''
+    btn.disabled = true
+  }
+  document.getElementById('personal-erro').style.display = 'none'
+}
+
+async function confirmarSlug() {
+  const inp   = document.getElementById('personal-inp')
+  const btn   = document.getElementById('btn-personal')
+  const erro  = document.getElementById('personal-erro')
+  const slug  = inp.value.toLowerCase().replace(/[^a-z0-9._-]/g,'').slice(0,30)
+  if (slug.length < 3) return
+
+  if (!confirm(`⚠️ ATENÇÃO — Esta ação é permanente!\n\nSeu link passará a ser:\nrevo2anos.com/r/${slug}\n\nIsso NÃO pode ser desfeito. Confirma?`)) return
+
+  btn.disabled = true
+  btn.textContent = 'Salvando...'
+  erro.style.display = 'none'
+
+  try {
+    const r = await fetch(WORKER + '/divulgador/trocar-slug', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ instagram: dados.instagram, senha: 'revo2anos', novoSlug: slug }),
+    })
+    const d = await r.json()
+    if (!r.ok) {
+      erro.textContent = d.error || 'Erro ao salvar.'
+      erro.style.display = 'block'
+      btn.disabled = false
+      btn.textContent = '✅ Confirmar link personalizado'
+      return
+    }
+    // Atualiza dados locais
+    dados.slug = d.slug
+    dados.slugTrocado = true
+    sessionStorage.setItem('div_sessao_v3', JSON.stringify(dados))
+
+    // Atualiza link na tela
+    const novoLink = SITE + '/r/' + d.slug
+    document.getElementById('s-link').textContent = novoLink
+
+    // Mostra badge e esconde card
+    document.getElementById('personal-card').style.display = 'none'
+    document.getElementById('personal-feito').style.display = 'flex'
+  } catch {
+    erro.textContent = 'Erro de conexão. Tente novamente.'
+    erro.style.display = 'block'
+    btn.disabled = false
+    btn.textContent = '✅ Confirmar link personalizado'
+  }
 }
 
 function copiarLink() {
