@@ -51,6 +51,10 @@
     {
       "source": "/validar",
       "destination": "/validar.html"
+    },
+    {
+      "source": "/meu-ingresso",
+      "destination": "/meu-ingresso.html"
     }
   ]
 }

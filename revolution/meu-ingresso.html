@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Ingresso — Revolution</title>
+  <meta name="description" content="Acesse seu ingresso para os eventos Revolution. Apresente o QR Code na entrada.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;background:#07060f;color:#fff;min-height:100vh;overflow-x:hidden;padding-bottom:48px}
+    body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(124,58,237,0.2) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 80% 100%,rgba(168,85,247,0.1) 0%,transparent 60%);pointer-events:none;z-index:0}
+
+    .topo{text-align:center;padding:36px 24px 24px;position:relative;z-index:1}
+    .topo-logo{width:60px;height:auto;margin-bottom:14px;filter:drop-shadow(0 4px 12px rgba(168,85,247,0.4))}
+    .topo-titulo{font-size:26px;font-weight:900;line-height:1.15;margin-bottom:6px}
+    .topo-titulo span{background:linear-gradient(135deg,#a855f7,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .topo-sub{font-size:14px;color:rgba(255,255,255,0.38);line-height:1.55;max-width:300px;margin:0 auto}
+
+    .wrap{max-width:440px;margin:0 auto;padding:0 18px;position:relative;z-index:1}
+
+    /* LOGIN */
+    .login-card{background:rgba(255,255,255,0.04);border:1px solid rgba(139,92,246,0.2);border-radius:22px;padding:28px 22px;margin-bottom:14px}
+    .login-titulo{font-size:18px;font-weight:800;margin-bottom:5px;text-align:center}
+    .login-sub{font-size:13px;color:rgba(255,255,255,0.4);text-align:center;margin-bottom:24px;line-height:1.5}
+    .campo{margin-bottom:14px}
+    .campo-label{font-size:12px;font-weight:700;color:rgba(255,255,255,0.45);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+    .inp-wrap{position:relative}
+    .inp-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none}
+    input{width:100%;padding:13px 13px 13px 42px;border-radius:12px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1);color:#fff;font-size:15px;outline:none;font-family:inherit;transition:border-color .2s,background .2s}
+    input:focus{border-color:rgba(139,92,246,0.7);background:rgba(139,92,246,0.07)}
+    input::placeholder{color:rgba(255,255,255,0.18)}
+    .btn-entrar{width:100%;padding:16px;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;color:#fff;font-size:15px;font-weight:800;cursor:pointer;margin-top:4px;transition:transform .15s,box-shadow .2s;box-shadow:0 6px 24px rgba(124,58,237,0.35)}
+    .btn-entrar:active{transform:scale(.97)}
+    .btn-entrar:disabled{opacity:.5;cursor:default}
+    .erro{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.28);border-radius:10px;padding:12px 14px;font-size:13px;color:#fca5a5;margin-bottom:14px;display:none;text-align:center;line-height:1.5}
+
+    /* AVISO NOMINAL */
+    .aviso-nominal{display:flex;gap:12px;align-items:flex-start;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:14px;padding:14px 16px;margin-bottom:14px}
+    .aviso-icon{font-size:22px;flex-shrink:0;margin-top:1px}
+    .aviso-txt{font-size:13px;color:rgba(255,255,255,0.75);line-height:1.6}
+    .aviso-txt strong{color:#fcd34d}
+
+    /* TICKET */
+    .ticket{background:linear-gradient(145deg,#1a0a33,#100620);border-radius:22px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.6),0 0 0 1px rgba(168,85,247,0.2);margin-bottom:14px}
+
+    .ticket-top{background:linear-gradient(135deg,#7c3aed 0%,#a855f7 50%,#6d28d9 100%);padding:24px 22px;position:relative;overflow:hidden}
+    .ticket-top::before{content:'';position:absolute;top:-40px;right:-40px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,0.06)}
+    .ticket-top::after{content:'';position:absolute;bottom:-30px;left:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,0.04)}
+    .t-logo-wrap{display:flex;align-items:center;gap:12px;margin-bottom:14px;position:relative;z-index:1}
+    .t-logo{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.4))}
+    .t-evento{font-size:18px;font-weight:900;line-height:1.15;text-shadow:0 2px 8px rgba(0,0,0,0.3)}
+    .t-evento-sub{font-size:11px;font-weight:700;opacity:.75;margin-top:3px;letter-spacing:.06em;text-transform:uppercase}
+    .t-lote-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:999px;font-size:12px;font-weight:800;background:rgba(255,255,255,0.18);backdrop-filter:blur(4px);margin-top:8px;position:relative;z-index:1}
+
+    .ticket-sep{height:22px;background:#07060f;position:relative;border-top:2px dashed rgba(255,255,255,0.1)}
+    .ticket-sep::before,.ticket-sep::after{content:'';position:absolute;width:22px;height:22px;background:#07060f;border-radius:50%;top:-11px}
+    .ticket-sep::before{left:-11px;box-shadow:inset -2px 0 0 rgba(168,85,247,0.25)}
+    .ticket-sep::after{right:-11px;box-shadow:inset 2px 0 0 rgba(168,85,247,0.25)}
+    .t-numero{margin:0 auto;font-size:10px;font-weight:800;color:rgba(255,255,255,0.25);letter-spacing:.18em;line-height:22px;text-align:center}
+
+    .ticket-body{padding:20px 22px}
+    .t-row{margin-bottom:16px}
+    .t-label{font-size:9px;font-weight:800;color:rgba(255,255,255,0.28);letter-spacing:.15em;text-transform:uppercase;margin-bottom:4px}
+    .t-value{font-size:18px;font-weight:900;color:#fff;line-height:1.2}
+    .t-value.small{font-size:14px;font-weight:700;color:rgba(255,255,255,0.75)}
+    .t-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+
+    .ticket-qr{display:flex;flex-direction:column;align-items:center;padding:20px 22px;border-top:1px dashed rgba(255,255,255,0.08);background:rgba(0,0,0,0.1)}
+    .qr-img{border-radius:14px;border:2px solid rgba(168,85,247,0.35);box-shadow:0 4px 20px rgba(0,0,0,0.5)}
+    .qr-label{font-size:11px;font-weight:700;color:rgba(255,255,255,0.3);margin-top:10px;letter-spacing:.08em;text-transform:uppercase;text-align:center}
+    .qr-code{font-family:monospace;font-size:12px;color:rgba(168,85,247,0.7);margin-top:4px;letter-spacing:.06em}
+
+    /* STATUS */
+    .status-utilizado{background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);border-radius:12px;padding:12px 16px;margin:0 22px 20px;text-align:center}
+
+    /* BOTÕES */
+    .btns{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+    .btn-share{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border-radius:14px;background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;font-size:14px;font-weight:800;border:none;cursor:pointer;font-family:inherit;box-shadow:0 6px 20px rgba(22,163,74,0.3);transition:transform .15s}
+    .btn-share:active{transform:scale(.97)}
+    .btn-copy{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border-radius:14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+    .btn-sair{width:100%;padding:12px;border-radius:12px;background:none;border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.25);font-size:12px;cursor:pointer;font-family:inherit}
+
+    /* LOADING */
+    .loading{text-align:center;padding:60px 20px;color:rgba(255,255,255,0.3);font-size:15px}
+    .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#a855f7;animation:pulse 1.2s ease-in-out infinite;margin:0 3px}
+    .dot:nth-child(2){animation-delay:.2s}
+    .dot:nth-child(3){animation-delay:.4s}
+    @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+
+    #tela-login{display:block}
+    #tela-ingresso{display:none}
+  </style>
+</head>
+<body>
+
+<div class="topo">
+  <img src="/logo.png" alt="Revolution" class="topo-logo" onerror="this.style.display='none'">
+  <div class="topo-titulo">Meu <span>Ingresso</span></div>
+  <div class="topo-sub">Acesse com o e-mail e CPF cadastrados na compra</div>
+</div>
+
+<div class="wrap">
+
+  <!-- ══ LOGIN ══ -->
+  <div id="tela-login">
+    <div class="login-card">
+      <div class="login-titulo">🔐 Acessar meu ingresso</div>
+      <div class="login-sub">Use o e-mail e CPF que foram informados ao comprar</div>
+
+      <div class="erro" id="erro-msg"></div>
+
+      <div class="campo">
+        <div class="campo-label">📧 Seu e-mail</div>
+        <div class="inp-wrap">
+          <span class="inp-icon">📧</span>
+          <input type="email" id="inp-email" placeholder="email@exemplo.com"
+            autocomplete="email" autocapitalize="none" autocorrect="off">
+        </div>
+      </div>
+
+      <div class="campo">
+        <div class="campo-label">🪪 Seu CPF</div>
+        <div class="inp-wrap">
+          <span class="inp-icon">🪪</span>
+          <input type="text" id="inp-cpf" placeholder="000.000.000-00"
+            autocomplete="off" inputmode="numeric" maxlength="14">
+        </div>
+      </div>
+
+      <button class="btn-entrar" id="btn-entrar" onclick="fazerLogin()">
+        Ver meu ingresso →
+      </button>
+    </div>
+
+    <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px">
+      <div style="font-size:11px;font-weight:800;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px">ℹ️ Informações</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.4);line-height:1.65">
+        Seu ingresso estará disponível aqui assim que for emitido pela equipe.<br><br>
+        <strong style="color:#fcd34d">⚠️ Ingresso nominal</strong> — obrigatório apresentar documento de identidade na entrada.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ INGRESSO ══ -->
+  <div id="tela-ingresso">
+
+    <!-- Aviso nominal -->
+    <div class="aviso-nominal">
+      <div class="aviso-icon">⚠️</div>
+      <div class="aviso-txt">
+        <strong>Este ingresso é NOMINAL.</strong><br>
+        É obrigatório apresentar <strong>documento de identidade</strong> (RG, CNH ou passaporte) na portaria. Ingressos não podem ser transferidos ou repassados.
+      </div>
+    </div>
+
+    <!-- Ticket -->
+    <div class="ticket" id="ticket">
+      <div class="ticket-top">
+        <div class="t-logo-wrap">
+          <img src="/logo.png" alt="Revolution" class="t-logo" onerror="this.style.display='none'">
+          <div>
+            <div class="t-evento" id="t-evento">EVENTO REVOLUTION</div>
+            <div class="t-evento-sub" id="t-data">—</div>
+          </div>
+        </div>
+        <div><span class="t-lote-badge" id="t-lote">🎟️ Ingresso</span></div>
+      </div>
+
+      <div class="ticket-sep"><div class="t-numero" id="t-numero">#001</div></div>
+
+      <div class="ticket-body">
+        <div class="t-row">
+          <div class="t-label">Participante</div>
+          <div class="t-value" id="t-nome">—</div>
+        </div>
+        <div class="t-grid">
+          <div>
+            <div class="t-label">Local</div>
+            <div class="t-value small" id="t-local">—</div>
+          </div>
+          <div>
+            <div class="t-label">Documento</div>
+            <div class="t-value small" style="color:#fcd34d;font-size:12px">Obrigatório na<br>portaria ⚠️</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status utilizado -->
+      <div class="status-utilizado" id="status-utilizado" style="display:none">
+        <div style="font-size:13px;font-weight:700;color:#818cf8">✔️ Ingresso já utilizado na entrada</div>
+        <div id="utilizado-em" style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:3px"></div>
+      </div>
+
+      <div class="ticket-qr">
+        <img id="qr-img" src="" alt="QR Code" class="qr-img" width="180" height="180">
+        <div class="qr-label">Apresente este QR Code na entrada</div>
+        <div class="qr-code" id="qr-code"></div>
+      </div>
+    </div>
+
+    <!-- Botões -->
+    <div class="btns">
+      <button class="btn-share" id="btn-share">💬 Salvar no WhatsApp</button>
+      <button class="btn-copy"  id="btn-copy">🔗 Copiar link do ingresso</button>
+    </div>
+    <button class="btn-sair" onclick="sair()">← Sair</button>
+  </div>
+
+</div>
+
+<script>
+const WORKER = 'https://revolution-upload.contatoramishi.workers.dev'
+const SITE   = 'https://revo2anos.com'
+let ingresso = null
+
+// Restaurar sessão
+try {
+  const s = sessionStorage.getItem('ing_sessao')
+  if (s) { ingresso = JSON.parse(s); renderIngresso(ingresso) }
+} catch {}
+
+// Enter nos inputs
+document.addEventListener('keydown', e => { if (e.key === 'Enter') fazerLogin() })
+
+// Máscara CPF
+document.getElementById('inp-cpf').addEventListener('input', function() {
+  let v = this.value.replace(/\D/g,'')
+  if (v.length > 11) v = v.slice(0,11)
+  v = v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2')
+  this.value = v
+})
+
+async function fazerLogin() {
+  const btn   = document.getElementById('btn-entrar')
+  const email = document.getElementById('inp-email').value.trim()
+  const cpf   = document.getElementById('inp-cpf').value.trim()
+  const erro  = document.getElementById('erro-msg')
+
+  erro.style.display = 'none'
+  if (!email || !cpf) { mostrarErro('Preencha seu e-mail e CPF. 👆'); return }
+
+  btn.disabled = true; btn.textContent = 'Buscando...'
+
+  try {
+    const r = await fetch(WORKER + '/ingressos/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, cpf }),
+    })
+    const d = await r.json()
+    if (!r.ok || !d.ok) {
+      mostrarErro(d.error === 'Ingresso não encontrado. Verifique seu e-mail e CPF.'
+        ? '🔍 Ingresso não encontrado.\nVerifique se o e-mail e CPF são os mesmos informados na compra.'
+        : d.error || 'Erro ao buscar ingresso.')
+      return
+    }
+    ingresso = d.ingresso
+    sessionStorage.setItem('ing_sessao', JSON.stringify(ingresso))
+    renderIngresso(ingresso)
+  } catch {
+    mostrarErro('🌐 Erro de conexão. Verifique sua internet.')
+  } finally {
+    btn.disabled = false; btn.textContent = 'Ver meu ingresso →'
+  }
+}
+
+function renderIngresso(ing) {
+  document.getElementById('tela-login').style.display    = 'none'
+  document.getElementById('tela-ingresso').style.display = 'block'
+  window.scrollTo(0,0)
+
+  document.getElementById('t-nome').textContent   = ing.nome
+  document.getElementById('t-numero').textContent = '#' + (ing.numero || '001')
+  document.getElementById('t-evento').textContent = ing.eventoNome || 'EVENTO REVOLUTION'
+  document.getElementById('t-data').textContent   = ing.eventoData || ''
+  document.getElementById('t-local').textContent  = ing.eventoLocal || '—'
+  document.getElementById('t-lote').textContent   = `🎟️ ${ing.loteNome || 'Ingresso'}`
+  document.getElementById('qr-code').textContent  = ing.codigo
+
+  // QR Code
+  const validUrl = `${SITE}/validar?c=${encodeURIComponent(ing.codigo)}`
+  document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(validUrl)}&bgcolor=100620&color=a855f7&margin=12`
+
+  // Status
+  if (ing.status === 'utilizado') {
+    document.getElementById('status-utilizado').style.display = 'block'
+    const dt = ing.utilizadoEm ? new Date(ing.utilizadoEm).toLocaleString('pt-BR') : ''
+    document.getElementById('utilizado-em').textContent = dt ? `Utilizado em ${dt}` : ''
+  }
+
+  // Botões
+  const link = `${SITE}/ingresso?c=${ing.codigo}`
+  document.getElementById('btn-share').onclick = () => {
+    const txt = `🎉 *${ing.eventoNome || 'EVENTO REVOLUTION'}*\n\n🎟️ Meu ingresso está pronto!\n\nAcesse: ${link}\n\n_Apresente o QR Code na entrada_`
+    if (navigator.share) navigator.share({ title: ing.eventoNome, text: txt, url: link })
+    else window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`, '_blank')
+  }
+  document.getElementById('btn-copy').onclick = () => {
+    navigator.clipboard.writeText(link).then(() => {
+      const btn = document.getElementById('btn-copy')
+      btn.textContent = '✅ Link copiado!'
+      setTimeout(() => { btn.textContent = '🔗 Copiar link do ingresso' }, 2500)
+    })
+  }
+}
+
+function mostrarErro(msg) {
+  const el = document.getElementById('erro-msg')
+  el.innerHTML = msg.replace(/\n/g,'<br>')
+  el.style.display = 'block'
+}
+
+function sair() {
+  sessionStorage.removeItem('ing_sessao')
+  ingresso = null
+  document.getElementById('tela-ingresso').style.display = 'none'
+  document.getElementById('tela-login').style.display    = 'block'
+  document.getElementById('inp-cpf').value   = ''
+  document.getElementById('inp-email').value = ''
+  window.scrollTo(0,0)
+}
+</script>
+</body>
+</html>
