@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ingresso — Arraiá Revolution</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;background:#07060f;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;overflow-x:hidden}
+    body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(245,158,11,0.2) 0%,transparent 60%);pointer-events:none;z-index:0}
+
+    .wrap{width:100%;max-width:420px;position:relative;z-index:1}
+
+    /* TICKET */
+    .ticket{background:linear-gradient(145deg,#1a0a33,#0f0521);border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.6),0 0 0 1px rgba(245,158,11,0.2);position:relative}
+    .ticket::before{content:'';position:absolute;inset:0;background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60"><circle cx="30" cy="30" r="1" fill="rgba(255,255,255,0.03)"/></svg>');pointer-events:none}
+
+    /* Topo do ingresso */
+    .ticket-top{background:linear-gradient(135deg,#7c3aed,#f59e0b);padding:24px 22px;position:relative;overflow:hidden}
+    .ticket-top::after{content:'';position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.08)}
+    .ticket-event-logo{width:60px;height:60px;object-fit:contain;margin-bottom:10px;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.4))}
+    .ticket-event-name{font-size:22px;font-weight:900;line-height:1.1;letter-spacing:.02em;text-shadow:0 2px 8px rgba(0,0,0,0.3);position:relative;z-index:1}
+    .ticket-event-sub{font-size:12px;font-weight:700;opacity:.8;margin-top:4px;letter-spacing:.08em;text-transform:uppercase;position:relative;z-index:1}
+
+    /* Separador dentado */
+    .ticket-sep{height:24px;background:#07060f;position:relative;display:flex;align-items:center;border-top:2px dashed rgba(255,255,255,0.1)}
+    .ticket-sep::before,.ticket-sep::after{content:'';position:absolute;width:24px;height:24px;background:#07060f;border-radius:50%;top:-12px}
+    .ticket-sep::before{left:-12px;box-shadow:inset -2px 0 0 rgba(245,158,11,0.3)}
+    .ticket-sep::after{right:-12px;box-shadow:inset 2px 0 0 rgba(245,158,11,0.3)}
+    .ticket-num{margin:0 auto;font-size:11px;font-weight:800;color:rgba(255,255,255,0.3);letter-spacing:.15em}
+
+    /* Body */
+    .ticket-body{padding:20px 22px}
+    .ticket-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;gap:12px}
+    .ticket-field{}
+    .ticket-label{font-size:9px;font-weight:800;color:rgba(255,255,255,0.3);letter-spacing:.15em;text-transform:uppercase;margin-bottom:3px}
+    .ticket-value{font-size:14px;font-weight:700;color:#fff;line-height:1.3}
+    .ticket-value.big{font-size:18px;font-weight:900;color:#f59e0b}
+
+    /* Badge tipo */
+    .tipo-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.04em}
+
+    /* QR section */
+    .ticket-qr{display:flex;flex-direction:column;align-items:center;padding:20px 22px;border-top:1px dashed rgba(255,255,255,0.08)}
+    .qr-img{border-radius:12px;border:2px solid rgba(245,158,11,0.3);box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+    .qr-label{font-size:10px;font-weight:700;color:rgba(255,255,255,0.3);margin-top:8px;letter-spacing:.1em;text-transform:uppercase}
+    .qr-code-txt{font-family:monospace;font-size:12px;color:rgba(245,158,11,0.8);margin-top:4px;letter-spacing:.08em}
+
+    /* Status */
+    .status-utilizado{background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.4);border-radius:12px;padding:12px 16px;margin:0 22px 20px;text-align:center}
+    .status-cancelado{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:12px 16px;margin:0 22px 20px;text-align:center}
+
+    /* Botões */
+    .btns{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+    .btn-wa{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border-radius:14px;background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;font-size:14px;font-weight:800;text-decoration:none;border:none;cursor:pointer;font-family:inherit}
+    .btn-copy{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border-radius:14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+
+    .loading{text-align:center;padding:60px 20px;color:rgba(255,255,255,0.3);font-size:15px}
+    .erro{text-align:center;padding:60px 20px;color:#fca5a5;font-size:15px}
+
+    @media print {
+      body{background:#fff;padding:0}
+      .btns,.qr-label-print{display:none}
+      .ticket{box-shadow:none;border:1px solid #ddd}
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div id="loading" class="loading">🎟️ Carregando ingresso...</div>
+  <div id="erro" class="erro" style="display:none">❌ Ingresso não encontrado.</div>
+  <div id="conteudo" style="display:none">
+
+    <div class="ticket" id="ticket">
+      <!-- Topo -->
+      <div class="ticket-top">
+        <img src="/logo.png" alt="Revolution" class="ticket-event-logo" onerror="this.style.display='none'">
+        <div class="ticket-event-name">ARRAIÁ<br>REVOLUTION</div>
+        <div class="ticket-event-sub">20 e 21 de Junho · Serra/ES</div>
+      </div>
+
+      <!-- Separador -->
+      <div class="ticket-sep">
+        <div class="ticket-num" id="ticket-num">#001</div>
+      </div>
+
+      <!-- Body -->
+      <div class="ticket-body">
+        <div class="ticket-row">
+          <div class="ticket-field">
+            <div class="ticket-label">Participante</div>
+            <div class="ticket-value big" id="t-nome">—</div>
+          </div>
+        </div>
+        <div class="ticket-row">
+          <div class="ticket-field">
+            <div class="ticket-label">Tipo de Ingresso</div>
+            <div id="t-tipo-badge"></div>
+          </div>
+          <div class="ticket-field" style="text-align:right">
+            <div class="ticket-label">Data</div>
+            <div class="ticket-value">20-21 Jun 2026</div>
+          </div>
+        </div>
+        <div class="ticket-row">
+          <div class="ticket-field">
+            <div class="ticket-label">Local</div>
+            <div class="ticket-value" style="font-size:12px">Sítio Vovó Hilda<br>Serra, ES</div>
+          </div>
+          <div class="ticket-field" style="text-align:right">
+            <div class="ticket-label">Evento</div>
+            <div class="ticket-value" style="font-size:12px;color:#f59e0b">Arraiá<br>Revolution</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status utilizado -->
+      <div id="status-utilizado" class="status-utilizado" style="display:none">
+        <div style="font-size:13px;font-weight:700;color:#818cf8">✔️ Ingresso já utilizado na entrada</div>
+        <div id="utilizado-em" style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:3px"></div>
+      </div>
+      <div id="status-cancelado" class="status-cancelado" style="display:none">
+        <div style="font-size:13px;font-weight:700;color:#ef4444">🚫 Ingresso cancelado</div>
+      </div>
+
+      <!-- QR Code -->
+      <div class="ticket-qr">
+        <img id="qr-img" src="" alt="QR Code" class="qr-img" width="160" height="160">
+        <div class="qr-label">Apresente na entrada</div>
+        <div class="qr-code-txt" id="qr-code-txt"></div>
+      </div>
+    </div>
+
+    <!-- Botões -->
+    <div class="btns" id="btns">
+      <button class="btn-wa" id="btn-wa">💬 Compartilhar via WhatsApp</button>
+      <button class="btn-copy" id="btn-copy">📋 Copiar link do ingresso</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const WORKER = 'https://revolution-upload.contatoramishi.workers.dev'
+const params = new URLSearchParams(location.search)
+const codigo = params.get('c')
+
+if (!codigo) {
+  document.getElementById('loading').style.display = 'none'
+  document.getElementById('erro').style.display    = 'block'
+} else {
+  fetch(WORKER + '/ingressos/dados?c=' + encodeURIComponent(codigo))
+    .then(r => r.json())
+    .then(d => {
+      document.getElementById('loading').style.display = 'none'
+      if (!d.ok || !d.ingresso) {
+        document.getElementById('erro').style.display = 'block'
+        return
+      }
+      const ing = d.ingresso
+      document.getElementById('conteudo').style.display = 'block'
+      document.getElementById('t-nome').textContent     = ing.nome
+      document.getElementById('ticket-num').textContent = '#' + (ing.numero || '001')
+      document.getElementById('qr-code-txt').textContent = ing.codigo
+
+      // Tipo badge
+      const tipos = { 'meia-solidaria':['🤝 Meia Solidária','#f59e0b','rgba(245,158,11,0.15)'], 'inteira':['🎟️ Inteira','#a855f7','rgba(168,85,247,0.15)'], 'vip':['⭐ VIP','#10b981','rgba(16,185,129,0.15)'] }
+      const [tLabel, tColor, tBg] = tipos[ing.tipo] || tipos.inteira
+      document.getElementById('t-tipo-badge').innerHTML = `<span style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:999px;font-size:12px;font-weight:800;color:${tColor};background:${tBg};border:1px solid ${tColor}44">${tLabel}</span>`
+
+      // QR Code
+      const qrUrl = WORKER + '/validar?c=' + encodeURIComponent(codigo) // para validação
+      const validUrl = 'https://revo2anos.com/validar?c=' + encodeURIComponent(codigo)
+      document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(validUrl)}&bgcolor=1a0a33&color=f59e0b&margin=10`
+
+      // Status
+      if (ing.status === 'utilizado') {
+        document.getElementById('status-utilizado').style.display = 'block'
+        const dt = ing.utilizadoEm ? new Date(ing.utilizadoEm).toLocaleString('pt-BR') : ''
+        document.getElementById('utilizado-em').textContent = 'Utilizado em ' + dt
+      } else if (ing.status === 'cancelado') {
+        document.getElementById('status-cancelado').style.display = 'block'
+      }
+
+      // Botões
+      const link = location.href
+      document.getElementById('btn-wa').onclick = () => {
+        const texto = `🎉 *ARRAIÁ REVOLUTION*\n\n🎟️ Ingresso de *${ing.nome}*\n\nAcesse e salve:\n${link}\n\n_Apresente o QR Code na entrada_`
+        window.open('https://wa.me/?text=' + encodeURIComponent(texto), '_blank')
+      }
+      document.getElementById('btn-copy').onclick = () => {
+        navigator.clipboard.writeText(link).then(() => {
+          const btn = document.getElementById('btn-copy')
+          btn.textContent = '✅ Link copiado!'
+          setTimeout(() => { btn.textContent = '📋 Copiar link do ingresso' }, 2500)
+        })
+      }
+    })
+    .catch(() => {
+      document.getElementById('loading').style.display = 'none'
+      document.getElementById('erro').style.display    = 'block'
+    })
+}
+</script>
+</body>
+</html>

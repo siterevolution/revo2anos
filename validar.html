@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portaria — Arraiá Revolution</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;background:#07060f;color:#fff;min-height:100vh;overflow-x:hidden}
+    body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(245,158,11,0.15) 0%,transparent 60%);pointer-events:none;z-index:0}
+
+    .topo{text-align:center;padding:28px 20px 20px;position:relative;z-index:1}
+    .topo-logo{font-size:10px;font-weight:800;color:rgba(255,255,255,0.2);letter-spacing:.2em;text-transform:uppercase;margin-bottom:12px}
+    .topo-titulo{font-size:22px;font-weight:900;margin-bottom:4px}
+    .topo-titulo span{color:#f59e0b}
+    .topo-sub{font-size:13px;color:rgba(255,255,255,0.35)}
+
+    .wrap{max-width:420px;margin:0 auto;padding:0 18px 40px;position:relative;z-index:1}
+
+    /* SCANNER */
+    .scanner-card{background:rgba(255,255,255,0.03);border:1px solid rgba(245,158,11,0.2);border-radius:20px;overflow:hidden;margin-bottom:16px}
+    .scanner-header{padding:14px 18px;background:rgba(245,158,11,0.08);display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(245,158,11,0.15)}
+    .scanner-titulo{font-size:14px;font-weight:800;color:#fcd34d}
+    .scanner-sub{font-size:11px;color:rgba(255,255,255,0.35);margin-top:2px}
+    #scanner-container{width:100%;position:relative;background:#000}
+    #scanner-container video{width:100% !important;display:block}
+    .scanner-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+    .scanner-frame{width:200px;height:200px;border:3px solid #f59e0b;border-radius:16px;box-shadow:0 0 0 9999px rgba(0,0,0,0.4)}
+
+    /* Botão scanner */
+    .btn-scan{width:100%;padding:15px;background:linear-gradient(135deg,#d97706,#f59e0b);border:none;border-radius:0 0 20px 20px;color:#000;font-size:15px;font-weight:900;cursor:pointer;letter-spacing:.02em;transition:opacity .15s;font-family:inherit}
+    .btn-scan:hover{opacity:.9}
+    .btn-scan.parar{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff}
+
+    /* Manual input */
+    .manual-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px;margin-bottom:16px}
+    .manual-titulo{font-size:11px;font-weight:800;color:rgba(255,255,255,0.28);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+    .manual-row{display:flex;gap:8px}
+    .manual-input{flex:1;padding:11px 13px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#fff;font-size:14px;outline:none;font-family:inherit;text-transform:uppercase;letter-spacing:.05em}
+    .manual-btn{padding:11px 16px;border-radius:10px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.35);color:#fcd34d;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap}
+
+    /* RESULTADO */
+    .resultado{border-radius:16px;padding:20px;margin-bottom:16px;text-align:center;display:none;animation:fadeIn .3s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .resultado.valido{background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.4)}
+    .resultado.invalido{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.35)}
+    .resultado.aviso{background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.35)}
+    .res-icon{font-size:56px;margin-bottom:12px;display:block}
+    .res-titulo{font-size:20px;font-weight:900;margin-bottom:6px}
+    .res-nome{font-size:16px;font-weight:700;color:rgba(255,255,255,0.8);margin-bottom:6px}
+    .res-detalhe{font-size:12px;color:rgba(255,255,255,0.4);line-height:1.5}
+    .res-btn{margin-top:14px;padding:11px 24px;border-radius:10px;border:none;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6)}
+
+    /* Histórico */
+    .hist-titulo{font-size:11px;font-weight:800;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+    .hist-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,0.03);border-radius:10px;margin-bottom:7px;font-size:12px}
+    .hist-icon{font-size:18px;flex-shrink:0}
+    .hist-nome{font-weight:700;color:#fff;flex:1}
+    .hist-tempo{color:rgba(255,255,255,0.3)}
+  </style>
+</head>
+<body>
+
+<div class="topo">
+  <div class="topo-logo">Revolution · Portaria</div>
+  <div class="topo-titulo">📱 <span>Validar</span> Ingressos</div>
+  <div class="topo-sub">Arraiá Revolution — Entrada</div>
+</div>
+
+<div class="wrap">
+
+  <!-- Resultado -->
+  <div class="resultado" id="resultado">
+    <span class="res-icon" id="res-icon"></span>
+    <div class="res-titulo" id="res-titulo"></div>
+    <div class="res-nome" id="res-nome"></div>
+    <div class="res-detalhe" id="res-detalhe"></div>
+    <button class="res-btn" onclick="resetar()">← Escanear próximo</button>
+  </div>
+
+  <!-- Scanner -->
+  <div class="scanner-card" id="scanner-card">
+    <div class="scanner-header">
+      <div>
+        <div class="scanner-titulo">📷 Scanner de QR Code</div>
+        <div class="scanner-sub">Aponte a câmera para o QR Code do ingresso</div>
+      </div>
+    </div>
+    <div id="scanner-container"></div>
+    <button class="btn-scan" id="btn-scan" onclick="toggleScanner()">
+      📷 Iniciar câmera
+    </button>
+  </div>
+
+  <!-- Input manual -->
+  <div class="manual-card">
+    <div class="manual-titulo">⌨️ Digitar código manualmente</div>
+    <div class="manual-row">
+      <input class="manual-input" id="input-codigo" placeholder="ARR-XXXXXXXX" maxlength="12"
+        oninput="this.value=this.value.toUpperCase()"
+        onkeydown="if(event.key==='Enter') validarManual()">
+      <button class="manual-btn" onclick="validarManual()">Validar</button>
+    </div>
+  </div>
+
+  <!-- Histórico -->
+  <div id="historico-wrap" style="display:none">
+    <div class="hist-titulo">Últimas validações</div>
+    <div id="historico-lista"></div>
+  </div>
+
+</div>
+
+<script>
+const WORKER = 'https://revolution-upload.contatoramishi.workers.dev'
+let scanner      = null
+let scannerAtivo = false
+let validando    = false
+const historico  = []
+
+// Se URL tem ?c=CODE, valida direto
+const params = new URLSearchParams(location.search)
+if (params.get('c')) {
+  validarCodigo(params.get('c'))
+}
+
+function toggleScanner() {
+  if (scannerAtivo) pararScanner(); else iniciarScanner()
+}
+
+function iniciarScanner() {
+  const btn = document.getElementById('btn-scan')
+  btn.textContent = '⏹ Parar câmera'
+  btn.classList.add('parar')
+  scannerAtivo = true
+
+  scanner = new Html5Qrcode('scanner-container')
+  Html5Qrcode.getCameras().then(cameras => {
+    const camId = cameras.length > 1 ? cameras[cameras.length-1].id : cameras[0].id
+    scanner.start(
+      camId,
+      { fps: 10, qrbox: { width: 200, height: 200 }, aspectRatio: 1 },
+      (decodedText) => {
+        if (validando) return
+        let codigo = decodedText
+        // Extrai código da URL se for link completo
+        try {
+          const url = new URL(decodedText)
+          codigo = url.searchParams.get('c') || decodedText
+        } catch {}
+        pararScanner()
+        validarCodigo(codigo)
+      },
+      () => {}
+    ).catch(err => {
+      console.error(err)
+      pararScanner()
+      mostrarResultado('invalido', '⚠️', 'Câmera não disponível', '', 'Tente digitar o código manualmente abaixo.')
+    })
+  }).catch(() => {
+    pararScanner()
+    mostrarResultado('invalido', '⚠️', 'Câmera não disponível', '', 'Tente digitar o código manualmente abaixo.')
+  })
+}
+
+function pararScanner() {
+  if (scanner) { try { scanner.stop().catch(()=>{}) } catch {} }
+  scannerAtivo = false
+  const btn = document.getElementById('btn-scan')
+  btn.textContent = '📷 Iniciar câmera'
+  btn.classList.remove('parar')
+}
+
+function validarManual() {
+  const codigo = document.getElementById('input-codigo').value.trim()
+  if (!codigo) return
+  document.getElementById('input-codigo').value = ''
+  validarCodigo(codigo)
+}
+
+async function validarCodigo(codigo) {
+  if (validando) return
+  validando = true
+
+  // Esconde scanner, mostra loading
+  document.getElementById('scanner-card').style.display  = 'none'
+  document.getElementById('resultado').style.display     = 'block'
+  document.getElementById('res-icon').textContent        = '⏳'
+  document.getElementById('res-titulo').textContent      = 'Verificando...'
+  document.getElementById('res-nome').textContent        = ''
+  document.getElementById('res-detalhe').textContent     = ''
+  document.getElementById('resultado').className        = 'resultado'
+
+  try {
+    const r = await fetch(WORKER + '/ingressos/validar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ codigo }),
+    })
+    const d = await r.json()
+
+    if (d.resultado === 'valido') {
+      vibrar([100, 50, 100])
+      mostrarResultado('valido', '✅', 'ENTRADA LIBERADA!', d.nome, `${tipoLabel(d.tipo)} · Ingresso #${d.numero || ''}`)
+      adicionarHistorico('valido', d.nome)
+    } else if (d.resultado === 'ja_usado') {
+      vibrar([200, 100, 200, 100, 200])
+      const dt = d.utilizadoEm ? new Date(d.utilizadoEm).toLocaleString('pt-BR') : ''
+      mostrarResultado('invalido', '🚫', 'INGRESSO JÁ USADO!', d.nome, `Este ingresso já foi utilizado.\n${dt ? 'Entrada em: ' + dt : ''}`)
+      adicionarHistorico('usado', d.nome)
+    } else if (d.resultado === 'cancelado') {
+      vibrar([300])
+      mostrarResultado('invalido', '❌', 'INGRESSO CANCELADO', d.nome || '', 'Este ingresso foi cancelado e não é válido.')
+    } else {
+      vibrar([300])
+      mostrarResultado('invalido', '❓', 'CÓDIGO INVÁLIDO', '', 'Ingresso não encontrado no sistema.')
+    }
+  } catch {
+    mostrarResultado('invalido', '⚠️', 'Erro de conexão', '', 'Verifique a internet e tente novamente.')
+  }
+  validando = false
+}
+
+function mostrarResultado(tipo, icon, titulo, nome, detalhe) {
+  const el = document.getElementById('resultado')
+  el.className = 'resultado ' + tipo
+  el.style.display = 'block'
+  document.getElementById('res-icon').textContent    = icon
+  document.getElementById('res-titulo').textContent  = titulo
+  document.getElementById('res-nome').textContent    = nome
+  document.getElementById('res-detalhe').textContent = detalhe
+}
+
+function resetar() {
+  validando = false
+  document.getElementById('resultado').style.display    = 'none'
+  document.getElementById('scanner-card').style.display = 'block'
+}
+
+function adicionarHistorico(tipo, nome) {
+  const agora = new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'})
+  historico.unshift({ tipo, nome, hora: agora })
+  if (historico.length > 10) historico.pop()
+  renderHistorico()
+}
+
+function renderHistorico() {
+  if (historico.length === 0) return
+  document.getElementById('historico-wrap').style.display = 'block'
+  document.getElementById('historico-lista').innerHTML = historico.map(h => `
+    <div class="hist-item">
+      <div class="hist-icon">${h.tipo === 'valido' ? '✅' : '🚫'}</div>
+      <div class="hist-nome">${h.nome || '—'}</div>
+      <div class="hist-tempo">${h.hora}</div>
+    </div>
+  `).join('')
+}
+
+function tipoLabel(tipo) {
+  const m = { 'meia-solidaria':'Meia Solidária', 'inteira':'Inteira', 'vip':'VIP' }
+  return m[tipo] || tipo || ''
+}
+
+function vibrar(pattern) {
+  if (navigator.vibrate) navigator.vibrate(pattern)
+}
+</script>
+</body>
+</html>
