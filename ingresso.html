@@ -160,17 +160,16 @@ if (!codigo) {
       }
       const ing = d.ingresso
       document.getElementById('conteudo').style.display = 'block'
-      document.getElementById('t-nome').textContent     = ing.nome
-      document.getElementById('ticket-num').textContent = '#' + (ing.numero || '001')
+      document.getElementById('t-nome').textContent      = ing.nome
+      document.getElementById('ticket-num').textContent  = '#' + (ing.numero || '001')
       document.getElementById('qr-code-txt').textContent = ing.codigo
 
-      // Tipo badge
-      const tipos = { 'meia-solidaria':['🤝 Meia Solidária','#f59e0b','rgba(245,158,11,0.15)'], 'inteira':['🎟️ Inteira','#a855f7','rgba(168,85,247,0.15)'], 'vip':['⭐ VIP','#10b981','rgba(16,185,129,0.15)'] }
-      const [tLabel, tColor, tBg] = tipos[ing.tipo] || tipos.inteira
-      document.getElementById('t-tipo-badge').innerHTML = `<span style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:999px;font-size:12px;font-weight:800;color:${tColor};background:${tBg};border:1px solid ${tColor}44">${tLabel}</span>`
+      // Lote / tipo badge
+      const loteNome = ing.loteNome || ing.tipo || 'Ingresso'
+      const corBadge = loteNome.toLowerCase().includes('vip') ? '#10b981' : loteNome.toLowerCase().includes('meia') ? '#f59e0b' : '#a855f7'
+      document.getElementById('t-tipo-badge').innerHTML = `<span style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:999px;font-size:12px;font-weight:800;color:${corBadge};background:${corBadge}20;border:1px solid ${corBadge}44">🎟️ ${loteNome}</span>`
 
-      // QR Code
-      const qrUrl = WORKER + '/validar?c=' + encodeURIComponent(codigo) // para validação
+      // QR Code (aponta para a portaria)
       const validUrl = 'https://revo2anos.com/validar?c=' + encodeURIComponent(codigo)
       document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(validUrl)}&bgcolor=1a0a33&color=f59e0b&margin=10`
 
