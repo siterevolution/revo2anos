@@ -43,6 +43,14 @@
     {
       "source": "/materiais-divulgadores",
       "destination": "/materiais-divulgadores.html"
+    },
+    {
+      "source": "/ingresso",
+      "destination": "/ingresso.html"
+    },
+    {
+      "source": "/validar",
+      "destination": "/validar.html"
     }
   ]
 }
